@@ -1,16 +1,5 @@
-import { useAuth, AuthProvider } from '@/contexts/AuthContext';
-import LoginPage from '@/components/LoginPage';
-import Dashboard from '@/components/Dashboard';
+import PowerLoopApp from '@/components/pl/PowerLoopApp';
 
-const IndexContent = () => {
-  const { isAuthenticated } = useAuth();
-  return isAuthenticated ? <Dashboard /> : <LoginPage />;
-};
-
-const Index = () => (
-  <AuthProvider>
-    <IndexContent />
-  </AuthProvider>
-);
+const Index = () => <PowerLoopApp />;
 
 export default Index;

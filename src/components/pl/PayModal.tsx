@@ -229,6 +229,7 @@ export default function PayModal({ station, user, token, onClose, onPaid }: PayM
 
         {err && <div style={{ background: RM, borderRadius: 10, padding: '10px', color: RD, fontSize: 13, fontWeight: 600, marginTop: 10 }}>{err}</div>}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

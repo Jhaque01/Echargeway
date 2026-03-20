@@ -66,10 +66,10 @@ function ChargingCard() {
         <div style={{ width: 4, height: 20, background: 'rgba(34,197,94,.2)', borderRadius: 2 }} />
         <div style={{ width: 26, height: 6, background: 'rgba(34,197,94,.1)', borderRadius: 3 }} />
       </div>
-      <div style={{ position: 'absolute', top: 18, left: 22, right: 110, height: 2, background: 'rgba(255,255,255,.06)', borderRadius: 2 }}>
-        <div style={{ height: '100%', width: '68%', background: 'linear-gradient(90deg,#22C55E,#86EFAC)', borderRadius: 2, boxShadow: '0 0 8px #22C55E' }} />
+      <div style={{ position: 'absolute', top: 18, left: 22, color: GN, fontSize: 11, fontWeight: 900, letterSpacing: 1.5, textTransform: 'uppercase' }}>68% · 32 min left</div>
+      <div style={{ position: 'absolute', top: 34, left: 22, right: 110, height: 6, background: 'rgba(255,255,255,.08)', borderRadius: 4 }}>
+        <div style={{ height: '100%', width: '68%', background: 'linear-gradient(90deg,#22C55E,#86EFAC)', borderRadius: 4, boxShadow: '0 0 10px #22C55E', fontWeight: 900 }} />
       </div>
-      <div style={{ position: 'absolute', top: 10, left: 22, color: TM, fontSize: 10, fontWeight: 600, letterSpacing: 1.5, textTransform: 'uppercase' }}>68% · 32 min left</div>
       <div>
         <div style={{ color: TM, fontSize: 10, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', marginBottom: 5 }}>Up to 150 kW DC</div>
         <h3 style={{ color: TX, fontWeight: 900, fontSize: 21, margin: 0 }}>Ultra-Fast Charging</h3>

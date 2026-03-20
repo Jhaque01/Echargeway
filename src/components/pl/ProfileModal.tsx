@@ -17,11 +17,11 @@ function downloadReport(user: any, hist: any[]) {
   const totalAmt = hist.reduce((s: number, h: any) => s + parseFloat(h.amount || 0), 0);
   const totalKwh = hist.reduce((s: number, h: any) => s + (parseFloat(h.kwh) || 0), 0);
   const totRow = hist.length > 0 ? `<tr class="tot"><td colspan="2"><b>Total (${hist.length} sessions)</b></td><td style="text-align:right"><b>₹${totalAmt.toFixed(0)}</b></td><td style="text-align:right"><b>${totalKwh} kWh</b></td></tr>` : '';
-  const doc = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>PowerLoop Charging Report</title><style>body{font-family:Arial,sans-serif;max-width:720px;margin:40px auto;color:#222;padding:0 24px}.hd{display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid #22C55E;padding-bottom:14px;margin-bottom:22px}.brand{font-size:26px;font-weight:900}.brand b{color:#22C55E}table{width:100%;border-collapse:collapse}th{background:#22C55E;color:#fff;padding:10px 12px;text-align:left;font-size:13px}td{padding:9px 12px;border-bottom:1px solid #eee;font-size:13px}.tot td{background:#f0fdf4;border-top:2px solid #22C55E}.foot{text-align:center;color:#aaa;font-size:11px;margin-top:36px}</style></head><body><div class="hd"><div class="brand">Power<b>Loop</b></div><div style="text-align:right;font-size:12px;color:#666"><b>Charging Report</b><br>Generated: ${new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}</div></div><h2>${user.name || 'User'}</h2><p>📞 ${user.phone || '—'}</p><table><thead><tr><th>Date</th><th>Station</th><th style="text-align:right">Amount</th><th style="text-align:right">Energy</th></tr></thead><tbody>${rows}${totRow}</tbody></table><div class="foot">PowerLoop EV Charging · © ${new Date().getFullYear()}</div></body></html>`;
+  const doc = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>eCharge Way Charging Report</title><style>body{font-family:Arial,sans-serif;max-width:720px;margin:40px auto;color:#222;padding:0 24px}.hd{display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid #22C55E;padding-bottom:14px;margin-bottom:22px}.brand{font-size:26px;font-weight:900}.brand b{color:#22C55E}table{width:100%;border-collapse:collapse}th{background:#22C55E;color:#fff;padding:10px 12px;text-align:left;font-size:13px}td{padding:9px 12px;border-bottom:1px solid #eee;font-size:13px}.tot td{background:#f0fdf4;border-top:2px solid #22C55E}.foot{text-align:center;color:#aaa;font-size:11px;margin-top:36px}</style></head><body><div class="hd"><div class="brand">e<b>Charge</b> Way</div><div style="text-align:right;font-size:12px;color:#666"><b>Charging Report</b><br>Generated: ${new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}</div></div><h2>${user.name || 'User'}</h2><p>📞 ${user.phone || '—'}</p><table><thead><tr><th>Date</th><th>Station</th><th style="text-align:right">Amount</th><th style="text-align:right">Energy</th></tr></thead><tbody>${rows}${totRow}</tbody></table><div class="foot">eCharge Way EV Charging · © ${new Date().getFullYear()}</div></body></html>`;
   const blob = new Blob([doc], { type: 'text/html' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = 'PowerLoop_Report_' + (user.name || 'User').replace(/\s+/g, '_') + '.html';
+  a.download = 'eChargeWay_Report_' + (user.name || 'User').replace(/\s+/g, '_') + '.html';
   document.body.appendChild(a); a.click();
   setTimeout(() => { URL.revokeObjectURL(a.href); document.body.removeChild(a); }, 800);
 }
@@ -193,7 +193,7 @@ export default function ProfileModal({ user, token, onClose, onUpdate, onLogout 
 
             <div style={{ background: S2, borderRadius: 15, padding: 16, border: `1px solid ${BD}` }}>
               <div style={{ fontSize: 10, fontWeight: 700, color: TM, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 12 }}>App Info</div>
-              {[['Version', '1.0.0'], ['UPI Beneficiary', UPI_ID], ['Support', 'support@powerloop.in']].map(([k, v], i) => (
+              {[['Version', '1.0.0'], ['UPI Beneficiary', UPI_ID], ['Support', 'support@echargeway.in']].map(([k, v], i) => (
                 <div key={i} style={{
                   display: 'flex', justifyContent: 'space-between', alignItems: 'center',
                   padding: '8px 0', borderBottom: i < 2 ? `1px solid ${BD}` : 'none',

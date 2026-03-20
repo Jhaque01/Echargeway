@@ -152,7 +152,7 @@ export default function PowerLoopApp() {
           position: 'sticky', top: 0, zIndex: 10, borderBottom: `1px solid ${BD}`,
         }}>
           <div style={{ fontWeight: 900, fontSize: 22, color: TX, letterSpacing: -.5 }}>
-            Power<span style={{ color: GN, textShadow: `0 0 22px ${GG}` }}>Loop</span>
+            e<span style={{ color: GN, textShadow: `0 0 22px ${GG}` }}>Charge</span> Way
           </div>
           {user ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -261,14 +261,14 @@ export default function PowerLoopApp() {
           {/* Footer */}
           <div style={{ textAlign: 'center', paddingTop: 20, borderTop: `1px solid ${BD}`, marginTop: 4 }}>
             <div style={{ fontWeight: 900, fontSize: 19, color: TX, marginBottom: 7 }}>
-              Power<span style={{ color: GN, textShadow: `0 0 16px ${GG}` }}>Loop</span>
+              e<span style={{ color: GN, textShadow: `0 0 16px ${GG}` }}>Charge</span> Way
             </div>
             <div style={{ display: 'flex', justifyContent: 'center', gap: 18, marginBottom: 10 }}>
               {['About', 'Careers', 'Contact'].map(l => (
                 <span key={l} style={{ fontSize: 12.5, color: TM, cursor: 'pointer', fontWeight: 600 }}>{l}</span>
               ))}
             </div>
-            <div style={{ color: TM, fontSize: 11.5 }}>© 2024 PowerLoop Inc.</div>
+            <div style={{ color: TM, fontSize: 11.5 }}>© 2024 eCharge Way Inc.</div>
           </div>
         </div>
       </div>

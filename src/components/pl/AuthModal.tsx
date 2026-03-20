@@ -131,7 +131,7 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
       }}>
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-          <span style={{ fontWeight: 900, fontSize: 22, color: TX }}>Power<span style={{ color: GN }}>Loop</span></span>
+          <span style={{ fontWeight: 900, fontSize: 22, color: TX }}>e<span style={{ color: GN }}>Charge</span> Way</span>
           <CloseBtn onClick={onClose} />
         </div>
 

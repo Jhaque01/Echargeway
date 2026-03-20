@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import ReactDOM from 'react-dom';
 import { callApi, sessPrice, makeQrUrl, makeDeepLink, UPI_ID, GN, GG, GD, S1, S2, S3, BD, BM, TX, TS, TM, RD, RM, SMCARD, Station } from '@/lib/powerloop';
 import { Spinner, CloseBtn, IcBolt, IcRup, IcOk } from '@/components/pl/Shared';
 
@@ -50,10 +51,10 @@ export default function PayModal({ station, user, token, onClose, onPaid }: PayM
   };
 
   if (paid) {
-    return (
+    return ReactDOM.createPortal(
       <div onClick={onClose} style={{
         position: 'fixed', inset: 0, background: '#080808',
-        zIndex: 300, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16,
+        zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16,
       }}>
         <div onClick={e => e.stopPropagation()} style={{
           background: S1, border: '1px solid rgba(34,197,94,.3)', borderRadius: 26,
@@ -75,7 +76,8 @@ export default function PayModal({ station, user, token, onClose, onPaid }: PayM
             fontFamily: 'inherit',
           }}>Done ✓</button>
         </div>
-      </div>
+      </div>,
+      document.body
     );
   }
 
@@ -85,15 +87,16 @@ export default function PayModal({ station, user, token, onClose, onPaid }: PayM
     { id: 'app', label: 'UPI App', icon: '📱' },
   ];
 
-  return (
+  return ReactDOM.createPortal(
     <div onClick={onClose} style={{
       position: 'fixed', inset: 0, background: '#080808',
-      zIndex: 300, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16,
+      zIndex: 9999, display: 'flex', alignItems: 'flex-start', justifyContent: 'center',
+      padding: '24px 16px', overflowY: 'auto',
     }}>
       <div onClick={e => e.stopPropagation()} style={{
         background: S1, border: '1px solid ' + BM, borderRadius: 26,
         padding: '26px 20px 24px', maxWidth: 400, width: '100%',
-        boxShadow: '0 32px 80px rgba(0,0,0,.9)', maxHeight: '94vh', overflowY: 'auto',
+        boxShadow: '0 32px 80px rgba(0,0,0,.9)', margin: 'auto 0',
       }}>
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
@@ -226,6 +229,7 @@ export default function PayModal({ station, user, token, onClose, onPaid }: PayM
 
         {err && <div style={{ background: RM, borderRadius: 10, padding: '10px', color: RD, fontSize: 13, fontWeight: 600, marginTop: 10 }}>{err}</div>}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

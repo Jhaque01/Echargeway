@@ -52,7 +52,7 @@ export default function PayModal({ station, user, token, onClose, onPaid }: PayM
   if (paid) {
     return (
       <div onClick={onClose} style={{
-        position: 'fixed', inset: 0, background: 'rgba(0,0,0,.87)', backdropFilter: 'blur(10px)',
+        position: 'fixed', inset: 0, background: '#080808',
         zIndex: 300, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16,
       }}>
         <div onClick={e => e.stopPropagation()} style={{
@@ -87,7 +87,7 @@ export default function PayModal({ station, user, token, onClose, onPaid }: PayM
 
   return (
     <div onClick={onClose} style={{
-      position: 'fixed', inset: 0, background: 'rgba(0,0,0,.87)', backdropFilter: 'blur(10px)',
+      position: 'fixed', inset: 0, background: '#080808',
       zIndex: 300, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16,
     }}>
       <div onClick={e => e.stopPropagation()} style={{

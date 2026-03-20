@@ -51,7 +51,7 @@ export default function PayModal({ station, user, token, onClose, onPaid }: PayM
   };
 
   if (paid) {
-    return (
+    return ReactDOM.createPortal(
       <div onClick={onClose} style={{
         position: 'fixed', inset: 0, background: '#080808',
         zIndex: 300, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16,

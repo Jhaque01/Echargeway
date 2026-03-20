@@ -90,7 +90,7 @@ export default function PayModal({ station, user, token, onClose, onPaid }: PayM
   return ReactDOM.createPortal(
     <div onClick={onClose} style={{
       position: 'fixed', inset: 0, background: '#080808',
-      zIndex: 300, display: 'flex', alignItems: 'flex-start', justifyContent: 'center',
+      zIndex: 9999, display: 'flex', alignItems: 'flex-start', justifyContent: 'center',
       padding: '24px 16px', overflowY: 'auto',
     }}>
       <div onClick={e => e.stopPropagation()} style={{

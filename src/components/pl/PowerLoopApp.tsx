@@ -152,7 +152,7 @@ export default function PowerLoopApp() {
           position: 'sticky', top: 0, zIndex: 10, borderBottom: `1px solid ${BD}`,
         }}>
           <div style={{ fontWeight: 900, fontSize: 22, color: TX, letterSpacing: -.5 }}>
-            Power<span style={{ color: GN, textShadow: `0 0 22px ${GG}` }}>Loop</span>
+            e<span style={{ color: GN, textShadow: `0 0 22px ${GG}` }}>Charge</span> Way
           </div>
           {user ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>

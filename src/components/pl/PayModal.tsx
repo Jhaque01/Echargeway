@@ -76,7 +76,8 @@ export default function PayModal({ station, user, token, onClose, onPaid }: PayM
             fontFamily: 'inherit',
           }}>Done ✓</button>
         </div>
-      </div>
+      </div>,
+      document.body
     );
   }
 

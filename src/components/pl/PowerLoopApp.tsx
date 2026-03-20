@@ -268,7 +268,7 @@ export default function PowerLoopApp() {
                 <span key={l} style={{ fontSize: 12.5, color: TM, cursor: 'pointer', fontWeight: 600 }}>{l}</span>
               ))}
             </div>
-            <div style={{ color: TM, fontSize: 11.5 }}>© 2024 PowerLoop Inc.</div>
+            <div style={{ color: TM, fontSize: 11.5 }}>© 2024 eCharge Way Inc.</div>
           </div>
         </div>
       </div>

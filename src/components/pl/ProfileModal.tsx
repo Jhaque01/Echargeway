@@ -193,7 +193,7 @@ export default function ProfileModal({ user, token, onClose, onUpdate, onLogout 
 
             <div style={{ background: S2, borderRadius: 15, padding: 16, border: `1px solid ${BD}` }}>
               <div style={{ fontSize: 10, fontWeight: 700, color: TM, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 12 }}>App Info</div>
-              {[['Version', '1.0.0'], ['UPI Beneficiary', UPI_ID], ['Support', 'support@powerloop.in']].map(([k, v], i) => (
+              {[['Version', '1.0.0'], ['UPI Beneficiary', UPI_ID], ['Support', 'support@echargeway.in']].map(([k, v], i) => (
                 <div key={i} style={{
                   display: 'flex', justifyContent: 'space-between', alignItems: 'center',
                   padding: '8px 0', borderBottom: i < 2 ? `1px solid ${BD}` : 'none',

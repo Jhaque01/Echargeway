@@ -88,12 +88,13 @@ export default function PayModal({ station, user, token, onClose, onPaid }: PayM
   return (
     <div onClick={onClose} style={{
       position: 'fixed', inset: 0, background: '#080808',
-      zIndex: 300, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16,
+      zIndex: 300, display: 'flex', alignItems: 'flex-start', justifyContent: 'center',
+      padding: '24px 16px', overflowY: 'auto',
     }}>
       <div onClick={e => e.stopPropagation()} style={{
         background: S1, border: '1px solid ' + BM, borderRadius: 26,
         padding: '26px 20px 24px', maxWidth: 400, width: '100%',
-        boxShadow: '0 32px 80px rgba(0,0,0,.9)', maxHeight: '94vh', overflowY: 'auto',
+        boxShadow: '0 32px 80px rgba(0,0,0,.9)', margin: 'auto 0',
       }}>
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>

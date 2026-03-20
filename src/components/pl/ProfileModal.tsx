@@ -21,7 +21,7 @@ function downloadReport(user: any, hist: any[]) {
   const blob = new Blob([doc], { type: 'text/html' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = 'PowerLoop_Report_' + (user.name || 'User').replace(/\s+/g, '_') + '.html';
+  a.download = 'eChargeWay_Report_' + (user.name || 'User').replace(/\s+/g, '_') + '.html';
   document.body.appendChild(a); a.click();
   setTimeout(() => { URL.revokeObjectURL(a.href); document.body.removeChild(a); }, 800);
 }

@@ -7,6 +7,7 @@ import {
 } from '@/lib/powerloop';
 import { Avatar, Spinner, IcBolt, IcCar, IcNav, IcRup, IcLoc } from '@/components/pl/Shared';
 import PayModal from '@/components/pl/PayModal';
+import upiLogo from '@/assets/upi-logo.png';
 
 interface MapScreenProps {
   onBack: () => void;
@@ -283,7 +284,7 @@ export default function MapScreen({ onBack, user, token, onHistAdd }: MapScreenP
                 boxShadow: '0 0 28px rgba(34,197,94,.55)',
                 animation: 'glow 3s ease infinite', fontFamily: 'inherit',
               }}>
-                💳 Pay ₹{sessPrice(sel.price)} via UPI
+                <img src={upiLogo} alt="UPI" style={{ height: 18, mixBlendMode: 'screen', filter: 'brightness(2)' }} /> Pay ₹{sessPrice(sel.price)} via UPI
               </button>
             </div>
           </div>

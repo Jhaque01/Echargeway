@@ -4,6 +4,10 @@ import { callApi, sessPrice, makeQrUrl, makeDeepLink, UPI_ID, GN, GG, GD, S1, S2
 import { Spinner, CloseBtn, IcBolt, IcRup, IcOk } from '@/components/pl/Shared';
 import upiLogo from '@/assets/upi-logo.png';
 
+const UpiIcon = ({ size = 24 }: { size?: number }) => (
+  <img src={upiLogo} alt="UPI" style={{ height: size, mixBlendMode: 'screen', filter: 'brightness(1.5)' }} />
+);
+
 interface PayModalProps {
   station: Station;
   user: any;
@@ -92,7 +96,7 @@ export default function PayModal({ station, user, token, onClose, onPaid }: PayM
 
   const tabs: { id: PayTab; label: string; icon: React.ReactNode }[] = [
     { id: 'qr', label: 'Scan QR', icon: <ScanIcon /> },
-    { id: 'upiid', label: 'UPI ID', icon: <img src={upiLogo} alt="UPI" style={{ height: 14 }} /> },
+    { id: 'upiid', label: 'UPI ID', icon: <UpiIcon size={14} /> },
     { id: 'app', label: 'UPI App', icon: null },
   ];
 
@@ -110,7 +114,7 @@ export default function PayModal({ station, user, token, onClose, onPaid }: PayM
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
           <div style={{ fontWeight: 800, fontSize: 18, color: TX, display: 'flex', alignItems: 'center', gap: 8 }}>
-            <img src={upiLogo} alt="UPI" style={{ height: 22 }} /> Pay via UPI
+            <UpiIcon size={28} /> Pay via UPI
           </div>
           <CloseBtn onClick={onClose} />
         </div>
@@ -156,29 +160,42 @@ export default function PayModal({ station, user, token, onClose, onPaid }: PayM
         {tab === 'qr' && (
           <div style={{ textAlign: 'center', marginBottom: 16 }}>
             <div style={{
-              background: 'linear-gradient(145deg, #1a1a1a, #111)',
-              borderRadius: 20, padding: 20,
-              border: '1px solid rgba(34,197,94,.2)',
-              boxShadow: '0 0 30px rgba(34,197,94,.08), inset 0 1px 0 rgba(255,255,255,.05)',
+              background: 'linear-gradient(145deg, #0a0a0a, #111)',
+              borderRadius: 22, padding: 22,
+              border: '1.5px solid rgba(34,197,94,.25)',
+              boxShadow: '0 0 40px rgba(34,197,94,.1), inset 0 1px 0 rgba(255,255,255,.04)',
               display: 'inline-block',
             }}>
-              {/* Corner accents */}
               <div style={{ position: 'relative' }}>
                 <div style={{
-                  background: '#fff', borderRadius: 14, padding: 12,
+                  background: '#fff', borderRadius: 16, padding: 14,
                   position: 'relative', overflow: 'hidden',
+                  boxShadow: '0 0 20px rgba(34,197,94,.15)',
                 }}>
-                  {/* Green corner marks */}
-                  <div style={{ position: 'absolute', top: 0, left: 0, width: 22, height: 22, borderTop: '3px solid ' + GN, borderLeft: '3px solid ' + GN, borderRadius: '14px 0 0 0' }} />
-                  <div style={{ position: 'absolute', top: 0, right: 0, width: 22, height: 22, borderTop: '3px solid ' + GN, borderRight: '3px solid ' + GN, borderRadius: '0 14px 0 0' }} />
-                  <div style={{ position: 'absolute', bottom: 0, left: 0, width: 22, height: 22, borderBottom: '3px solid ' + GN, borderLeft: '3px solid ' + GN, borderRadius: '0 0 0 14px' }} />
-                  <div style={{ position: 'absolute', bottom: 0, right: 0, width: 22, height: 22, borderBottom: '3px solid ' + GN, borderRight: '3px solid ' + GN, borderRadius: '0 0 14px 0' }} />
+                  {/* Green corner scan marks */}
+                  <div style={{ position: 'absolute', top: 0, left: 0, width: 28, height: 28, borderTop: '4px solid ' + GN, borderLeft: '4px solid ' + GN, borderRadius: '16px 0 0 0' }} />
+                  <div style={{ position: 'absolute', top: 0, right: 0, width: 28, height: 28, borderTop: '4px solid ' + GN, borderRight: '4px solid ' + GN, borderRadius: '0 16px 0 0' }} />
+                  <div style={{ position: 'absolute', bottom: 0, left: 0, width: 28, height: 28, borderBottom: '4px solid ' + GN, borderLeft: '4px solid ' + GN, borderRadius: '0 0 0 16px' }} />
+                  <div style={{ position: 'absolute', bottom: 0, right: 0, width: 28, height: 28, borderBottom: '4px solid ' + GN, borderRight: '4px solid ' + GN, borderRadius: '0 0 16px 0' }} />
                   {imgOk ? (
-                    <img src={qrUrl} alt="UPI QR" width={190} height={190}
-                      onError={() => setImgOk(false)}
-                      style={{ display: 'block', borderRadius: 6 }} />
+                    <div style={{ position: 'relative' }}>
+                      <img src={qrUrl} alt="UPI QR" width={200} height={200}
+                        onError={() => setImgOk(false)}
+                        style={{ display: 'block', borderRadius: 6, filter: 'hue-rotate(90deg) saturate(1.5)' }} />
+                      {/* Company name overlay in center */}
+                      <div style={{
+                        position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)',
+                        background: '#fff', borderRadius: 8, padding: '4px 8px',
+                        boxShadow: '0 2px 8px rgba(0,0,0,.15)',
+                        display: 'flex', alignItems: 'center', gap: 3,
+                      }}>
+                        <span style={{ fontSize: 9, fontWeight: 900, color: '#111', letterSpacing: .3 }}>e</span>
+                        <span style={{ fontSize: 9, fontWeight: 900, color: GN, letterSpacing: .3 }}>Charge</span>
+                        <span style={{ fontSize: 9, fontWeight: 900, color: '#111', letterSpacing: .3 }}>Way</span>
+                      </div>
+                    </div>
                   ) : (
-                    <div style={{ width: 190, height: 190, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#999', fontSize: 13 }}>
+                    <div style={{ width: 200, height: 200, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#999', fontSize: 13 }}>
                       QR unavailable
                     </div>
                   )}
@@ -186,15 +203,15 @@ export default function PayModal({ station, user, token, onClose, onPaid }: PayM
               </div>
               {/* UPI badge */}
               <div style={{
-                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-                marginTop: 14, background: GD, borderRadius: 10, padding: '8px 14px',
-                border: '1px solid rgba(34,197,94,.15)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                marginTop: 16, background: GD, borderRadius: 12, padding: '10px 16px',
+                border: '1px solid rgba(34,197,94,.2)',
               }}>
-                <img src={upiLogo} alt="UPI" style={{ height: 16 }} />
-                <span style={{ fontSize: 12, fontWeight: 700, color: GN }}>Scan & Pay ₹{amt}</span>
+                <UpiIcon size={20} />
+                <span style={{ fontSize: 14, fontWeight: 900, color: GN, letterSpacing: .3 }}>Scan & Pay ₹{amt}</span>
               </div>
             </div>
-            <div style={{ fontSize: 12, color: TM, marginTop: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+            <div style={{ fontSize: 12, color: TM, marginTop: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
               <span style={{ display: 'inline-block', width: 6, height: 6, borderRadius: '50%', background: GN, animation: 'pulse-dot 2s infinite' }} />
               Scan with GPay, PhonePe, Paytm or any UPI app
             </div>

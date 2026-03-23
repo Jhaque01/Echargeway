@@ -82,10 +82,18 @@ export default function PayModal({ station, user, token, onClose, onPaid }: PayM
     );
   }
 
-  const tabs: { id: PayTab; label: string; icon: string }[] = [
-    { id: 'qr', label: 'Scan QR', icon: '📷' },
-    { id: 'upiid', label: 'UPI ID', icon: '🆔' },
-    { id: 'app', label: 'UPI App', icon: '📱' },
+  const ScanIcon = () => (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={GN} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M3 7V5a2 2 0 0 1 2-2h2" /><path d="M17 3h2a2 2 0 0 1 2 2v2" />
+      <path d="M21 17v2a2 2 0 0 1-2 2h-2" /><path d="M7 21H5a2 2 0 0 1-2-2v-2" />
+      <line x1="7" y1="12" x2="17" y2="12" />
+    </svg>
+  );
+
+  const tabs: { id: PayTab; label: string; icon: React.ReactNode }[] = [
+    { id: 'qr', label: 'Scan QR', icon: <ScanIcon /> },
+    { id: 'upiid', label: 'UPI ID', icon: <img src={upiLogo} alt="UPI" style={{ height: 14 }} /> },
+    { id: 'app', label: 'UPI App', icon: null },
   ];
 
   return ReactDOM.createPortal(

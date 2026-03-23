@@ -7,6 +7,7 @@ import {
 } from '@/lib/powerloop';
 import { Avatar, Spinner, IcBolt, IcCar, IcNav, IcRup, IcLoc } from '@/components/pl/Shared';
 import PayModal from '@/components/pl/PayModal';
+import upiLogo from '@/assets/upi-logo.png';
 
 interface MapScreenProps {
   onBack: () => void;

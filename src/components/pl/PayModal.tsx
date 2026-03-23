@@ -117,13 +117,13 @@ export default function PayModal({ station, user, token, onClose, onPaid }: PayM
 
         {/* Amount */}
         <div style={{ fontSize: 10, fontWeight: 700, color: TM, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 6 }}>Amount (₹)</div>
-        <div style={{ position: 'relative', marginBottom: 14 }}>
-          <span style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: GN, fontWeight: 800, fontSize: 18 }}>₹</span>
-          <input type="number" value={amt} onChange={e => setAmt(e.target.value)} style={{
-            width: '100%', padding: '14px 14px 14px 34px', background: S3, border: '1.5px solid ' + BM,
-            borderRadius: 12, fontSize: 22, fontWeight: 800, color: TX, outline: 'none',
-            boxSizing: 'border-box', fontFamily: 'inherit',
-          }} />
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 6,
+          background: S3, border: '1.5px solid ' + BM, borderRadius: 12,
+          padding: '14px', marginBottom: 14,
+        }}>
+          <span style={{ color: GN, fontWeight: 800, fontSize: 22 }}>₹</span>
+          <span style={{ fontSize: 22, fontWeight: 800, color: TX }}>{amt}</span>
         </div>
 
         {/* Payment method tabs */}

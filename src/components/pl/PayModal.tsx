@@ -156,20 +156,48 @@ export default function PayModal({ station, user, token, onClose, onPaid }: PayM
         {tab === 'qr' && (
           <div style={{ textAlign: 'center', marginBottom: 16 }}>
             <div style={{
-              background: '#fff', borderRadius: 16, padding: 14,
-              display: 'inline-block', marginBottom: 10,
+              background: 'linear-gradient(145deg, #1a1a1a, #111)',
+              borderRadius: 20, padding: 20,
+              border: '1px solid rgba(34,197,94,.2)',
+              boxShadow: '0 0 30px rgba(34,197,94,.08), inset 0 1px 0 rgba(255,255,255,.05)',
+              display: 'inline-block',
             }}>
-              {imgOk ? (
-                <img src={qrUrl} alt="UPI QR" width={180} height={180}
-                  onError={() => setImgOk(false)}
-                  style={{ display: 'block', borderRadius: 8 }} />
-              ) : (
-                <div style={{ width: 180, height: 180, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#999', fontSize: 13 }}>
-                  QR unavailable
+              {/* Corner accents */}
+              <div style={{ position: 'relative' }}>
+                <div style={{
+                  background: '#fff', borderRadius: 14, padding: 12,
+                  position: 'relative', overflow: 'hidden',
+                }}>
+                  {/* Green corner marks */}
+                  <div style={{ position: 'absolute', top: 0, left: 0, width: 22, height: 22, borderTop: '3px solid ' + GN, borderLeft: '3px solid ' + GN, borderRadius: '14px 0 0 0' }} />
+                  <div style={{ position: 'absolute', top: 0, right: 0, width: 22, height: 22, borderTop: '3px solid ' + GN, borderRight: '3px solid ' + GN, borderRadius: '0 14px 0 0' }} />
+                  <div style={{ position: 'absolute', bottom: 0, left: 0, width: 22, height: 22, borderBottom: '3px solid ' + GN, borderLeft: '3px solid ' + GN, borderRadius: '0 0 0 14px' }} />
+                  <div style={{ position: 'absolute', bottom: 0, right: 0, width: 22, height: 22, borderBottom: '3px solid ' + GN, borderRight: '3px solid ' + GN, borderRadius: '0 0 14px 0' }} />
+                  {imgOk ? (
+                    <img src={qrUrl} alt="UPI QR" width={190} height={190}
+                      onError={() => setImgOk(false)}
+                      style={{ display: 'block', borderRadius: 6 }} />
+                  ) : (
+                    <div style={{ width: 190, height: 190, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#999', fontSize: 13 }}>
+                      QR unavailable
+                    </div>
+                  )}
                 </div>
-              )}
+              </div>
+              {/* UPI badge */}
+              <div style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                marginTop: 14, background: GD, borderRadius: 10, padding: '8px 14px',
+                border: '1px solid rgba(34,197,94,.15)',
+              }}>
+                <img src={upiLogo} alt="UPI" style={{ height: 16 }} />
+                <span style={{ fontSize: 12, fontWeight: 700, color: GN }}>Scan & Pay ₹{amt}</span>
+              </div>
             </div>
-            <div style={{ fontSize: 12, color: TM }}>Scan with any UPI app</div>
+            <div style={{ fontSize: 12, color: TM, marginTop: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+              <span style={{ display: 'inline-block', width: 6, height: 6, borderRadius: '50%', background: GN, animation: 'pulse-dot 2s infinite' }} />
+              Scan with GPay, PhonePe, Paytm or any UPI app
+            </div>
           </div>
         )}
 

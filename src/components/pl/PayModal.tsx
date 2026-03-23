@@ -114,7 +114,7 @@ export default function PayModal({ station, user, token, onClose, onPaid }: PayM
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
           <div style={{ fontWeight: 800, fontSize: 18, color: TX, display: 'flex', alignItems: 'center', gap: 8 }}>
-            <img src={upiLogo} alt="UPI" style={{ height: 22 }} /> Pay via UPI
+            <UpiIcon size={28} /> Pay via UPI
           </div>
           <CloseBtn onClick={onClose} />
         </div>

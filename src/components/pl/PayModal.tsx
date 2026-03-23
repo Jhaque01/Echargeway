@@ -4,6 +4,10 @@ import { callApi, sessPrice, makeQrUrl, makeDeepLink, UPI_ID, GN, GG, GD, S1, S2
 import { Spinner, CloseBtn, IcBolt, IcRup, IcOk } from '@/components/pl/Shared';
 import upiLogo from '@/assets/upi-logo.png';
 
+const UpiIcon = ({ size = 24 }: { size?: number }) => (
+  <img src={upiLogo} alt="UPI" style={{ height: size, mixBlendMode: 'screen', filter: 'brightness(1.5)' }} />
+);
+
 interface PayModalProps {
   station: Station;
   user: any;

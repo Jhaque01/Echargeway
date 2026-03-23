@@ -96,7 +96,7 @@ export default function PayModal({ station, user, token, onClose, onPaid }: PayM
 
   const tabs: { id: PayTab; label: string; icon: React.ReactNode }[] = [
     { id: 'qr', label: 'Scan QR', icon: <ScanIcon /> },
-    { id: 'upiid', label: 'UPI ID', icon: <img src={upiLogo} alt="UPI" style={{ height: 14 }} /> },
+    { id: 'upiid', label: 'UPI ID', icon: <UpiIcon size={14} /> },
     { id: 'app', label: 'UPI App', icon: null },
   ];
 

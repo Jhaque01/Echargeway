@@ -1,6 +1,6 @@
 // Constants
 export const UPI_ID = '9832667682@upi';
-export const UPI_NAME = 'eCharge Way';
+export const UPI_NAME = 'eChargeWay';
 export const KWH_SES = 30;
 
 // Colors

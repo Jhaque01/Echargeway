@@ -185,7 +185,7 @@ export default function PayModal({ station, user, token, onClose, onPaid }: PayM
             }}>
               <div>
                 <div style={{ fontWeight: 900, fontSize: 18, color: GN, letterSpacing: .5 }}>{UPI_ID}</div>
-                <div style={{ fontSize: 12, color: TS, marginTop: 4 }}>eCharge Way</div>
+                <div style={{ fontSize: 12, color: TS, marginTop: 4 }}>eChargeWay</div>
               </div>
               <button onClick={copyUpiId} style={{
                 background: copied ? GD : S3, border: '1px solid ' + (copied ? GN : BD),

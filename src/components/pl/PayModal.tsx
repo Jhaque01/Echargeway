@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { callApi, sessPrice, makeQrUrl, makeDeepLink, UPI_ID, GN, GG, GD, S1, S2, S3, BD, BM, TX, TS, TM, RD, RM, SMCARD, Station } from '@/lib/powerloop';
 import { Spinner, CloseBtn, IcBolt, IcRup, IcOk } from '@/components/pl/Shared';
+import upiLogo from '@/assets/upi-logo.png';
 
 interface PayModalProps {
   station: Station;
@@ -81,10 +82,18 @@ export default function PayModal({ station, user, token, onClose, onPaid }: PayM
     );
   }
 
-  const tabs: { id: PayTab; label: string; icon: string }[] = [
-    { id: 'qr', label: 'Scan QR', icon: '📷' },
-    { id: 'upiid', label: 'UPI ID', icon: '🆔' },
-    { id: 'app', label: 'UPI App', icon: '📱' },
+  const ScanIcon = () => (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={GN} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M3 7V5a2 2 0 0 1 2-2h2" /><path d="M17 3h2a2 2 0 0 1 2 2v2" />
+      <path d="M21 17v2a2 2 0 0 1-2 2h-2" /><path d="M7 21H5a2 2 0 0 1-2-2v-2" />
+      <line x1="7" y1="12" x2="17" y2="12" />
+    </svg>
+  );
+
+  const tabs: { id: PayTab; label: string; icon: React.ReactNode }[] = [
+    { id: 'qr', label: 'Scan QR', icon: <ScanIcon /> },
+    { id: 'upiid', label: 'UPI ID', icon: <img src={upiLogo} alt="UPI" style={{ height: 14 }} /> },
+    { id: 'app', label: 'UPI App', icon: null },
   ];
 
   return ReactDOM.createPortal(
@@ -100,8 +109,8 @@ export default function PayModal({ station, user, token, onClose, onPaid }: PayM
       }}>
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
-          <div style={{ fontWeight: 800, fontSize: 18, color: TX }}>
-            💳 Pay via UPI
+          <div style={{ fontWeight: 800, fontSize: 18, color: TX, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <img src={upiLogo} alt="UPI" style={{ height: 22 }} /> Pay via UPI
           </div>
           <CloseBtn onClick={onClose} />
         </div>
@@ -116,13 +125,13 @@ export default function PayModal({ station, user, token, onClose, onPaid }: PayM
 
         {/* Amount */}
         <div style={{ fontSize: 10, fontWeight: 700, color: TM, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 6 }}>Amount (₹)</div>
-        <div style={{ position: 'relative', marginBottom: 14 }}>
-          <span style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: GN, fontWeight: 800, fontSize: 18 }}>₹</span>
-          <input type="number" value={amt} onChange={e => setAmt(e.target.value)} style={{
-            width: '100%', padding: '14px 14px 14px 34px', background: S3, border: '1.5px solid ' + BM,
-            borderRadius: 12, fontSize: 22, fontWeight: 800, color: TX, outline: 'none',
-            boxSizing: 'border-box', fontFamily: 'inherit',
-          }} />
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 6,
+          background: S3, border: '1.5px solid ' + BM, borderRadius: 12,
+          padding: '14px', marginBottom: 14,
+        }}>
+          <span style={{ color: GN, fontWeight: 800, fontSize: 22 }}>₹</span>
+          <span style={{ fontSize: 22, fontWeight: 800, color: TX }}>{amt}</span>
         </div>
 
         {/* Payment method tabs */}

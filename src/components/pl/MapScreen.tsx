@@ -283,7 +283,7 @@ export default function MapScreen({ onBack, user, token, onHistAdd }: MapScreenP
                 boxShadow: '0 0 28px rgba(34,197,94,.55)',
                 animation: 'glow 3s ease infinite', fontFamily: 'inherit',
               }}>
-                💳 Pay ₹{sessPrice(sel.price)} via UPI
+                Pay ₹{sessPrice(sel.price)} via UPI
               </button>
             </div>
           </div>

@@ -108,6 +108,7 @@ function Milestones() {
 
 // Main App
 export default function PowerLoopApp() {
+  const isMobile = useIsMobile();
   const [showMap, setShowMap] = useState(false);
   const [showAuth, setShowAuth] = useState(false);
   const [showProf, setShowProf] = useState(false);
@@ -144,7 +145,7 @@ export default function PowerLoopApp() {
 
   return (
     <div style={{ background: BG, minHeight: '100vh', display: 'flex', justifyContent: 'center' }}>
-      <div style={{ width: '100%', maxWidth: window.innerWidth <= 768 ? 430 : 900, background: BG, minHeight: '100vh' }}>
+      <div style={{ width: '100%', maxWidth: isMobile ? 430 : 900, background: BG, minHeight: '100vh' }}>
 
         {/* Header */}
         <header style={{

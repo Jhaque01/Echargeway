@@ -143,7 +143,7 @@ export default function PowerLoopApp() {
 
   return (
     <div style={{ background: BG, minHeight: '100vh', display: 'flex', justifyContent: 'center' }}>
-      <div style={{ width: '100%', maxWidth: 430, background: BG, minHeight: '100vh' }}>
+      <div style={{ width: '100%', maxWidth: window.innerWidth <= 768 ? 430 : 900, background: BG, minHeight: '100vh' }}>
 
         {/* Header */}
         <header style={{

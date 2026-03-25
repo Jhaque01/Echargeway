@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useIsMobile } from '@/hooks/use-mobile';
 import {
   callApi, store, requestGeo, sortedStations, sessPrice,
   STATIONS, BG, S1, S2, BD, BM, GN, GG, GD, TX, TS, TM,
@@ -107,6 +108,7 @@ function Milestones() {
 
 // Main App
 export default function PowerLoopApp() {
+  const isMobile = useIsMobile();
   const [showMap, setShowMap] = useState(false);
   const [showAuth, setShowAuth] = useState(false);
   const [showProf, setShowProf] = useState(false);
@@ -143,7 +145,7 @@ export default function PowerLoopApp() {
 
   return (
     <div style={{ background: BG, minHeight: '100vh', display: 'flex', justifyContent: 'center' }}>
-      <div style={{ width: '100%', maxWidth: 430, background: BG, minHeight: '100vh' }}>
+      <div style={{ width: '100%', maxWidth: isMobile ? 430 : 900, background: BG, minHeight: '100vh' }}>
 
         {/* Header */}
         <header style={{
@@ -152,7 +154,7 @@ export default function PowerLoopApp() {
           position: 'sticky', top: 0, zIndex: 10, borderBottom: `1px solid ${BD}`
         }}>
           <div style={{ fontWeight: 900, fontSize: 22, color: TX, letterSpacing: -.5 }}>
-            e<span style={{ color: GN, textShadow: `0 0 22px ${GG}` }}>Charge</span> Way
+            e<span style={{ color: GN, textShadow: `0 0 22px ${GG}` }}>Charge</span>Way
           </div>
           {user ?
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -261,7 +263,7 @@ export default function PowerLoopApp() {
           {/* Footer */}
           <div style={{ textAlign: 'center', paddingTop: 20, borderTop: `1px solid ${BD}`, marginTop: 4 }}>
             <div style={{ fontWeight: 900, fontSize: 19, color: TX, marginBottom: 7 }}>
-              e<span style={{ color: GN, textShadow: `0 0 16px ${GG}` }}>Charge</span> Way
+              e<span style={{ color: GN, textShadow: `0 0 16px ${GG}` }}>Charge</span>Way
             </div>
             <div style={{ display: 'flex', justifyContent: 'center', gap: 18, marginBottom: 10 }}>
               {['About', 'Careers', 'Contact'].map((l) =>

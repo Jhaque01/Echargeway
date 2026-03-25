@@ -46,12 +46,20 @@ export default function ProfileModal({ user, session, onClose, onUpdate, onLogou
   useEffect(() => {
     if (tab !== 'history' || hist !== null) return;
     setHl(true);
-    supabase
-      .from('charging_history')
-      .select('*')
-      .order('created_at', { ascending: false })
-      .then(({ data }) => { setHist(data || []); setHl(false); })
-      .catch(() => { setHist([]); setHl(false); });
+    const loadHistory = async () => {
+      try {
+        const { data } = await supabase
+          .from('charging_history')
+          .select('*')
+          .order('created_at', { ascending: false });
+        setHist(data || []);
+      } catch {
+        setHist([]);
+      } finally {
+        setHl(false);
+      }
+    };
+    loadHistory();
   }, [tab, hist]);
 
   const save = async () => {

@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { supabase } from '@/integrations/supabase/client';
 import {
-  callApi, store, requestGeo, sortedStations, sessPrice,
+  requestGeo, sortedStations, sessPrice,
   STATIONS, BG, S1, S2, BD, BM, GN, GG, GD, TX, TS, TM,
   CARD, IBOX, Station } from
 '@/lib/powerloop';
@@ -49,61 +50,48 @@ function ChargingCard() {
         width: 110 + i * 80, height: 110 + i * 80,
         border: `1px solid rgba(34,197,94,${0.2 - i * .06})`,
         top: '50%', left: '63%', transform: 'translate(-50%,-50%)',
-        animation: `ring 2.4s ease-in-out infinite ${i * .6}s`
       }} />
       )}
-      <div style={{
-        position: 'absolute', right: 32, top: '50%', transform: 'translateY(-55%)',
-        display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3
-      }}>
+      <div style={{ position: 'absolute', top: '50%', left: '63%', transform: 'translate(-50%,-50%)' }}>
         <div style={{
-          width: 52, height: 70, background: 'rgba(34,197,94,.06)', borderRadius: 13,
-          border: `1.5px solid rgba(34,197,94,${p ? .45 : .15})`,
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          transition: 'border-color .3s'
+          width: 58, height: 58, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+          background: p ? `radial-gradient(circle,rgba(34,197,94,.35),transparent 70%)` : 'transparent',
+          transition: 'background .5s',
         }}>
-          <span style={{ fontSize: 28, filter: p ? 'drop-shadow(0 0 18px #22C55E)' : 'none', transition: 'filter .3s' }}>⚡</span>
+          <IcBolt s={32} />
         </div>
-        <div style={{ width: 4, height: 20, background: 'rgba(34,197,94,.2)', borderRadius: 2 }} />
-        <div style={{ width: 26, height: 6, background: 'rgba(34,197,94,.1)', borderRadius: 3 }} />
       </div>
-      <div style={{ position: 'absolute', top: 18, left: 22, color: GN, fontSize: 11, fontWeight: 900, letterSpacing: 1.5, textTransform: 'uppercase' }}>68% · 32 min left</div>
-      <div style={{ position: 'absolute', top: 34, left: 22, right: 110, height: 6, background: 'rgba(255,255,255,.08)', borderRadius: 4 }}>
-        <div style={{ height: '100%', width: '68%', background: 'linear-gradient(90deg,#22C55E,#86EFAC)', borderRadius: 4, boxShadow: '0 0 10px #22C55E', fontWeight: 900 }} />
+      <div style={{ position: 'relative', zIndex: 2 }}>
+        <div style={{
+          fontSize: 10, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase',
+          color: GN, marginBottom: 6,
+        }}>SMART EV CHARGING</div>
+        <div style={{ fontWeight: 900, fontSize: 24, color: TX, lineHeight: 1.2 }}>
+          Find & Charge<br />in <span style={{ color: GN, textShadow: `0 0 18px ${GG}` }}>Seconds</span>
+        </div>
       </div>
-      <div>
-        <div style={{ color: TM, fontSize: 10, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', marginBottom: 5 }}>Up to 150 kW DC</div>
-        <h3 style={{ color: TX, fontWeight: 900, fontSize: 21, margin: 0 }}>Ultra-Fast Charging</h3>
-      </div>
-    </div>);
-
+    </div>
+  );
 }
 
 // Milestones
 function Milestones() {
   const items = [
-  { Icon: IcSta, label: 'Charging Points', target: 500, suffix: '+' },
-  { Icon: IcPeo, label: 'Happy Drivers', target: 2400, suffix: 'K+' },
-  { Icon: IcCity, label: 'Cities Covered', target: 28, suffix: '+' },
-  { Icon: IcBolt, label: 'MWh Delivered', target: 1200, suffix: 'K' }];
-
+    { icon: <IcSta s={22} />, label: 'Stations', value: 200, suffix: '+' },
+    { icon: <IcPeo s={22} />, label: 'Users', value: 14, suffix: 'K+' },
+    { icon: <IcCity s={22} />, label: 'Cities', value: 12, suffix: '' },
+  ];
   return (
-    <div>
-      <h2 style={{ textAlign: 'center', fontWeight: 900, fontSize: 19, color: TX, marginBottom: 3 }}>Powering India's EV Revolution</h2>
-      <p style={{ textAlign: 'center', color: TM, fontSize: 13, marginBottom: 13 }}>Trusted by drivers across 28+ cities</p>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-        {items.map(({ Icon, label, target, suffix }, i) =>
-        <div key={i} style={{ ...CARD, textAlign: 'center', padding: '16px 10px' }}>
-            <div style={{ width: 46, height: 46, background: GD, borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 10px', border: '1px solid rgba(34,197,94,.2)' }}>
-              <Icon s={20} />
-            </div>
-            <div style={{ fontWeight: 900, fontSize: 24, color: TX, lineHeight: 1 }}><Counter target={target} suffix={suffix} /></div>
-            <div style={{ fontSize: 11, color: TM, marginTop: 4, fontWeight: 600 }}>{label}</div>
-          </div>
-        )}
-      </div>
-    </div>);
-
+    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10 }}>
+      {items.map((m, i) => (
+        <div key={i} style={{ ...CARD, textAlign: 'center', padding: '18px 8px' }}>
+          <div style={{ ...IBOX, margin: '0 auto 10px' }}>{m.icon}</div>
+          <div style={{ fontWeight: 900, fontSize: 22, color: TX, lineHeight: 1 }}><Counter target={m.value} suffix={m.suffix} /></div>
+          <div style={{ fontSize: 11, color: TM, fontWeight: 600, marginTop: 5 }}>{m.label}</div>
+        </div>
+      ))}
+    </div>
+  );
 }
 
 // Main App
@@ -112,16 +100,47 @@ export default function PowerLoopApp() {
   const [showMap, setShowMap] = useState(false);
   const [showAuth, setShowAuth] = useState(false);
   const [showProf, setShowProf] = useState(false);
-  const [user, setUser] = useState<any>(() => store.get('pl_usr'));
-  const [token, setToken] = useState<string | null>(() => store.get('pl_tok'));
+  const [user, setUser] = useState<any>(null);
+  const [session, setSession] = useState<any>(null);
   const [nearest, setNearest] = useState<Station | null>(null);
+  const [authLoading, setAuthLoading] = useState(true);
 
+  // Listen for auth state changes
   useEffect(() => {
-    if (!token) return;
-    callApi('/profile', 'GET', null, token).
-    then((u) => {setUser(u);store.set('pl_usr', u);}).
-    catch(() => {setUser(null);setToken(null);store.del('pl_tok');store.del('pl_usr');});
-  }, [token]);
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, sess) => {
+        setSession(sess);
+        if (sess?.user) {
+          // Fetch profile
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', sess.user.id)
+            .single();
+          setUser(profile);
+        } else {
+          setUser(null);
+        }
+        setAuthLoading(false);
+      }
+    );
+
+    // Check initial session
+    supabase.auth.getSession().then(async ({ data: { session: sess } }) => {
+      setSession(sess);
+      if (sess?.user) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', sess.user.id)
+          .single();
+        setUser(profile);
+      }
+      setAuthLoading(false);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   useEffect(() => {
     requestGeo(
@@ -130,9 +149,18 @@ export default function PowerLoopApp() {
     );
   }, []);
 
-  const onAuthOk = (u: any, t: string) => {setUser(u);setToken(t);setShowAuth(false);};
-  const onUpdate = (u: any) => {setUser(u);store.set('pl_usr', u);};
-  const onLogout = () => {setUser(null);setToken(null);store.del('pl_tok');store.del('pl_usr');setShowProf(false);};
+  const onAuthOk = (profile: any, sess: any) => {
+    setUser(profile);
+    setSession(sess);
+    setShowAuth(false);
+  };
+  const onUpdate = (u: any) => { setUser(u); };
+  const onLogout = async () => {
+    await supabase.auth.signOut();
+    setUser(null);
+    setSession(null);
+    setShowProf(false);
+  };
   const goNav = () => {
     if (!nearest) return;
     requestGeo(
@@ -141,7 +169,7 @@ export default function PowerLoopApp() {
     );
   };
 
-  if (showMap) return <MapScreen onBack={() => setShowMap(false)} user={user} token={token || ''} onHistAdd={() => {}} />;
+  if (showMap) return <MapScreen onBack={() => setShowMap(false)} user={user} token={session?.access_token || ''} onHistAdd={() => {}} />;
 
   return (
     <div style={{ background: BG, minHeight: '100vh', display: 'flex', justifyContent: 'center' }}>
@@ -170,90 +198,48 @@ export default function PowerLoopApp() {
             fontWeight: 700, fontSize: 13, cursor: 'pointer', display: 'flex', alignItems: 'center',
             gap: 7, boxShadow: `0 0 18px ${GG}`, fontFamily: 'inherit'
           }}>
-              <IcUser /> Log In
-            </button>
+            <IcUser s={15} c="#fff" /> Sign In
+          </button>
           }
         </header>
 
-        {/* Hero */}
-        <section className="fu" style={{ padding: '30px 20px 16px', textAlign: 'center', position: 'relative' }}>
-          <div style={{
-            position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)',
-            width: 340, height: 200, background: 'radial-gradient(ellipse,rgba(34,197,94,.07),transparent 68%)',
-            pointerEvents: 'none'
-          }} />
-          {user ?
-          <div style={{
-            display: 'inline-flex', alignItems: 'center', gap: 8,
-            background: GD, border: '1px solid rgba(34,197,94,.22)', borderRadius: 50,
-            padding: '6px 14px', marginBottom: 16
-          }}>
-              <Avatar name={user.name} img={user.avatar_url} size={20} />
-              <span style={{ fontSize: 12, fontWeight: 700, color: GN }}>Welcome back, {user.name?.split(' ')[0]}!</span>
-            </div> :
+        <div style={{ padding: '14px 16px 40px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <div className="fu" style={{ opacity: 0 }}><ChargingCard /></div>
 
-          <div style={{
-            display: 'inline-flex', alignItems: 'center', gap: 6,
-            background: GD, border: '1px solid rgba(34,197,94,.2)', borderRadius: 50,
-            padding: '5px 13px', marginBottom: 14
-          }}>
-              <div style={{ width: 6, height: 6, borderRadius: '50%', background: GN, boxShadow: `0 0 6px ${GN}` }} />
-              <span style={{ fontSize: 11, fontWeight: 700, color: GN, letterSpacing: .4 }}>Now live in 28+ cities</span>
-            </div>
-          }
-          <h1 style={{ fontWeight: 900, fontSize: 32, lineHeight: 1.13, color: TX, marginBottom: 13, letterSpacing: -.5 }}>
-            The Future of <span style={{ color: GN, textShadow: `0 0 28px ${GG}` }}>EV Charging</span>
-          </h1>
-          <p style={{ color: TS, fontSize: 14, lineHeight: 1.75, maxWidth: 300, margin: '0 auto' }}>
-            Real-time station finder, instant UPI payment, and charging history — all in one tap.
-          </p>
-        </section>
-
-        <div style={{ padding: '0 13px', display: 'flex', flexDirection: 'column', gap: 12, paddingBottom: 32 }}>
-
-          <div className="fu" style={{ animationDelay: '.06s', opacity: 0 }}><ChargingCard /></div>
-
-          {/* Location card */}
-          <div className="fu hoverable" onClick={() => setShowMap(true)}
-          style={{ ...CARD, animationDelay: '.13s', opacity: 0, border: '1.5px solid rgba(34,197,94,.2)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 10 }}>
-              <div style={IBOX}><IcPin s={22} /></div>
-              <div>
-                <h3 style={{ fontWeight: 800, fontSize: 17, color: TX, marginBottom: 2 }}>Find Nearest Station</h3>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-                  <div style={{ width: 6, height: 6, borderRadius: '50%', background: GN, boxShadow: `0 0 8px ${GN}` }} />
-                  <span style={{ fontSize: 11.5, color: GN, fontWeight: 700 }}>Live GPS · Real-time availability</span>
+          {/* Nearest station */}
+          <div className="fu" style={{ animationDelay: '.12s', opacity: 0 }}>
+            <div style={{ ...CARD, cursor: 'pointer', transition: 'transform .18s, border-color .2s' }} onClick={() => setShowMap(true)}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 13, marginBottom: 13 }}>
+                <div style={{ ...IBOX }}><IcPin s={21} /></div>
+                <div style={{ flex: 1 }}>
+                  <div style={{
+                    fontSize: 9, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase',
+                    color: TM, marginBottom: 4,
+                  }}>Nearest Station</div>
+                  <div style={{ fontWeight: 800, fontSize: 16, color: TX, lineHeight: 1.2 }}>
+                    {nearest ? nearest.name : 'Locating…'}
+                  </div>
                 </div>
               </div>
-            </div>
-            <p style={{ color: TS, fontSize: 13.5, lineHeight: 1.65, marginBottom: 13 }}>
-              Tap to open the live map, select a station, and pay instantly via UPI — GPay, PhonePe, Paytm or any app.
-            </p>
-            <div style={{
-              background: S2, borderRadius: 14, padding: '13px 15px',
-              display: 'flex', alignItems: 'center', gap: 12, border: `1px solid ${BM}`
-            }}>
-              <div style={{
-                width: 38, height: 38, background: GD, borderRadius: 11,
-                display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-                border: '1px solid rgba(34,197,94,.25)'
-              }}><IcPin s={18} /></div>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontWeight: 700, fontSize: 13.5, color: TX, marginBottom: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                  {nearest ? nearest.name : 'Detecting your location…'}
+              {nearest && (
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                    <span style={{ fontSize: 13, color: GN, fontWeight: 700 }}>{nearest.distStr}</span>
+                    <span style={{ color: TM, fontSize: 12 }}>{nearest.timeStr} drive</span>
+                    <span style={{ background: GD, padding: '3px 10px', borderRadius: 50, color: GN, fontSize: 11, fontWeight: 700 }}>
+                      {nearest.av}/{nearest.tot} free
+                    </span>
+                  </div>
+                  <button className="press" onClick={e => {e.stopPropagation();goNav();}} style={{
+                    background: GN, color: '#fff', border: 'none', borderRadius: 50, padding: '7px 14px',
+                    fontWeight: 700, fontSize: 12, cursor: 'pointer',
+                    display: 'flex', alignItems: 'center', gap: 5, whiteSpace: 'nowrap',
+                    boxShadow: `0 0 14px ${GG}`, flexShrink: 0, fontFamily: 'inherit'
+                  }}>
+                    <IcNav s={12} /> Go
+                  </button>
                 </div>
-                <div style={{ fontSize: 11.5, color: TM }}>
-                  {nearest ? `${nearest.distStr} · ${nearest.av}/${nearest.tot} chargers free` : 'Getting GPS…'}
-                </div>
-              </div>
-              <button className="press" onClick={(e) => {e.stopPropagation();goNav();}} style={{
-                background: GN, border: 'none', borderRadius: 10, padding: '9px 14px',
-                color: '#fff', fontWeight: 800, fontSize: 12, cursor: 'pointer',
-                display: 'flex', alignItems: 'center', gap: 5, whiteSpace: 'nowrap',
-                boxShadow: `0 0 14px ${GG}`, flexShrink: 0, fontFamily: 'inherit'
-              }}>
-                <IcNav s={12} /> Go
-              </button>
+              )}
             </div>
             <div style={{ marginTop: 11, fontSize: 12, color: TM, textAlign: 'center' }} className="font-mono text-center text-xs font-light">Tap to open map & pay inside →</div>
           </div>
@@ -277,7 +263,7 @@ export default function PowerLoopApp() {
 
       {showAuth && <AuthModal onClose={() => setShowAuth(false)} onSuccess={onAuthOk} />}
       {showProf && user &&
-      <ProfileModal user={user} token={token || ''} onClose={() => setShowProf(false)} onUpdate={onUpdate} onLogout={onLogout} />
+      <ProfileModal user={user} session={session} onClose={() => setShowProf(false)} onUpdate={onUpdate} onLogout={onLogout} />
       }
     </div>);
 

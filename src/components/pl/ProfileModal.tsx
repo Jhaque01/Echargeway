@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { callApi, fmtAge, UPI_ID, GN, GG, GD, S2, BD, TX, TS, TM, RD, RM, GBTN, DBTN } from '@/lib/powerloop';
+import { supabase } from '@/integrations/supabase/client';
+import { fmtAge, UPI_ID, GN, GG, GD, S2, BD, TX, TS, TM, RD, RM, GBTN, DBTN } from '@/lib/powerloop';
 import { Spinner, Avatar, CloseBtn, DInput, TabRow, IcUser, IcMail, IcPhone, IcEdit, IcOk, IcOut, IcHist, IcSet, IcBolt } from '@/components/pl/Shared';
 
 interface ProfileModalProps {
   user: any;
-  token: string;
+  session: any;
   onClose: () => void;
   onUpdate: (user: any) => void;
   onLogout: () => void;
@@ -17,7 +18,7 @@ function downloadReport(user: any, hist: any[]) {
   const totalAmt = hist.reduce((s: number, h: any) => s + parseFloat(h.amount || 0), 0);
   const totalKwh = hist.reduce((s: number, h: any) => s + (parseFloat(h.kwh) || 0), 0);
   const totRow = hist.length > 0 ? `<tr class="tot"><td colspan="2"><b>Total (${hist.length} sessions)</b></td><td style="text-align:right"><b>₹${totalAmt.toFixed(0)}</b></td><td style="text-align:right"><b>${totalKwh} kWh</b></td></tr>` : '';
-  const doc = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>eChargeWay Charging Report</title><style>body{font-family:Arial,sans-serif;max-width:720px;margin:40px auto;color:#222;padding:0 24px}.hd{display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid #22C55E;padding-bottom:14px;margin-bottom:22px}.brand{font-size:26px;font-weight:900}.brand b{color:#22C55E}table{width:100%;border-collapse:collapse}th{background:#22C55E;color:#fff;padding:10px 12px;text-align:left;font-size:13px}td{padding:9px 12px;border-bottom:1px solid #eee;font-size:13px}.tot td{background:#f0fdf4;border-top:2px solid #22C55E}.foot{text-align:center;color:#aaa;font-size:11px;margin-top:36px}</style></head><body><div class="hd"><div class="brand">e<b>Charge</b>Way</div><div style="text-align:right;font-size:12px;color:#666"><b>Charging Report</b><br>Generated: ${new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}</div></div><h2>${user.name || 'User'}</h2><p>📞 ${user.phone || '—'}</p><table><thead><tr><th>Date</th><th>Station</th><th style="text-align:right">Amount</th><th style="text-align:right">Energy</th></tr></thead><tbody>${rows}${totRow}</tbody></table><div class="foot">eChargeWay EV Charging · © ${new Date().getFullYear()}</div></body></html>`;
+  const doc = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>eChargeWay Charging Report</title><style>body{font-family:Arial,sans-serif;max-width:720px;margin:40px auto;color:#222;padding:0 24px}.hd{display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid #22C55E;padding-bottom:14px;margin-bottom:22px}.brand{font-size:26px;font-weight:900}.brand b{color:#22C55E}table{width:100%;border-collapse:collapse}th{background:#22C55E;color:#fff;padding:10px 12px;text-align:left;font-size:13px}td{padding:9px 12px;border-bottom:1px solid #eee;font-size:13px}.tot td{background:#f0fdf4;border-top:2px solid #22C55E}.foot{text-align:center;color:#aaa;font-size:11px;margin-top:36px}</style></head><body><div class="hd"><div class="brand">e<b>Charge</b>Way</div><div style="text-align:right;font-size:12px;color:#666"><b>Charging Report</b><br>Generated: ${new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}</div></div><h2>${user.name || 'User'}</h2><p>📧 ${user.email || '—'}</p><table><thead><tr><th>Date</th><th>Station</th><th style="text-align:right">Amount</th><th style="text-align:right">Energy</th></tr></thead><tbody>${rows}${totRow}</tbody></table><div class="foot">eChargeWay EV Charging · © ${new Date().getFullYear()}</div></body></html>`;
   const blob = new Blob([doc], { type: 'text/html' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
@@ -26,7 +27,7 @@ function downloadReport(user: any, hist: any[]) {
   setTimeout(() => { URL.revokeObjectURL(a.href); document.body.removeChild(a); }, 800);
 }
 
-export default function ProfileModal({ user, token, onClose, onUpdate, onLogout }: ProfileModalProps) {
+export default function ProfileModal({ user, session, onClose, onUpdate, onLogout }: ProfileModalProps) {
   const [tab, setTab] = useState('profile');
   const [editing, setEd] = useState(false);
   const [form, setForm] = useState({ name: user.name || '', email: user.email || '', phone: user.phone || '' });
@@ -45,8 +46,21 @@ export default function ProfileModal({ user, token, onClose, onUpdate, onLogout 
   useEffect(() => {
     if (tab !== 'history' || hist !== null) return;
     setHl(true);
-    callApi('/history', 'GET', null, token).then(r => setHist(r)).catch(() => setHist([])).finally(() => setHl(false));
-  }, [tab, token, hist]);
+    const loadHistory = async () => {
+      try {
+        const { data } = await supabase
+          .from('charging_history')
+          .select('*')
+          .order('created_at', { ascending: false });
+        setHist(data || []);
+      } catch {
+        setHist([]);
+      } finally {
+        setHl(false);
+      }
+    };
+    loadHistory();
+  }, [tab, hist]);
 
   const save = async () => {
     setLd(true); setErr('');
@@ -56,8 +70,15 @@ export default function ProfileModal({ user, token, onClose, onUpdate, onLogout 
       if (form.email !== (user.email || '')) b.email = form.email;
       if (form.phone !== (user.phone || '')) b.phone = form.phone;
       if (!Object.keys(b).length) { setEd(false); setLd(false); return; }
-      const u = await callApi('/profile', 'PUT', b, token);
-      onUpdate(u); setSaved(true);
+      
+      const { data, error } = await supabase
+        .from('profiles')
+        .update(b)
+        .eq('id', user.id)
+        .select()
+        .single();
+      if (error) throw error;
+      onUpdate(data); setSaved(true);
       setTimeout(() => { setSaved(false); setEd(false); }, 1500);
     } catch (e: any) { setErr(e.message); }
     setLd(false);

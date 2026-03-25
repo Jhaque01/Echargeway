@@ -47,9 +47,20 @@ export default function PayModal({ station, user, token, onClose, onPaid }: PayM
   const confirm = async () => {
     setSaving(true); setErr('');
     try {
-      const h = await callApi('/history', 'POST', {
-        station_name: station.name, amount: parseFloat(amt || '0'), kwh: 30,
-      }, token);
+      const { data: { user: authUser } } = await supabase.auth.getUser();
+      if (!authUser) throw new Error('Please sign in first');
+      
+      const { data: h, error } = await supabase
+        .from('charging_history')
+        .insert({
+          user_id: authUser.id,
+          station_name: station.name,
+          amount: parseFloat(amt || '0'),
+          kwh: 30,
+        })
+        .select()
+        .single();
+      if (error) throw error;
       setPaid(true);
       onPaid(h);
     } catch (e: any) { setErr(e.message); }

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useIsMobile } from '@/hooks/use-mobile';
 import {
   callApi, store, requestGeo, sortedStations, sessPrice,
   STATIONS, BG, S1, S2, BD, BM, GN, GG, GD, TX, TS, TM,

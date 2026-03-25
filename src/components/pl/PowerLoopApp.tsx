@@ -261,7 +261,7 @@ export default function PowerLoopApp() {
           {/* Footer */}
           <div style={{ textAlign: 'center', paddingTop: 20, borderTop: `1px solid ${BD}`, marginTop: 4 }}>
             <div style={{ fontWeight: 900, fontSize: 19, color: TX, marginBottom: 7 }}>
-              e<span style={{ color: GN, textShadow: `0 0 16px ${GG}` }}>Charge</span> Way
+              e<span style={{ color: GN, textShadow: `0 0 16px ${GG}` }}>Charge</span>Way
             </div>
             <div style={{ display: 'flex', justifyContent: 'center', gap: 18, marginBottom: 10 }}>
               {['About', 'Careers', 'Contact'].map((l) =>

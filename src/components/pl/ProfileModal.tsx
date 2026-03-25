@@ -50,8 +50,8 @@ export default function ProfileModal({ user, session, onClose, onUpdate, onLogou
       .from('charging_history')
       .select('*')
       .order('created_at', { ascending: false })
-      .then(({ data }) => setHist(data || []))
-      .finally(() => setHl(false));
+      .then(({ data }) => { setHist(data || []); setHl(false); })
+      .catch(() => { setHist([]); setHl(false); });
   }, [tab, hist]);
 
   const save = async () => {

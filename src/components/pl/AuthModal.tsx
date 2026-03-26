@@ -314,7 +314,7 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
               padding: '11px 14px', color: GN, fontSize: 13, fontWeight: 700, marginBottom: 18,
               display: 'flex', alignItems: 'center', gap: 8,
             }}>
-              <IcOk s={16} />Email verified! Set up your profile.
+              <IcOk s={16} />Verified! Set up your profile.
             </div>
             {lbl('Your Name *')}
             <DInput ph="Full Name" value={name} onChange={e => setName(e.target.value)} icon={<IcUser />} autoFocus />

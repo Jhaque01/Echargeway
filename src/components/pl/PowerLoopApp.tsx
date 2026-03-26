@@ -206,6 +206,10 @@ export default function PowerLoopApp() {
         <div style={{ padding: '14px 16px 40px', display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div className="fu" style={{ opacity: 0 }}><ChargingCard /></div>
 
+          {/* Live charging status bar */}
+          <div className="fu" style={{ animationDelay: '.06s', opacity: 0 }}>
+            <ChargingStatusBar />
+
           {/* Nearest station */}
           <div className="fu" style={{ animationDelay: '.12s', opacity: 0 }}>
             <div style={{ ...CARD, cursor: 'pointer', transition: 'transform .18s, border-color .2s' }} onClick={() => setShowMap(true)}>

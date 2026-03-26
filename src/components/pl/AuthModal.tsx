@@ -92,11 +92,10 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
   const verifyOtp = async (code?: string) => {
     setLoading(true); setErr('');
     try {
-      const { data, error } = await supabase.auth.verifyOtp({
-        email: email.trim().toLowerCase(),
-        token: code || digits.join(''),
-        type: 'email',
-      });
+      const otpPayload = authMethod === 'email'
+        ? { email: email.trim().toLowerCase(), token: code || digits.join(''), type: 'email' as const }
+        : { phone: (phone.trim().startsWith('+') ? phone.trim() : `+91${phone.trim()}`), token: code || digits.join(''), type: 'sms' as const };
+      const { data, error } = await supabase.auth.verifyOtp(otpPayload);
       if (error) throw error;
       if (data.session && data.user) {
         // Check if profile has a name set

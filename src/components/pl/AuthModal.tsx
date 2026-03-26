@@ -9,8 +9,10 @@ interface AuthModalProps {
 }
 
 export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
-  const [step, setStep] = useState<'email' | 'otp' | 'register'>('email');
+  const [step, setStep] = useState<'choose' | 'email' | 'phone' | 'otp' | 'register'>('choose');
+  const [authMethod, setAuthMethod] = useState<'email' | 'phone'>('email');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [digits, setDigits] = useState(Array(6).fill(''));
   const [countdown, setCntdn] = useState(0);
   const [name, setName] = useState('');
@@ -33,18 +35,24 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
   }, []);
 
   const sendOtp = async (resend = false) => {
-    const em = email.trim().toLowerCase();
-    if (!em) { setErr('Please enter your email address'); return; }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) { setErr('Enter a valid email address'); return; }
     setLoading(true); setErr('');
     try {
-      const { error } = await supabase.auth.signInWithOtp({
-        email: em,
-        options: {
-          shouldCreateUser: true,
-        },
-      });
-      if (error) throw error;
+      if (authMethod === 'email') {
+        const em = email.trim().toLowerCase();
+        if (!em) { setErr('Please enter your email address'); setLoading(false); return; }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) { setErr('Enter a valid email address'); setLoading(false); return; }
+        const { error } = await supabase.auth.signInWithOtp({
+          email: em,
+          options: { shouldCreateUser: true },
+        });
+        if (error) throw error;
+      } else {
+        const ph = phone.trim();
+        if (!ph || ph.length < 10) { setErr('Enter a valid phone number with country code'); setLoading(false); return; }
+        const formattedPhone = ph.startsWith('+') ? ph : `+91${ph}`;
+        const { error } = await supabase.auth.signInWithOtp({ phone: formattedPhone });
+        if (error) throw error;
+      }
       setStep('otp');
       setCntdn(60);
       setDigits(Array(6).fill(''));

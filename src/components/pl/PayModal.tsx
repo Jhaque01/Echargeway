@@ -67,6 +67,28 @@ export default function PayModal({ station, user, token, onClose, onPaid }: PayM
     setSaving(false);
   };
 
+  const [chargePercent, setChargePercent] = useState(0);
+
+  useEffect(() => {
+    if (!paid) return;
+    setChargePercent(0);
+    const target = 100;
+    const duration = 4000;
+    const stepTime = 50;
+    const steps = duration / stepTime;
+    const increment = target / steps;
+    let current = 0;
+    const timer = setInterval(() => {
+      current += increment;
+      if (current >= target) {
+        current = target;
+        clearInterval(timer);
+      }
+      setChargePercent(Math.round(current));
+    }, stepTime);
+    return () => clearInterval(timer);
+  }, [paid]);
+
   if (paid) {
     return ReactDOM.createPortal(
       <div onClick={onClose} style={{
@@ -86,9 +108,34 @@ export default function PayModal({ station, user, token, onClose, onPaid }: PayM
           </div>
           <div style={{ fontWeight: 900, fontSize: 22, color: TX, marginBottom: 6 }}>Payment Confirmed!</div>
           <div style={{ color: TS, fontSize: 14, marginBottom: 6 }}>₹{amt} charged at</div>
-          <div style={{ color: GN, fontWeight: 700, fontSize: 15 }}>{station.name}</div>
+          <div style={{ color: GN, fontWeight: 700, fontSize: 15, marginBottom: 20 }}>{station.name}</div>
+
+          {/* Charging progress bar */}
+          <div style={{ marginBottom: 8, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span style={{ fontSize: 13, fontWeight: 800, color: TX, display: 'flex', alignItems: 'center', gap: 5 }}>
+              <IcBolt s={14} /> Charging
+            </span>
+            <span style={{ fontSize: 15, fontWeight: 900, color: GN }}>{chargePercent}%</span>
+          </div>
+          <div style={{
+            width: '100%', height: 18, borderRadius: 12,
+            background: S3, border: '1.5px solid ' + BD,
+            overflow: 'hidden', position: 'relative',
+          }}>
+            <div style={{
+              height: '100%', borderRadius: 12,
+              width: `${chargePercent}%`,
+              background: `linear-gradient(90deg, ${GN}, #4ade80)`,
+              boxShadow: `0 0 16px ${GG}`,
+              transition: 'width 0.15s linear',
+            }} />
+          </div>
+          <div style={{ fontSize: 11, color: TM, marginTop: 6, fontWeight: 600 }}>
+            {chargePercent < 100 ? '⚡ Charging in progress…' : '✅ Charge complete!'}
+          </div>
+
           <button className="press" onClick={onClose} style={{
-            width: '100%', marginTop: 24, padding: 14, background: GN, color: '#fff',
+            width: '100%', marginTop: 20, padding: 14, background: GN, color: '#fff',
             border: 'none', borderRadius: 13, fontWeight: 800, fontSize: 15, cursor: 'pointer',
             fontFamily: 'inherit',
           }}>Done ✓</button>

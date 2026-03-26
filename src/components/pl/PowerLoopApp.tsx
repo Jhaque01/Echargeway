@@ -98,7 +98,7 @@ function Milestones() {
 function ChargingStatusBar() {
   const [percent, setPercent] = useState(0);
   const [active, setActive] = useState(false);
-  const speed = 'fast';
+  const speed: 'slow' | 'fast' | 'rapid' = 'fast';
   const totalMin = speed === 'slow' ? 200 : speed === 'fast' ? 70 : 30;
 
   useEffect(() => {

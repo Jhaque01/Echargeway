@@ -94,6 +94,71 @@ function Milestones() {
   );
 }
 
+// Charging Status Bar for home page
+function ChargingStatusBar() {
+  const [percent, setPercent] = useState(0);
+  const [active, setActive] = useState(false);
+  const speed = 'fast' as string;
+  const totalMin = speed === 'slow' ? 200 : speed === 'fast' ? 70 : 30;
+
+  useEffect(() => {
+    // Simulate an active charging session
+    setActive(true);
+    setPercent(0);
+    let current = 0;
+    const timer = setInterval(() => {
+      current += 0.15;
+      if (current >= 100) { current = 100; clearInterval(timer); }
+      setPercent(Math.round(current));
+    }, 50);
+    return () => clearInterval(timer);
+  }, []);
+
+  const remainMin = Math.max(0, Math.round(totalMin * (1 - percent / 100)));
+  const hrs = Math.floor(remainMin / 60);
+  const mins = remainMin % 60;
+  const timeStr = hrs > 0 ? `${hrs}h ${mins}m` : `${mins} min`;
+
+  return (
+    <div style={{
+      ...CARD, padding: '16px 18px',
+      border: '1px solid rgba(34,197,94,.25)',
+      background: 'linear-gradient(135deg, rgba(34,197,94,.06), rgba(10,10,10,.9))',
+    }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div style={{ ...IBOX, width: 32, height: 32 }}><IcBolt s={16} /></div>
+          <div>
+            <div style={{ fontWeight: 800, fontSize: 13, color: TX }}>Charging Status</div>
+            <div style={{ fontSize: 10, color: GN, fontWeight: 700 }}>
+              {percent < 100 ? '● Active' : '✅ Complete'}
+            </div>
+          </div>
+        </div>
+        <div style={{ textAlign: 'right' }}>
+          <div style={{ fontWeight: 900, fontSize: 20, color: GN }}>{percent}%</div>
+          <div style={{ fontSize: 10, color: TM, fontWeight: 600 }}>
+            {percent < 100 ? `~${timeStr} left` : 'Ready!'}
+          </div>
+        </div>
+      </div>
+      <div style={{
+        width: '100%', height: 14, borderRadius: 10,
+        background: S2, border: '1px solid ' + BD,
+        overflow: 'hidden',
+      }}>
+        <div style={{
+          height: '100%', borderRadius: 10,
+          width: `${percent}%`,
+          background: `linear-gradient(90deg, ${GN}, #4ade80)`,
+          boxShadow: `0 0 12px ${GG}`,
+          transition: 'width 0.15s linear',
+        }} />
+      </div>
+    </div>
+  );
+}
+
 // Main App
 export default function PowerLoopApp() {
   const isMobile = useIsMobile();
@@ -205,6 +270,11 @@ export default function PowerLoopApp() {
 
         <div style={{ padding: '14px 16px 40px', display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div className="fu" style={{ opacity: 0 }}><ChargingCard /></div>
+
+          {/* Live charging status bar */}
+          <div className="fu" style={{ animationDelay: '.06s', opacity: 0 }}>
+            <ChargingStatusBar />
+          </div>
 
           {/* Nearest station */}
           <div className="fu" style={{ animationDelay: '.12s', opacity: 0 }}>

@@ -68,12 +68,16 @@ export default function PayModal({ station, user, token, onClose, onPaid }: PayM
   };
 
   const [chargePercent, setChargePercent] = useState(0);
+  const [chargeSpeed, setChargeSpeed] = useState<'slow' | 'fast' | 'rapid'>('fast');
+  const speedDurations = { slow: 12000, fast: 6000, rapid: 3000 };
+  const speedLabels = { slow: '🐢 Slow (3.3 kW)', fast: '⚡ Fast (22 kW)', rapid: '🚀 Rapid (50 kW)' };
+  const speedTimes = { slow: '~3h 20m', fast: '~1h 10m', rapid: '~30 min' };
 
   useEffect(() => {
     if (!paid) return;
     setChargePercent(0);
     const target = 100;
-    const duration = 4000;
+    const duration = speedDurations[chargeSpeed];
     const stepTime = 50;
     const steps = duration / stepTime;
     const increment = target / steps;
@@ -87,7 +91,7 @@ export default function PayModal({ station, user, token, onClose, onPaid }: PayM
       setChargePercent(Math.round(current));
     }, stepTime);
     return () => clearInterval(timer);
-  }, [paid]);
+  }, [paid, chargeSpeed]);
 
   if (paid) {
     return ReactDOM.createPortal(
@@ -108,7 +112,27 @@ export default function PayModal({ station, user, token, onClose, onPaid }: PayM
           </div>
           <div style={{ fontWeight: 900, fontSize: 22, color: TX, marginBottom: 6 }}>Payment Confirmed!</div>
           <div style={{ color: TS, fontSize: 14, marginBottom: 6 }}>₹{amt} charged at</div>
-          <div style={{ color: GN, fontWeight: 700, fontSize: 15, marginBottom: 20 }}>{station.name}</div>
+          <div style={{ color: GN, fontWeight: 700, fontSize: 15, marginBottom: 16 }}>{station.name}</div>
+
+          {/* Charging speed selector */}
+          <div style={{ marginBottom: 16 }}>
+            <div style={{ fontSize: 10, fontWeight: 700, color: TM, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>Charging Speed</div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 6 }}>
+              {(['slow', 'fast', 'rapid'] as const).map(s => (
+                <button key={s} onClick={() => setChargeSpeed(s)} style={{
+                  padding: '10px 6px', border: `1.5px solid ${chargeSpeed === s ? GN : BD}`,
+                  borderRadius: 12, background: chargeSpeed === s ? GD : S3,
+                  color: chargeSpeed === s ? GN : TS, fontWeight: 700, fontSize: 11,
+                  cursor: 'pointer', fontFamily: 'inherit', transition: 'all .2s',
+                  textAlign: 'center',
+                }}>
+                  <div>{s === 'slow' ? '🐢' : s === 'fast' ? '⚡' : '🚀'}</div>
+                  <div style={{ marginTop: 2, textTransform: 'capitalize' }}>{s}</div>
+                  <div style={{ fontSize: 9, color: TM, marginTop: 2 }}>{speedTimes[s]}</div>
+                </button>
+              ))}
+            </div>
+          </div>
 
           {/* Charging progress bar */}
           <div style={{ marginBottom: 8, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -131,7 +155,7 @@ export default function PayModal({ station, user, token, onClose, onPaid }: PayM
             }} />
           </div>
           <div style={{ fontSize: 11, color: TM, marginTop: 6, fontWeight: 600 }}>
-            {chargePercent < 100 ? '⚡ Charging in progress…' : '✅ Charge complete!'}
+            {chargePercent < 100 ? `⚡ Charging in progress… (${speedTimes[chargeSpeed]} est.)` : '✅ Charge complete!'}
           </div>
 
           <button className="press" onClick={onClose} style={{

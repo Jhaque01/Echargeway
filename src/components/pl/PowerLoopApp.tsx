@@ -209,6 +209,7 @@ export default function PowerLoopApp() {
           {/* Live charging status bar */}
           <div className="fu" style={{ animationDelay: '.06s', opacity: 0 }}>
             <ChargingStatusBar />
+          </div>
 
           {/* Nearest station */}
           <div className="fu" style={{ animationDelay: '.12s', opacity: 0 }}>

@@ -168,6 +168,28 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
           <CloseBtn onClick={onClose} />
         </div>
 
+        {step === 'choose' && (
+          <>
+            <p style={{ color: TS, fontSize: 13.5, lineHeight: 1.7, marginBottom: 18 }}>
+              Sign in or create an account — no password needed.
+            </p>
+            <button className="press" onClick={() => { setAuthMethod('email'); setStep('email'); setErr(''); }} style={{
+              width: '100%', padding: '15px', background: S2, color: TX, border: `1.5px solid ${BD}`,
+              borderRadius: 13, fontWeight: 700, fontSize: 14, cursor: 'pointer', marginBottom: 10,
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, fontFamily: 'inherit',
+            }}>
+              <IcMail /> Continue with Email
+            </button>
+            <button className="press" onClick={() => { setAuthMethod('phone'); setStep('phone'); setErr(''); }} style={{
+              width: '100%', padding: '15px', background: S2, color: TX, border: `1.5px solid ${BD}`,
+              borderRadius: 13, fontWeight: 700, fontSize: 14, cursor: 'pointer', marginBottom: 10,
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, fontFamily: 'inherit',
+            }}>
+              📱 Continue with Phone
+            </button>
+          </>
+        )}
+
         {step === 'email' && (
           <>
             <p style={{ color: TS, fontSize: 13.5, lineHeight: 1.7, marginBottom: 16 }}>
@@ -185,6 +207,42 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
             }}>
               {loading ? <><Spinner sz={20} col="#fff" />Sending OTP…</> : 'Send OTP →'}
             </button>
+            <button onClick={() => { setStep('choose'); setErr(''); }} style={{
+              width: '100%', marginTop: 10, padding: '10px', background: 'transparent',
+              border: `1px solid ${BD}`, color: TS, borderRadius: 11, fontWeight: 600, fontSize: 13,
+              cursor: 'pointer', fontFamily: 'inherit',
+            }}>← Back</button>
+          </>
+        )}
+
+        {step === 'phone' && (
+          <>
+            <p style={{ color: TS, fontSize: 13.5, lineHeight: 1.7, marginBottom: 16 }}>
+              Enter your mobile number. We'll send a 6-digit OTP via SMS.
+            </p>
+            {lbl('Phone Number')}
+            <div style={{ display: 'flex', gap: 8, marginBottom: 10 }}>
+              <div style={{
+                background: S3, border: `1.5px solid ${BD}`, borderRadius: 12,
+                padding: '12px', color: GN, fontWeight: 800, fontSize: 15, minWidth: 56, textAlign: 'center',
+              }}>+91</div>
+              <DInput ph="9876543210" type="tel" value={phone}
+                onChange={e => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))} autoFocus />
+            </div>
+            <button className="press" onClick={() => sendOtp(false)} disabled={loading} style={{
+              width: '100%', padding: '14px', background: GN, color: '#fff', border: 'none',
+              borderRadius: 13, fontWeight: 800, fontSize: 15, cursor: 'pointer',
+              opacity: loading ? 0.7 : 1, marginTop: 4,
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
+              boxShadow: loading ? 'none' : `0 0 24px ${GG}`, fontFamily: 'inherit',
+            }}>
+              {loading ? <><Spinner sz={20} col="#fff" />Sending OTP…</> : 'Send OTP →'}
+            </button>
+            <button onClick={() => { setStep('choose'); setErr(''); }} style={{
+              width: '100%', marginTop: 10, padding: '10px', background: 'transparent',
+              border: `1px solid ${BD}`, color: TS, borderRadius: 11, fontWeight: 600, fontSize: 13,
+              cursor: 'pointer', fontFamily: 'inherit',
+            }}>← Back</button>
           </>
         )}
 
@@ -192,12 +250,12 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
           <>
             <div style={{ textAlign: 'center', marginBottom: 20 }}>
               <div style={{ fontWeight: 800, fontSize: 17, color: TX, marginBottom: 5 }}>Enter the 6-digit OTP</div>
-              <div style={{ fontSize: 13, color: TS }}>Sent to <span style={{ color: GN, fontWeight: 700 }}>{email}</span></div>
+              <div style={{ fontSize: 13, color: TS }}>Sent to <span style={{ color: GN, fontWeight: 700 }}>{authMethod === 'email' ? email : `+91 ${phone}`}</span></div>
               <div style={{
                 background: GD, border: '1px solid rgba(34,197,94,.2)', borderRadius: 9,
                 padding: '7px 12px', marginTop: 10, color: GN, fontSize: 12, fontWeight: 700,
               }}>
-                📧 Check your email inbox for the OTP code
+                {authMethod === 'email' ? '📧 Check your email inbox for the OTP code' : '📱 Check your SMS for the OTP code'}
               </div>
             </div>
 
@@ -241,11 +299,11 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
               }
             </div>
 
-            <button onClick={() => { setStep('email'); setDigits(Array(6).fill('')); setErr(''); setCntdn(0); }} style={{
+            <button onClick={() => { setStep(authMethod === 'email' ? 'email' : 'phone'); setDigits(Array(6).fill('')); setErr(''); setCntdn(0); }} style={{
               width: '100%', marginTop: 10, padding: '10px', background: 'transparent',
               border: `1px solid ${BD}`, color: TS, borderRadius: 11, fontWeight: 600, fontSize: 13,
               cursor: 'pointer', fontFamily: 'inherit',
-            }}>← Change Email</button>
+            }}>← Change {authMethod === 'email' ? 'Email' : 'Phone'}</button>
           </>
         )}
 

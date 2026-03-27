@@ -212,7 +212,7 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
             </div>
 
             {methodBtn('Continue with Email', <IcMail />, () => { setAuthMethod('email'); setStep('email'); setErr(''); })}
-            {methodBtn('Continue with Phone', <span>📱</span>, () => { setAuthMethod('phone'); setStep('phone'); setErr(''); })}
+            {methodBtn('Continue with Phone', <span></span>, () => { setAuthMethod('phone'); setStep('phone'); setErr(''); })}
           </>
         )}
 

@@ -7,7 +7,7 @@ import {
 } from '@/lib/powerloop';
 import { Avatar, Spinner, IcBolt, IcCar, IcNav, IcRup, IcLoc } from '@/components/pl/Shared';
 import PayModal from '@/components/pl/PayModal';
-import upiLogo from '@/assets/upi-logo.png';
+import upiLogo from '@/assets/upi-official.jpeg';
 
 interface MapScreenProps {
   onBack: () => void;
@@ -44,7 +44,7 @@ export default function MapScreen({ onBack, user, token, onHistAdd }: MapScreenP
         className: '',
         iconSize: [38, 46],
         iconAnchor: [19, 46],
-        html: `<div style="width:34px;height:34px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:${col};border:2.5px solid ${bord};display:flex;align-items:center;justify-content:center;box-shadow:${glow};cursor:pointer"><span style="transform:rotate(45deg);color:#fff;font-size:9px;font-weight:900">PL</span></div>`,
+        html: `<div style="width:34px;height:34px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:${col};border:2.5px solid ${bord};display:flex;align-items:center;justify-content:center;box-shadow:${glow};cursor:pointer"><span style="transform:rotate(45deg);color:#fff;font-size:9px;font-weight:900">CW</span></div>`,
       });
       const mk = L.marker([s.lat, s.lng], { icon }).addTo(map);
       mk.on('click', () => {
@@ -284,7 +284,7 @@ export default function MapScreen({ onBack, user, token, onHistAdd }: MapScreenP
                 boxShadow: '0 0 28px rgba(34,197,94,.55)',
                 animation: 'glow 3s ease infinite', fontFamily: 'inherit',
               }}>
-                <img src={upiLogo} alt="UPI" style={{ height: 18, mixBlendMode: 'screen', filter: 'brightness(2)' }} /> Pay ₹{sessPrice(sel.price)} via UPI
+                <img src={upiLogo} alt="UPI" style={{ height: 22, objectFit: 'contain' }} /> Pay ₹{sessPrice(sel.price)} via UPI
               </button>
             </div>
           </div>

@@ -44,7 +44,7 @@ export default function MapScreen({ onBack, user, token, onHistAdd }: MapScreenP
         className: '',
         iconSize: [38, 46],
         iconAnchor: [19, 46],
-        html: `<div style="width:34px;height:34px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:${col};border:2.5px solid ${bord};display:flex;align-items:center;justify-content:center;box-shadow:${glow};cursor:pointer"><span style="transform:rotate(45deg);color:#fff;font-size:9px;font-weight:900">PL</span></div>`,
+        html: `<div style="width:34px;height:34px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:${col};border:2.5px solid ${bord};display:flex;align-items:center;justify-content:center;box-shadow:${glow};cursor:pointer"><span style="transform:rotate(45deg);color:#fff;font-size:9px;font-weight:900">CW</span></div>`,
       });
       const mk = L.marker([s.lat, s.lng], { icon }).addTo(map);
       mk.on('click', () => {

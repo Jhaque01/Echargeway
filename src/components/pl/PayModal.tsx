@@ -6,7 +6,7 @@ import { Spinner, CloseBtn, IcBolt, IcRup, IcOk } from '@/components/pl/Shared';
 import upiLogo from '@/assets/upi-official.jpeg';
 
 const UpiIcon = ({ size = 24 }: { size?: number }) => (
-  <img src={upiLogo} alt="UPI" style={{ height: size, mixBlendMode: 'screen', filter: 'brightness(1.5)' }} />
+  <img src={upiLogo} alt="UPI" style={{ height: size, objectFit: 'contain' }} />
 );
 
 interface PayModalProps {

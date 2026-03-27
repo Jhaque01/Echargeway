@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { lovable } from '@/integrations/lovable/index';
 import { GN, GG, S2, S3, BD, TX, TS, TM, GD } from '@/lib/powerloop';
-import { Spinner, CloseBtn, DInput, ErrBanner, IcUser, IcMail, IcOk } from '@/components/pl/Shared';
+import { Spinner, CloseBtn, DInput, ErrBanner, IcUser, IcMail, IcOk, GoogleG } from '@/components/pl/Shared';
 
 interface AuthModalProps {
   onClose: () => void;
@@ -19,7 +20,6 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState('');
   const [shake, setShake] = useState(false);
-  const [isNewUser, setIsNewUser] = useState(false);
   const boxRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   useEffect(() => {
@@ -33,6 +33,19 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
     document.body.style.overflow = 'hidden';
     return () => { document.body.style.overflow = orig; };
   }, []);
+
+  const handleGoogleSignIn = async () => {
+    setLoading(true); setErr('');
+    try {
+      const result = await lovable.auth.signInWithOAuth('google', {
+        redirect_uri: window.location.origin,
+      });
+      if (result.error) throw result.error;
+    } catch (e: any) {
+      setErr(e.message || 'Google sign-in failed');
+    }
+    setLoading(false);
+  };
 
   const sendOtp = async (resend = false) => {
     setLoading(true); setErr('');
@@ -98,7 +111,6 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
       const { data, error } = await supabase.auth.verifyOtp(otpPayload);
       if (error) throw error;
       if (data.session && data.user) {
-        // Check if profile has a name set
         const { data: profile } = await supabase
           .from('profiles')
           .select('*')
@@ -106,11 +118,8 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
           .single();
         
         if (profile && profile.name) {
-          // Existing user with profile
           onSuccess(profile, data.session);
         } else {
-          // New user — need to set name
-          setIsNewUser(true);
           setStep('register');
         }
       }
@@ -129,16 +138,18 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('Not authenticated');
 
-      // Update profile with name
+      const updateData: any = { name: name.trim() };
+      if (authMethod === 'email') updateData.email = email.trim().toLowerCase();
+      if (authMethod === 'phone') updateData.phone = phone.trim().startsWith('+') ? phone.trim() : `+91${phone.trim()}`;
+
       const { data: profile, error } = await supabase
         .from('profiles')
-        .update({ name: name.trim(), email: email.trim().toLowerCase() })
+        .update(updateData)
         .eq('id', user.id)
         .select()
         .single();
       if (error) throw error;
 
-      // Update user metadata
       await supabase.auth.updateUser({ data: { name: name.trim() } });
 
       const { data: { session } } = await supabase.auth.getSession();
@@ -149,6 +160,16 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
 
   const lbl = (t: string) => (
     <div style={{ fontSize: 10, fontWeight: 700, color: TM, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 6 }}>{t}</div>
+  );
+
+  const methodBtn = (label: string, icon: React.ReactNode, onClick: () => void) => (
+    <button className="press" onClick={onClick} style={{
+      width: '100%', padding: '15px', background: S2, color: TX, border: `1.5px solid ${BD}`,
+      borderRadius: 13, fontWeight: 700, fontSize: 14, cursor: 'pointer', marginBottom: 10,
+      display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, fontFamily: 'inherit',
+    }}>
+      {icon} {label}
+    </button>
   );
 
   return (
@@ -173,27 +194,32 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
             <p style={{ color: TS, fontSize: 13.5, lineHeight: 1.7, marginBottom: 18 }}>
               Sign in or create an account — no password needed.
             </p>
-            <button className="press" onClick={() => { setAuthMethod('email'); setStep('email'); setErr(''); }} style={{
-              width: '100%', padding: '15px', background: S2, color: TX, border: `1.5px solid ${BD}`,
+
+            {/* Google Sign-In */}
+            <button className="press" onClick={handleGoogleSignIn} disabled={loading} style={{
+              width: '100%', padding: '15px', background: '#fff', color: '#222', border: 'none',
               borderRadius: 13, fontWeight: 700, fontSize: 14, cursor: 'pointer', marginBottom: 10,
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, fontFamily: 'inherit',
+              opacity: loading ? 0.7 : 1,
             }}>
-              <IcMail /> Continue with Email
+              {loading ? <Spinner sz={18} col="#222" /> : <GoogleG s={20} />} Continue with Google
             </button>
-            <button className="press" onClick={() => { setAuthMethod('phone'); setStep('phone'); setErr(''); }} style={{
-              width: '100%', padding: '15px', background: S2, color: TX, border: `1.5px solid ${BD}`,
-              borderRadius: 13, fontWeight: 700, fontSize: 14, cursor: 'pointer', marginBottom: 10,
-              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, fontFamily: 'inherit',
-            }}>
-              📱 Continue with Phone
-            </button>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, margin: '6px 0 14px' }}>
+              <div style={{ flex: 1, height: 1, background: BD }} />
+              <span style={{ fontSize: 11, color: TM, fontWeight: 600 }}>or</span>
+              <div style={{ flex: 1, height: 1, background: BD }} />
+            </div>
+
+            {methodBtn('Continue with Email', <IcMail />, () => { setAuthMethod('email'); setStep('email'); setErr(''); })}
+            {methodBtn('Continue with Phone', <span>📱</span>, () => { setAuthMethod('phone'); setStep('phone'); setErr(''); })}
           </>
         )}
 
         {step === 'email' && (
           <>
             <p style={{ color: TS, fontSize: 13.5, lineHeight: 1.7, marginBottom: 16 }}>
-              Enter your email address. We'll send a 6-digit OTP — no password needed.
+              Enter your email. We'll send a 6-digit OTP — works for both new and existing accounts.
             </p>
             {lbl('Email Address')}
             <DInput ph="you@email.com" type="email" value={email}
@@ -218,7 +244,7 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
         {step === 'phone' && (
           <>
             <p style={{ color: TS, fontSize: 13.5, lineHeight: 1.7, marginBottom: 16 }}>
-              Enter your mobile number. We'll send a 6-digit OTP via SMS.
+              Enter your mobile number. Works for both new and existing accounts.
             </p>
             {lbl('Phone Number')}
             <div style={{ display: 'flex', gap: 8, marginBottom: 10 }}>
@@ -318,6 +344,26 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
             </div>
             {lbl('Your Name *')}
             <DInput ph="Full Name" value={name} onChange={e => setName(e.target.value)} icon={<IcUser />} autoFocus />
+            
+            {/* Name initial preview */}
+            {name.trim() && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
+                <div style={{
+                  width: 42, height: 42, borderRadius: '50%',
+                  background: `linear-gradient(135deg,${GN},#16A34A)`,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontWeight: 900, fontSize: 18, color: '#fff',
+                  boxShadow: `0 0 16px ${GG}`, border: '2.5px solid rgba(34,197,94,.4)',
+                }}>
+                  {name.trim()[0].toUpperCase()}
+                </div>
+                <div>
+                  <div style={{ fontWeight: 700, fontSize: 14, color: TX }}>{name.trim()}</div>
+                  <div style={{ fontSize: 11, color: TM }}>Your profile avatar</div>
+                </div>
+              </div>
+            )}
+
             <button className="press" onClick={doRegister} disabled={loading} style={{
               width: '100%', padding: '14px', background: GN, color: '#fff', border: 'none',
               borderRadius: 13, fontWeight: 800, fontSize: 15, cursor: 'pointer',

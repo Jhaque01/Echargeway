@@ -191,8 +191,8 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
 
         {step === 'choose' && (
           <>
-            <p style={{ color: TS, fontSize: 13.5, lineHeight: 1.7, marginBottom: 18 }}>
-              Sign in or create an account — no password needed.
+            <p className="text-center" style={{ color: TS, fontSize: 13.5, lineHeight: 1.7, marginBottom: 18 }}>
+              Sign in or create an account
             </p>
 
             {/* Google Sign-In */}

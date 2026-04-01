@@ -361,13 +361,18 @@ export default function PowerLoopApp() {
 
           <div className="fu" style={{ animationDelay: '.22s', opacity: 0 }}><Milestones /></div>
 
+          {/* About Section */}
+          <div className="fu" style={{ animationDelay: '.28s', opacity: 0 }}>
+            <AboutSection />
+          </div>
+
           {/* Footer */}
           <div style={{ textAlign: 'center', paddingTop: 20, borderTop: `1px solid ${BD}`, marginTop: 4 }}>
             <div style={{ fontWeight: 900, fontSize: 19, color: TX, marginBottom: 7 }}>
               e<span style={{ color: GN, textShadow: `0 0 16px ${GG}` }}>Charge</span>Way
             </div>
             <div style={{ display: 'flex', justifyContent: 'center', gap: 18, marginBottom: 10 }}>
-              {['About', 'Careers', 'Contact'].map((l) =>
+              {['Careers', 'Contact'].map((l) =>
               <span key={l} style={{ fontSize: 12.5, color: TM, cursor: 'pointer', fontWeight: 600 }}>{l}</span>
               )}
             </div>

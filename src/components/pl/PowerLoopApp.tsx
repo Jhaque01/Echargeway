@@ -431,6 +431,7 @@ export default function PowerLoopApp() {
       {showProf && user &&
       <ProfileModal user={user} session={session} onClose={() => setShowProf(false)} onUpdate={onUpdate} onLogout={onLogout} />
       }
+      {showAbout && <AboutSection onClose={() => setShowAbout(false)} />}
     </div>);
 
 }

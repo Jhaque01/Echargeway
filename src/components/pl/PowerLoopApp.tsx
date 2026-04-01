@@ -145,7 +145,7 @@ function AboutSection({ onClose }: { onClose: () => void }) {
             </div>
             <div style={{ fontSize: 14, color: TM, lineHeight: 1.8 }}>
               <p style={{ marginBottom: 12 }}>EChargeWay started with a simple idea — make EV charging easy and stress-free.</p>
-              <p style={{ marginBottom: 12 }}>The journey began in January 2026, when Jiaul set out to solve a real problem faced by electric vehicle users: finding reliable charging at the right time and place.</p>
+              <p style={{ marginBottom: 12 }}>The journey began in January 2026, when Jiaul Haque set out to solve a real problem faced by electric vehicle users: finding reliable charging at the right time and place.</p>
               <p style={{ marginBottom: 12 }}>What started as a small project quickly turned into a focused mission. The goal was not just to build a platform, but to create a practical solution that people can use every day.</p>
               <p style={{ marginBottom: 12 }}>From initial prototypes to a working platform, EChargeWay has grown step by step with a strong focus on usability and real-world needs.</p>
               <p>Today, EChargeWay continues to evolve with one clear vision — to support the shift to clean mobility by making EV charging simple, reliable, and accessible for everyone.</p>

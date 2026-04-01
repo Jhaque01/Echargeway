@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import ecwLogo from '@/assets/echargeway-logo.png';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { supabase } from '@/integrations/supabase/client';
 import {

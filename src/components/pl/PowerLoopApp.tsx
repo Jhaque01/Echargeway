@@ -94,52 +94,65 @@ function Milestones() {
   );
 }
 
-// About Section
-function AboutSection() {
+// About Modal
+function AboutSection({ onClose }: { onClose: () => void }) {
   const [showStory, setShowStory] = useState(false);
   return (
-    <div style={{ ...CARD, padding: '22px 20px' }}>
-      <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: GN, marginBottom: 10 }}>ABOUT US</div>
-      <div style={{ fontSize: 14, color: TM, lineHeight: 1.7, marginBottom: 14 }}>
-        EChargeWay is a smart platform built to make electric vehicle charging simple, reliable, and accessible. We help EV users find nearby charging points, check availability, and plan their journeys with confidence.
-      </div>
-      <div style={{ fontSize: 14, color: TM, lineHeight: 1.7, marginBottom: 14 }}>
-        Our goal is to remove the stress of charging by giving users clear, real-time information. As electric vehicles grow, access to charging must keep up. We focus on solving this gap with a user-first approach.
-      </div>
-      <div style={{ fontSize: 14, color: TM, lineHeight: 1.7, marginBottom: 14 }}>
-        The platform is designed for both individual drivers and fleet operators. Whether you need a quick charge or want to manage multiple vehicles, EChargeWay gives you the tools to stay in control.
-      </div>
-      <div style={{ fontSize: 14, color: TM, lineHeight: 1.7, marginBottom: 16 }}>
-        We believe clean mobility should be easy to use. By combining technology with practical solutions, we support the shift toward a more sustainable future.
-      </div>
+    <div style={{
+      position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(0,0,0,.7)',
+      backdropFilter: 'blur(10px)', display: 'flex', justifyContent: 'center', alignItems: 'flex-start',
+      overflowY: 'auto', padding: '40px 16px',
+    }} onClick={onClose}>
+      <div style={{
+        width: '100%', maxWidth: 520, background: S1, borderRadius: 22,
+        border: `1px solid ${BD}`, padding: '28px 22px', position: 'relative',
+      }} onClick={e => e.stopPropagation()}>
+        <button onClick={onClose} style={{
+          position: 'absolute', top: 14, right: 16, background: 'none', border: 'none',
+          color: TM, fontSize: 22, cursor: 'pointer', fontFamily: 'inherit',
+        }}>✕</button>
 
-      <button className="press" onClick={() => setShowStory(!showStory)} style={{
-        background: showStory ? S2 : GN, color: showStory ? GN : '#fff', border: showStory ? `1px solid ${GN}` : 'none',
-        borderRadius: 50, padding: '10px 22px', fontWeight: 700, fontSize: 13,
-        cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8,
-        boxShadow: showStory ? 'none' : `0 0 14px ${GG}`, fontFamily: 'inherit', transition: 'all .2s',
-      }}>
-        {showStory ? '▲ Close' : '▼ Our Story'}
-      </button>
-
-      {showStory && (
-        <div style={{
-          marginTop: 18, padding: '20px', borderRadius: 16,
-          background: 'linear-gradient(135deg, rgba(34,197,94,.06), rgba(10,10,10,.9))',
-          border: '1px solid rgba(34,197,94,.2)',
-        }}>
-          <div style={{ fontWeight: 900, fontSize: 20, color: TX, marginBottom: 14 }}>
-            Our <span style={{ color: GN, textShadow: `0 0 14px ${GG}` }}>Story</span>
-          </div>
-          <div style={{ fontSize: 14, color: TM, lineHeight: 1.8 }}>
-            <p style={{ marginBottom: 12 }}>EChargeWay started with a simple idea — make EV charging easy and stress-free.</p>
-            <p style={{ marginBottom: 12 }}>The journey began in January 2026, when Jiaul set out to solve a real problem faced by electric vehicle users: finding reliable charging at the right time and place. Early on, it was clear that the lack of accessible and well-managed charging points was slowing down EV adoption.</p>
-            <p style={{ marginBottom: 12 }}>What started as a small project quickly turned into a focused mission. The goal was not just to build a platform, but to create a practical solution that people can use every day.</p>
-            <p style={{ marginBottom: 12 }}>From initial prototypes to a working platform, EChargeWay has grown step by step with a strong focus on usability and real-world needs. Each feature is designed to save time, reduce uncertainty, and give users full control over their charging experience.</p>
-            <p>Today, EChargeWay continues to evolve with one clear vision — to support the shift to clean mobility by making EV charging simple, reliable, and accessible for everyone.</p>
-          </div>
+        <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: GN, marginBottom: 10 }}>ABOUT US</div>
+        <div style={{ fontWeight: 900, fontSize: 22, color: TX, marginBottom: 16 }}>
+          e<span style={{ color: GN, textShadow: `0 0 14px ${GG}` }}>Charge</span>Way
         </div>
-      )}
+        {[
+          'EChargeWay is a smart platform built to make electric vehicle charging simple, reliable, and accessible. We help EV users find nearby charging points, check availability, and plan their journeys with confidence.',
+          'Our goal is to remove the stress of charging by giving users clear, real-time information. As electric vehicles grow, access to charging must keep up. We focus on solving this gap with a user-first approach.',
+          'The platform is designed for both individual drivers and fleet operators. Whether you need a quick charge or want to manage multiple vehicles, EChargeWay gives you the tools to stay in control.',
+          'We believe clean mobility should be easy to use. By combining technology with practical solutions, we support the shift toward a more sustainable future.',
+        ].map((t, i) => (
+          <div key={i} style={{ fontSize: 14, color: TM, lineHeight: 1.7, marginBottom: 14 }}>{t}</div>
+        ))}
+
+        <button className="press" onClick={() => setShowStory(!showStory)} style={{
+          background: showStory ? S2 : GN, color: showStory ? GN : '#fff', border: showStory ? `1px solid ${GN}` : 'none',
+          borderRadius: 50, padding: '10px 22px', fontWeight: 700, fontSize: 13,
+          cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8,
+          boxShadow: showStory ? 'none' : `0 0 14px ${GG}`, fontFamily: 'inherit', transition: 'all .2s',
+        }}>
+          {showStory ? '▲ Close Story' : '▼ Our Story'}
+        </button>
+
+        {showStory && (
+          <div style={{
+            marginTop: 18, padding: '20px', borderRadius: 16,
+            background: 'linear-gradient(135deg, rgba(34,197,94,.06), rgba(10,10,10,.9))',
+            border: '1px solid rgba(34,197,94,.2)',
+          }}>
+            <div style={{ fontWeight: 900, fontSize: 20, color: TX, marginBottom: 14 }}>
+              Our <span style={{ color: GN, textShadow: `0 0 14px ${GG}` }}>Story</span>
+            </div>
+            <div style={{ fontSize: 14, color: TM, lineHeight: 1.8 }}>
+              <p style={{ marginBottom: 12 }}>EChargeWay started with a simple idea — make EV charging easy and stress-free.</p>
+              <p style={{ marginBottom: 12 }}>The journey began in January 2026, when Jiaul set out to solve a real problem faced by electric vehicle users: finding reliable charging at the right time and place.</p>
+              <p style={{ marginBottom: 12 }}>What started as a small project quickly turned into a focused mission. The goal was not just to build a platform, but to create a practical solution that people can use every day.</p>
+              <p style={{ marginBottom: 12 }}>From initial prototypes to a working platform, EChargeWay has grown step by step with a strong focus on usability and real-world needs.</p>
+              <p>Today, EChargeWay continues to evolve with one clear vision — to support the shift to clean mobility by making EV charging simple, reliable, and accessible for everyone.</p>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

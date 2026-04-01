@@ -356,7 +356,8 @@ export default function PowerLoopApp() {
           padding: '16px 18px 12px', background: 'rgba(8,8,8,.97)', backdropFilter: 'blur(20px)',
           position: 'sticky', top: 0, zIndex: 10, borderBottom: `1px solid ${BD}`
         }}>
-          <div style={{ fontWeight: 900, fontSize: 22, color: TX, letterSpacing: -.5 }}>
+          <div style={{ fontWeight: 900, fontSize: 22, color: TX, letterSpacing: -.5, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <img src={ecwLogo} alt="eChargeWay logo" style={{ height: 32, width: 32, objectFit: 'contain' }} />
             e<span style={{ color: GN, textShadow: `0 0 22px ${GG}` }}>Charge</span>Way
           </div>
           {user ?

@@ -273,13 +273,11 @@ export default function PayModal({ station, user, token, onClose, onPaid }: PayM
                       {/* Company name overlay in center */}
                       <div style={{
                         position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)',
-                        background: '#fff', borderRadius: 8, padding: '4px 8px',
+                        background: '#fff', borderRadius: 8, padding: '3px',
                         boxShadow: '0 2px 8px rgba(0,0,0,.15)',
-                        display: 'flex', alignItems: 'center', gap: 3,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
                       }}>
-                        <span style={{ fontSize: 9, fontWeight: 900, color: '#111', letterSpacing: .3 }}>e</span>
-                        <span style={{ fontSize: 9, fontWeight: 900, color: GN, letterSpacing: .3 }}>Charge</span>
-                        <span style={{ fontSize: 9, fontWeight: 900, color: '#111', letterSpacing: .3 }}>Way</span>
+                        <img src={ecwLogo} alt="eChargeWay" style={{ width: 28, height: 28, objectFit: 'contain' }} />
                       </div>
                     </div>
                   ) : (

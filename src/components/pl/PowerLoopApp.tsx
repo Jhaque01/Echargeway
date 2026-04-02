@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ecwLogo from '@/assets/echargeway-logo.png';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { supabase } from '@/integrations/supabase/client';
@@ -10,7 +11,7 @@ import {
 import { Avatar, IcBolt, IcPin, IcNav, IcUser, IcSta, IcPeo, IcCity } from '@/components/pl/Shared';
 import AuthModal from '@/components/pl/AuthModal';
 import ProfileModal from '@/components/pl/ProfileModal';
-import MapScreen from '@/components/pl/MapScreen';
+import SiteFooter from '@/components/pl/SiteFooter';
 
 // Counter component
 function Counter({ target, suffix }: {target: number;suffix?: string;}) {

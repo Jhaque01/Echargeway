@@ -17,7 +17,7 @@ export default function SignInPage() {
     <div style={{ background: BG, minHeight: '100vh' }}>
       <AuthModal
         onClose={() => navigate('/home')}
-        onSuccess={() => navigate('/home', { replace: true })}
+        onSuccess={(_user: any, _session: any) => navigate('/home', { replace: true })}
       />
     </div>
   );

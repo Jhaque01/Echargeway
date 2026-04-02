@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { sessPrice, makeQrUrl, makeDeepLink, UPI_ID, GN, GG, GD, S1, S2, S3, BD, BM, TX, TS, TM, RD, RM, SMCARD, Station } from '@/lib/powerloop';
 import { Spinner, CloseBtn, IcBolt, IcRup, IcOk } from '@/components/pl/Shared';
 import upiLogo from '@/assets/upi-official.jpeg';
+import ecwLogo from '@/assets/echargeway-logo.png';
 
 const UpiIcon = ({ size = 24 }: { size?: number }) => (
   <img src={upiLogo} alt="UPI" style={{ height: size, objectFit: 'contain' }} />

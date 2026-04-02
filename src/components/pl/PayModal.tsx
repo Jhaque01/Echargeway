@@ -175,18 +175,18 @@ export default function PayModal({ station, user, token, onClose, onPaid }: PayM
     );
   }
 
-  const ScanIcon = () => (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={GN} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+  const ScanIcon = ({ color = GN }: { color?: string }) => (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
       <path d="M3 7V5a2 2 0 0 1 2-2h2" /><path d="M17 3h2a2 2 0 0 1 2 2v2" />
       <path d="M21 17v2a2 2 0 0 1-2 2h-2" /><path d="M7 21H5a2 2 0 0 1-2-2v-2" />
       <line x1="7" y1="12" x2="17" y2="12" />
     </svg>
   );
 
-  const tabs: { id: PayTab; label: string; icon: React.ReactNode }[] = [
-    { id: 'qr', label: 'Scan QR', icon: <ScanIcon /> },
-    { id: 'upiid', label: 'UPI ID', icon: <UpiIcon size={14} /> },
-    { id: 'app', label: 'UPI App', icon: null },
+  const tabs: { id: PayTab; label: string; icon: (active: boolean) => React.ReactNode }[] = [
+    { id: 'qr', label: 'Scan QR', icon: (active) => <ScanIcon color={active ? '#000' : GN} /> },
+    { id: 'upiid', label: 'UPI ID', icon: () => <UpiIcon size={14} /> },
+    { id: 'app', label: 'UPI App', icon: () => null },
   ];
 
   return ReactDOM.createPortal(
@@ -236,11 +236,11 @@ export default function PayModal({ station, user, token, onClose, onPaid }: PayM
             <button key={t.id} onClick={() => setTab(t.id)} style={{
               padding: '9px 4px', border: 'none', borderRadius: 11, fontWeight: 700, fontSize: 12,
               cursor: 'pointer', background: tab === t.id ? GN : 'transparent',
-              color: tab === t.id ? '#fff' : TS, transition: 'all .2s',
+              color: tab === t.id ? '#000' : TS, transition: 'all .2s',
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4,
               fontFamily: 'inherit',
             }}>
-              {t.icon} {t.label}
+              {t.icon(tab === t.id)} {t.label}
             </button>
           ))}
         </div>

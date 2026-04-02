@@ -309,32 +309,30 @@ export default function PayModal({ station, user, token, onClose, onPaid }: PayM
         {tab === 'upiid' && (
           <div style={{ marginBottom: 16 }}>
             <div style={{ fontSize: 11, fontWeight: 700, color: TM, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>
-              Send ₹{amt || '0'} to this UPI ID
+              Enter your UPI ID to pay ₹{amt || '0'}
             </div>
             <div style={{
-              background: S2, border: '1.5px solid ' + BM, borderRadius: 14, padding: '16px',
-              display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10,
+              background: S2, border: '1.5px solid ' + BM, borderRadius: 14, padding: '14px',
+              display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12,
             }}>
-              <div>
-                <div style={{ fontWeight: 900, fontSize: 18, color: GN, letterSpacing: .5 }}>{UPI_ID}</div>
-                <div style={{ fontSize: 12, color: TS, marginTop: 4 }}>eChargeWay</div>
-              </div>
-              <button onClick={copyUpiId} style={{
-                background: copied ? GD : S3, border: '1px solid ' + (copied ? GN : BD),
-                borderRadius: 10, padding: '8px 14px', cursor: 'pointer',
-                fontWeight: 700, fontSize: 12, color: copied ? GN : TX,
-                transition: 'all .2s', fontFamily: 'inherit',
-                display: 'flex', alignItems: 'center', gap: 5,
-              }}>
-                {copied ? <><IcOk s={12} c={GN} /> Copied</> : '📋 Copy'}
-              </button>
+              <UpiIcon size={20} />
+              <input
+                type="text"
+                placeholder="yourname@upi"
+                value={userUpiId}
+                onChange={e => setUserUpiId(e.target.value)}
+                style={{
+                  flex: 1, background: 'transparent', border: 'none', outline: 'none',
+                  color: TX, fontSize: 16, fontWeight: 700, fontFamily: 'inherit',
+                }}
+              />
             </div>
             <div style={{
-              background: GD, borderRadius: 12, padding: '12px 14px', marginTop: 12,
-              border: '1px solid rgba(34,197,94,.15)',
+              background: GD, borderRadius: 12, padding: '12px 14px',
+              border: '1px solid rgba(15,255,80,.15)',
             }}>
               <div style={{ fontSize: 12, color: GN, fontWeight: 600, lineHeight: 1.5 }}>
-                💡 Steps: Open any UPI app → Send Money → Enter UPI ID → Enter ₹{amt || '0'} → Pay
+                💡 Enter your UPI ID (e.g. name@paytm, name@okaxis) and click "I've Paid" to confirm payment.
               </div>
             </div>
           </div>

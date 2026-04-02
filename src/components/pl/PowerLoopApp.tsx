@@ -357,9 +357,15 @@ export default function PowerLoopApp() {
           padding: '16px 18px 12px', background: 'rgba(8,8,8,.97)', backdropFilter: 'blur(20px)',
           position: 'sticky', top: 0, zIndex: 10, borderBottom: `1px solid ${BD}`
         }}>
-          <div style={{ fontWeight: 900, fontSize: 22, color: TX, letterSpacing: -.5, display: 'flex', alignItems: 'center', gap: 8 }}>
-            <img src={ecwLogo} alt="eChargeWay logo" style={{ height: 32, width: 32, objectFit: 'contain' }} />
-            e<span style={{ color: GN, textShadow: `0 0 22px ${GG}` }}>Charge</span>Way
+          <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+            <div onClick={() => navigate('/home')} style={{ fontWeight: 900, fontSize: 22, color: TX, letterSpacing: -.5, display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
+              <img src={ecwLogo} alt="eChargeWay logo" style={{ height: 32, width: 32, objectFit: 'contain' }} />
+              e<span style={{ color: GN, textShadow: `0 0 22px ${GG}` }}>Charge</span>Way
+            </div>
+            <nav style={{ display: 'flex', gap: 16 }}>
+              <span onClick={() => navigate('/about')} style={{ fontSize: 13, color: TS, fontWeight: 600, cursor: 'pointer' }}>About</span>
+              <span onClick={() => navigate('/station')} style={{ fontSize: 13, color: TS, fontWeight: 600, cursor: 'pointer' }}>Find Chargers</span>
+            </nav>
           </div>
           {user ?
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -370,12 +376,12 @@ export default function PowerLoopApp() {
               <Avatar name={user.name} img={user.avatar_url} size={38} onClick={() => setShowProf(true)} />
             </div> :
 
-          <button className="press" onClick={() => setShowAuth(true)} style={{
-            background: GN, color: '#fff', border: 'none', borderRadius: 50, padding: '9px 18px',
+          <button className="press" onClick={() => navigate('/signin')} style={{
+            background: GN, color: '#000', border: 'none', borderRadius: 50, padding: '9px 18px',
             fontWeight: 700, fontSize: 13, cursor: 'pointer', display: 'flex', alignItems: 'center',
             gap: 7, boxShadow: `0 0 18px ${GG}`, fontFamily: 'inherit'
           }}>
-            <IcUser s={15} c="#fff" /> Sign In
+            <IcUser s={15} c="#000" /> Sign In
           </button>
           }
         </header>
@@ -428,18 +434,7 @@ export default function PowerLoopApp() {
 
           <div className="fu" style={{ animationDelay: '.22s', opacity: 0 }}><Milestones /></div>
 
-          {/* Footer */}
-          <div style={{ textAlign: 'center', paddingTop: 20, borderTop: `1px solid ${BD}`, marginTop: 4 }}>
-            <div style={{ fontWeight: 900, fontSize: 19, color: TX, marginBottom: 7 }}>
-              e<span style={{ color: GN, textShadow: `0 0 16px ${GG}` }}>Charge</span>Way
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'center', gap: 18, marginBottom: 10 }}>
-              {['About', 'Careers', 'Contact'].map((l) =>
-              <span key={l} onClick={l === 'About' ? () => setShowAbout(true) : undefined} style={{ fontSize: 12.5, color: TM, cursor: 'pointer', fontWeight: 600 }}>{l}</span>
-              )}
-            </div>
-            <div style={{ color: TM, fontSize: 11.5 }}>© 2024 eChargeWay Inc.</div>
-          </div>
+          <SiteFooter />
         </div>
       </div>
 
@@ -447,7 +442,6 @@ export default function PowerLoopApp() {
       {showProf && user &&
       <ProfileModal user={user} session={session} onClose={() => setShowProf(false)} onUpdate={onUpdate} onLogout={onLogout} />
       }
-      {showAbout && <AboutSection onClose={() => setShowAbout(false)} />}
     </div>);
 
 }

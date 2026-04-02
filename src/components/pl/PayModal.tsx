@@ -28,6 +28,7 @@ export default function PayModal({ station, user, token, onClose, onPaid }: PayM
   const [imgOk, setImgOk] = useState(true);
   const [tab, setTab] = useState<PayTab>('qr');
   const [copied, setCopied] = useState(false);
+  const [userUpiId, setUserUpiId] = useState('');
   const qrUrl = useMemo(() => makeQrUrl(amt || '0', station.name), [amt, station.name]);
   const deepLnk = useMemo(() => makeDeepLink(amt || '0', station.name), [amt, station.name]);
 
@@ -50,14 +51,18 @@ export default function PayModal({ station, user, token, onClose, onPaid }: PayM
       const { data: { user: authUser } } = await supabase.auth.getUser();
       if (!authUser) throw new Error('Please sign in first');
       
-      const { data: h, error } = await supabase
-        .from('charging_history')
-        .insert({
+      const insertData: any = {
           user_id: authUser.id,
           station_name: station.name,
           amount: parseFloat(amt || '0'),
           kwh: 30,
-        })
+        };
+      if (tab === 'upiid' && userUpiId.trim()) {
+        insertData.upi_id = userUpiId.trim();
+      }
+      const { data: h, error } = await supabase
+        .from('charging_history')
+        .insert(insertData)
         .select()
         .single();
       if (error) throw error;

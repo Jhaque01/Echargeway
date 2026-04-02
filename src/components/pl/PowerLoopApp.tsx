@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ecwLogo from '@/assets/echargeway-logo.png';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { supabase } from '@/integrations/supabase/client';
@@ -10,7 +11,7 @@ import {
 import { Avatar, IcBolt, IcPin, IcNav, IcUser, IcSta, IcPeo, IcCity } from '@/components/pl/Shared';
 import AuthModal from '@/components/pl/AuthModal';
 import ProfileModal from '@/components/pl/ProfileModal';
-import MapScreen from '@/components/pl/MapScreen';
+import SiteFooter from '@/components/pl/SiteFooter';
 
 // Counter component
 function Counter({ target, suffix }: {target: number;suffix?: string;}) {
@@ -95,68 +96,6 @@ function Milestones() {
   );
 }
 
-// About Modal
-function AboutSection({ onClose }: { onClose: () => void }) {
-  const [showStory, setShowStory] = useState(false);
-  return (
-    <div style={{
-      position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(0,0,0,.7)',
-      backdropFilter: 'blur(10px)', display: 'flex', justifyContent: 'center', alignItems: 'flex-start',
-      overflowY: 'auto', padding: '40px 16px',
-    }} onClick={onClose}>
-      <div style={{
-        width: '100%', maxWidth: 520, background: S1, borderRadius: 22,
-        border: `1px solid ${BD}`, padding: '28px 22px', position: 'relative',
-      }} onClick={e => e.stopPropagation()}>
-        <button onClick={onClose} style={{
-          position: 'absolute', top: 14, right: 16, background: 'none', border: 'none',
-          color: TM, fontSize: 22, cursor: 'pointer', fontFamily: 'inherit',
-        }}>✕</button>
-
-        <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: GN, marginBottom: 10 }}>ABOUT US</div>
-        <div style={{ fontWeight: 900, fontSize: 22, color: TX, marginBottom: 16 }}>
-          e<span style={{ color: GN, textShadow: `0 0 14px ${GG}` }}>Charge</span>Way
-        </div>
-        {[
-          'EChargeWay is a smart platform built to make electric vehicle charging simple, reliable, and accessible. We help EV users find nearby charging points, check availability, and plan their journeys with confidence.',
-          'Our goal is to remove the stress of charging by giving users clear, real-time information. As electric vehicles grow, access to charging must keep up. We focus on solving this gap with a user-first approach.',
-          'The platform is designed for both individual drivers and fleet operators. Whether you need a quick charge or want to manage multiple vehicles, EChargeWay gives you the tools to stay in control.',
-          'We believe clean mobility should be easy to use. By combining technology with practical solutions, we support the shift toward a more sustainable future.',
-        ].map((t, i) => (
-          <div key={i} style={{ fontSize: 14, color: TM, lineHeight: 1.7, marginBottom: 14 }}>{t}</div>
-        ))}
-
-        <button className="press" onClick={() => setShowStory(!showStory)} style={{
-          background: showStory ? S2 : GN, color: showStory ? GN : '#fff', border: showStory ? `1px solid ${GN}` : 'none',
-          borderRadius: 50, padding: '10px 22px', fontWeight: 700, fontSize: 13,
-          cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8,
-          boxShadow: showStory ? 'none' : `0 0 14px ${GG}`, fontFamily: 'inherit', transition: 'all .2s',
-        }}>
-          {showStory ? '▲ Close Story' : '▼ Our Story'}
-        </button>
-
-        {showStory && (
-          <div style={{
-            marginTop: 18, padding: '20px', borderRadius: 16,
-            background: 'linear-gradient(135deg, rgba(34,197,94,.06), rgba(10,10,10,.9))',
-            border: '1px solid rgba(34,197,94,.2)',
-          }}>
-            <div style={{ fontWeight: 900, fontSize: 20, color: TX, marginBottom: 14 }}>
-              Our <span style={{ color: GN, textShadow: `0 0 14px ${GG}` }}>Story</span>
-            </div>
-            <div style={{ fontSize: 14, color: TM, lineHeight: 1.8 }}>
-              <p style={{ marginBottom: 12 }}>EChargeWay started with a simple idea — make EV charging easy and stress-free.</p>
-              <p style={{ marginBottom: 12 }}>The journey began in January 2026, when Jiaul Haque set out to solve a real problem faced by electric vehicle users: finding reliable charging at the right time and place.</p>
-              <p style={{ marginBottom: 12 }}>What started as a small project quickly turned into a focused mission. The goal was not just to build a platform, but to create a practical solution that people can use every day.</p>
-              <p style={{ marginBottom: 12 }}>From initial prototypes to a working platform, EChargeWay has grown step by step with a strong focus on usability and real-world needs.</p>
-              <p>Today, EChargeWay continues to evolve with one clear vision — to support the shift to clean mobility by making EV charging simple, reliable, and accessible for everyone.</p>
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
 
 // Charging Status Bar - shows real data from DB
 function ChargingStatusBar({ user }: { user: any }) {
@@ -272,15 +211,15 @@ function getTimeAgo(date: Date): string {
 
 // Main App
 export default function PowerLoopApp() {
+  const navigate = useNavigate();
   const isMobile = useIsMobile();
-  const [showMap, setShowMap] = useState(false);
   const [showAuth, setShowAuth] = useState(false);
   const [showProf, setShowProf] = useState(false);
   const [user, setUser] = useState<any>(null);
   const [session, setSession] = useState<any>(null);
   const [nearest, setNearest] = useState<Station | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
-  const [showAbout, setShowAbout] = useState(false);
+  
 
   // Listen for auth state changes
   useEffect(() => {
@@ -344,7 +283,7 @@ export default function PowerLoopApp() {
     );
   };
 
-  if (showMap) return <MapScreen onBack={() => setShowMap(false)} user={user} token={session?.access_token || ''} onHistAdd={() => {}} />;
+  // Map is now at /station route
 
   return (
     <div style={{ background: BG, minHeight: '100vh', display: 'flex', justifyContent: 'center' }}>
@@ -356,9 +295,15 @@ export default function PowerLoopApp() {
           padding: '16px 18px 12px', background: 'rgba(8,8,8,.97)', backdropFilter: 'blur(20px)',
           position: 'sticky', top: 0, zIndex: 10, borderBottom: `1px solid ${BD}`
         }}>
-          <div style={{ fontWeight: 900, fontSize: 22, color: TX, letterSpacing: -.5, display: 'flex', alignItems: 'center', gap: 8 }}>
-            <img src={ecwLogo} alt="eChargeWay logo" style={{ height: 32, width: 32, objectFit: 'contain' }} />
-            e<span style={{ color: GN, textShadow: `0 0 22px ${GG}` }}>Charge</span>Way
+          <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+            <div onClick={() => navigate('/home')} style={{ fontWeight: 900, fontSize: 22, color: TX, letterSpacing: -.5, display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
+              <img src={ecwLogo} alt="eChargeWay logo" style={{ height: 32, width: 32, objectFit: 'contain' }} />
+              e<span style={{ color: GN, textShadow: `0 0 22px ${GG}` }}>Charge</span>Way
+            </div>
+            <nav style={{ display: 'flex', gap: 16 }}>
+              <span onClick={() => navigate('/about')} style={{ fontSize: 13, color: TS, fontWeight: 600, cursor: 'pointer' }}>About</span>
+              <span onClick={() => navigate('/station')} style={{ fontSize: 13, color: TS, fontWeight: 600, cursor: 'pointer' }}>Find Chargers</span>
+            </nav>
           </div>
           {user ?
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -369,12 +314,12 @@ export default function PowerLoopApp() {
               <Avatar name={user.name} img={user.avatar_url} size={38} onClick={() => setShowProf(true)} />
             </div> :
 
-          <button className="press" onClick={() => setShowAuth(true)} style={{
-            background: GN, color: '#fff', border: 'none', borderRadius: 50, padding: '9px 18px',
+          <button className="press" onClick={() => navigate('/signin')} style={{
+            background: GN, color: '#000', border: 'none', borderRadius: 50, padding: '9px 18px',
             fontWeight: 700, fontSize: 13, cursor: 'pointer', display: 'flex', alignItems: 'center',
             gap: 7, boxShadow: `0 0 18px ${GG}`, fontFamily: 'inherit'
           }}>
-            <IcUser s={15} c="#fff" /> Sign In
+            <IcUser s={15} c="#000" /> Sign In
           </button>
           }
         </header>
@@ -389,7 +334,7 @@ export default function PowerLoopApp() {
 
           {/* Nearest station */}
           <div className="fu" style={{ animationDelay: '.12s', opacity: 0 }}>
-            <div style={{ ...CARD, cursor: 'pointer', transition: 'transform .18s, border-color .2s' }} onClick={() => setShowMap(true)}>
+            <div style={{ ...CARD, cursor: 'pointer', transition: 'transform .18s, border-color .2s' }} onClick={() => navigate('/station')}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 13, marginBottom: 13 }}>
                 <div style={{ ...IBOX }}><IcPin s={21} /></div>
                 <div style={{ flex: 1 }}>
@@ -427,18 +372,7 @@ export default function PowerLoopApp() {
 
           <div className="fu" style={{ animationDelay: '.22s', opacity: 0 }}><Milestones /></div>
 
-          {/* Footer */}
-          <div style={{ textAlign: 'center', paddingTop: 20, borderTop: `1px solid ${BD}`, marginTop: 4 }}>
-            <div style={{ fontWeight: 900, fontSize: 19, color: TX, marginBottom: 7 }}>
-              e<span style={{ color: GN, textShadow: `0 0 16px ${GG}` }}>Charge</span>Way
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'center', gap: 18, marginBottom: 10 }}>
-              {['About', 'Careers', 'Contact'].map((l) =>
-              <span key={l} onClick={l === 'About' ? () => setShowAbout(true) : undefined} style={{ fontSize: 12.5, color: TM, cursor: 'pointer', fontWeight: 600 }}>{l}</span>
-              )}
-            </div>
-            <div style={{ color: TM, fontSize: 11.5 }}>© 2024 eChargeWay Inc.</div>
-          </div>
+          <SiteFooter />
         </div>
       </div>
 
@@ -446,7 +380,6 @@ export default function PowerLoopApp() {
       {showProf && user &&
       <ProfileModal user={user} session={session} onClose={() => setShowProf(false)} onUpdate={onUpdate} onLogout={onLogout} />
       }
-      {showAbout && <AboutSection onClose={() => setShowAbout(false)} />}
     </div>);
 
 }

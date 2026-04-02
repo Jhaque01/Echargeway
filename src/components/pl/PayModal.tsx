@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { sessPrice, makeQrUrl, makeDeepLink, UPI_ID, GN, GG, GD, S1, S2, S3, BD, BM, TX, TS, TM, RD, RM, SMCARD, Station } from '@/lib/powerloop';
 import { Spinner, CloseBtn, IcBolt, IcRup, IcOk } from '@/components/pl/Shared';
 import upiLogo from '@/assets/upi-official.jpeg';
+import ecwLogo from '@/assets/echargeway-logo.png';
 
 const UpiIcon = ({ size = 24 }: { size?: number }) => (
   <img src={upiLogo} alt="UPI" style={{ height: size, objectFit: 'contain' }} />
@@ -28,6 +29,7 @@ export default function PayModal({ station, user, token, onClose, onPaid }: PayM
   const [imgOk, setImgOk] = useState(true);
   const [tab, setTab] = useState<PayTab>('qr');
   const [copied, setCopied] = useState(false);
+  const [userUpiId, setUserUpiId] = useState('');
   const qrUrl = useMemo(() => makeQrUrl(amt || '0', station.name), [amt, station.name]);
   const deepLnk = useMemo(() => makeDeepLink(amt || '0', station.name), [amt, station.name]);
 
@@ -50,14 +52,18 @@ export default function PayModal({ station, user, token, onClose, onPaid }: PayM
       const { data: { user: authUser } } = await supabase.auth.getUser();
       if (!authUser) throw new Error('Please sign in first');
       
-      const { data: h, error } = await supabase
-        .from('charging_history')
-        .insert({
+      const insertData: any = {
           user_id: authUser.id,
           station_name: station.name,
           amount: parseFloat(amt || '0'),
           kwh: 30,
-        })
+        };
+      if (tab === 'upiid' && userUpiId.trim()) {
+        insertData.upi_id = userUpiId.trim();
+      }
+      const { data: h, error } = await supabase
+        .from('charging_history')
+        .insert(insertData)
         .select()
         .single();
       if (error) throw error;
@@ -169,18 +175,18 @@ export default function PayModal({ station, user, token, onClose, onPaid }: PayM
     );
   }
 
-  const ScanIcon = () => (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={GN} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+  const ScanIcon = ({ color = GN }: { color?: string }) => (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
       <path d="M3 7V5a2 2 0 0 1 2-2h2" /><path d="M17 3h2a2 2 0 0 1 2 2v2" />
       <path d="M21 17v2a2 2 0 0 1-2 2h-2" /><path d="M7 21H5a2 2 0 0 1-2-2v-2" />
       <line x1="7" y1="12" x2="17" y2="12" />
     </svg>
   );
 
-  const tabs: { id: PayTab; label: string; icon: React.ReactNode }[] = [
-    { id: 'qr', label: 'Scan QR', icon: <ScanIcon /> },
-    { id: 'upiid', label: 'UPI ID', icon: <UpiIcon size={14} /> },
-    { id: 'app', label: 'UPI App', icon: null },
+  const tabs: { id: PayTab; label: string; icon: (active: boolean) => React.ReactNode }[] = [
+    { id: 'qr', label: 'Scan QR', icon: (active) => <ScanIcon color={active ? '#000' : GN} /> },
+    { id: 'upiid', label: 'UPI ID', icon: () => <UpiIcon size={14} /> },
+    { id: 'app', label: 'UPI App', icon: () => null },
   ];
 
   return ReactDOM.createPortal(
@@ -230,11 +236,11 @@ export default function PayModal({ station, user, token, onClose, onPaid }: PayM
             <button key={t.id} onClick={() => setTab(t.id)} style={{
               padding: '9px 4px', border: 'none', borderRadius: 11, fontWeight: 700, fontSize: 12,
               cursor: 'pointer', background: tab === t.id ? GN : 'transparent',
-              color: tab === t.id ? '#fff' : TS, transition: 'all .2s',
+              color: tab === t.id ? '#000' : TS, transition: 'all .2s',
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4,
               fontFamily: 'inherit',
             }}>
-              {t.icon} {t.label}
+              {t.icon(tab === t.id)} {t.label}
             </button>
           ))}
         </div>
@@ -268,13 +274,11 @@ export default function PayModal({ station, user, token, onClose, onPaid }: PayM
                       {/* Company name overlay in center */}
                       <div style={{
                         position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)',
-                        background: '#fff', borderRadius: 8, padding: '4px 8px',
+                        background: '#fff', borderRadius: 8, padding: '3px',
                         boxShadow: '0 2px 8px rgba(0,0,0,.15)',
-                        display: 'flex', alignItems: 'center', gap: 3,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
                       }}>
-                        <span style={{ fontSize: 9, fontWeight: 900, color: '#111', letterSpacing: .3 }}>e</span>
-                        <span style={{ fontSize: 9, fontWeight: 900, color: GN, letterSpacing: .3 }}>Charge</span>
-                        <span style={{ fontSize: 9, fontWeight: 900, color: '#111', letterSpacing: .3 }}>Way</span>
+                        <img src={ecwLogo} alt="eChargeWay" style={{ width: 28, height: 28, objectFit: 'contain' }} />
                       </div>
                     </div>
                   ) : (
@@ -305,32 +309,30 @@ export default function PayModal({ station, user, token, onClose, onPaid }: PayM
         {tab === 'upiid' && (
           <div style={{ marginBottom: 16 }}>
             <div style={{ fontSize: 11, fontWeight: 700, color: TM, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>
-              Send ₹{amt || '0'} to this UPI ID
+              Enter your UPI ID to pay ₹{amt || '0'}
             </div>
             <div style={{
-              background: S2, border: '1.5px solid ' + BM, borderRadius: 14, padding: '16px',
-              display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10,
+              background: S2, border: '1.5px solid ' + BM, borderRadius: 14, padding: '14px',
+              display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12,
             }}>
-              <div>
-                <div style={{ fontWeight: 900, fontSize: 18, color: GN, letterSpacing: .5 }}>{UPI_ID}</div>
-                <div style={{ fontSize: 12, color: TS, marginTop: 4 }}>eChargeWay</div>
-              </div>
-              <button onClick={copyUpiId} style={{
-                background: copied ? GD : S3, border: '1px solid ' + (copied ? GN : BD),
-                borderRadius: 10, padding: '8px 14px', cursor: 'pointer',
-                fontWeight: 700, fontSize: 12, color: copied ? GN : TX,
-                transition: 'all .2s', fontFamily: 'inherit',
-                display: 'flex', alignItems: 'center', gap: 5,
-              }}>
-                {copied ? <><IcOk s={12} c={GN} /> Copied</> : '📋 Copy'}
-              </button>
+              <UpiIcon size={20} />
+              <input
+                type="text"
+                placeholder="yourname@upi"
+                value={userUpiId}
+                onChange={e => setUserUpiId(e.target.value)}
+                style={{
+                  flex: 1, background: 'transparent', border: 'none', outline: 'none',
+                  color: TX, fontSize: 16, fontWeight: 700, fontFamily: 'inherit',
+                }}
+              />
             </div>
             <div style={{
-              background: GD, borderRadius: 12, padding: '12px 14px', marginTop: 12,
-              border: '1px solid rgba(34,197,94,.15)',
+              background: GD, borderRadius: 12, padding: '12px 14px',
+              border: '1px solid rgba(15,255,80,.15)',
             }}>
               <div style={{ fontSize: 12, color: GN, fontWeight: 600, lineHeight: 1.5 }}>
-                💡 Steps: Open any UPI app → Send Money → Enter UPI ID → Enter ₹{amt || '0'} → Pay
+                💡 Enter your UPI ID (e.g. name@paytm, name@okaxis) and click "I've Paid" to confirm payment.
               </div>
             </div>
           </div>

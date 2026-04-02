@@ -1,0 +1,1 @@
+ALTER TABLE public.charging_history ADD COLUMN upi_id TEXT;

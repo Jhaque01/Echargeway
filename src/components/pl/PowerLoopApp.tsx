@@ -345,7 +345,7 @@ export default function PowerLoopApp() {
     );
   };
 
-  if (showMap) return <MapScreen onBack={() => setShowMap(false)} user={user} token={session?.access_token || ''} onHistAdd={() => {}} />;
+  // Map is now at /station route
 
   return (
     <div style={{ background: BG, minHeight: '100vh', display: 'flex', justifyContent: 'center' }}>

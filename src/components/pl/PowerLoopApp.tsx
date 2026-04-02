@@ -390,7 +390,7 @@ export default function PowerLoopApp() {
 
           {/* Nearest station */}
           <div className="fu" style={{ animationDelay: '.12s', opacity: 0 }}>
-            <div style={{ ...CARD, cursor: 'pointer', transition: 'transform .18s, border-color .2s' }} onClick={() => setShowMap(true)}>
+            <div style={{ ...CARD, cursor: 'pointer', transition: 'transform .18s, border-color .2s' }} onClick={() => navigate('/station')}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 13, marginBottom: 13 }}>
                 <div style={{ ...IBOX }}><IcPin s={21} /></div>
                 <div style={{ flex: 1 }}>

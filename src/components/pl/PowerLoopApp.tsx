@@ -273,8 +273,8 @@ function getTimeAgo(date: Date): string {
 
 // Main App
 export default function PowerLoopApp() {
+  const navigate = useNavigate();
   const isMobile = useIsMobile();
-  const [showMap, setShowMap] = useState(false);
   const [showAuth, setShowAuth] = useState(false);
   const [showProf, setShowProf] = useState(false);
   const [user, setUser] = useState<any>(null);

@@ -281,7 +281,7 @@ export default function PowerLoopApp() {
   const [session, setSession] = useState<any>(null);
   const [nearest, setNearest] = useState<Station | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
-  const [showAbout, setShowAbout] = useState(false);
+  
 
   // Listen for auth state changes
   useEffect(() => {

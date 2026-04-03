@@ -295,7 +295,8 @@ export default function PowerLoopApp() {
         {/* Header */}
         <header style={{
           display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-          padding: '16px 18px 12px', background: 'rgba(8,8,8,.97)', backdropFilter: 'blur(20px)',
+          padding: '16px 18px 12px', background: 'rgba(0,0,0,.75)', backdropFilter: 'blur(24px)',
+          WebkitBackdropFilter: 'blur(24px)',
           position: 'sticky', top: 0, zIndex: 10, borderBottom: `1px solid ${BD}`
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>

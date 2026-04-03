@@ -41,10 +41,12 @@ function ChargingCard() {
   useEffect(() => {const t = setInterval(() => setP((x) => !x), 900);return () => clearInterval(t);}, []);
   return (
     <div style={{
-      background: 'linear-gradient(135deg,#0D0D0D,#111 50%,#0A1A0A)', borderRadius: 22,
-      overflow: 'hidden', position: 'relative', height: 196,
+      background: 'linear-gradient(135deg, rgba(255,255,255,.03), rgba(34,197,110,.04) 50%, rgba(0,0,0,.4))',
+      borderRadius: 22, overflow: 'hidden', position: 'relative', height: 196,
       display: 'flex', alignItems: 'flex-end', padding: '18px 22px',
-      border: '1px solid rgba(34,197,94,.15)'
+      border: '1px solid rgba(34,197,110,.12)',
+      backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
+      boxShadow: '0 8px 32px rgba(0,0,0,.5)',
     }}>
       {[0, 1, 2].map((i) =>
       <div key={i} style={{

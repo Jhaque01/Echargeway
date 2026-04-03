@@ -37,8 +37,8 @@
     --radius: 0.75rem;
 
     /* Custom PowerLoop tokens */
-    --pl-bg: #080808;
-    --pl-s1: #111111;
+    --pl-bg: #000000;
+    --pl-s1: #0A0A0A;
     --pl-s2: #1A1A1A;
     --pl-s3: #222222;
     --pl-gn: #22C55E;

@@ -352,10 +352,10 @@ export default function PowerLoopApp() {
                 </div>
               </div>
               {nearest && (
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-                    <span style={{ fontSize: 13, color: GN, fontWeight: 700 }}>{nearest.distStr}</span>
-                    <span style={{ color: TM, fontSize: 12 }}>{nearest.timeStr} drive</span>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? 8 : 14, flexWrap: 'wrap' }}>
+                    <span style={{ fontSize: isMobile ? 12 : 13, color: GN, fontWeight: 700 }}>{nearest.distStr}</span>
+                    <span style={{ color: TM, fontSize: isMobile ? 11 : 12 }}>{nearest.timeStr} drive</span>
                     <span style={{ background: GD, padding: '3px 10px', borderRadius: 50, color: GN, fontSize: 11, fontWeight: 700 }}>
                       {nearest.av}/{nearest.tot} free
                     </span>

@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import ecwLogo from '@/assets/echargeway-logo.png';
 import { BG, S1, BD, GN, GG, TX, TS, TM } from '@/lib/powerloop';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const XIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill={TM}>
@@ -23,6 +24,7 @@ const InstaIcon = () => (
 
 export default function SiteFooter() {
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
 
   const cols = [
     { title: 'Product', items: [{ label: 'Features', action: () => navigate('/home') }, { label: 'Find Chargers', action: () => navigate('/station') }, { label: 'Pricing', action: () => {} }] },
@@ -32,31 +34,37 @@ export default function SiteFooter() {
   ];
 
   return (
-    <footer style={{ background: S1, borderTop: `1px solid ${BD}`, padding: '48px 40px 24px' }}>
+    <footer style={{ background: S1, borderTop: `1px solid ${BD}`, padding: isMobile ? '32px 16px 16px' : '48px 40px 24px' }}>
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr 1fr 1fr 1fr', gap: 40, marginBottom: 40 }}>
-          {/* Brand */}
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
-              <img src={ecwLogo} alt="logo" style={{ height: 28, width: 28 }} />
-              <span style={{ fontWeight: 900, fontSize: 18, color: TX }}>e<span style={{ color: GN }}>Charge</span>Way</span>
-            </div>
-            <p style={{ fontSize: 13, color: TM, lineHeight: 1.7, marginBottom: 20 }}>
-              Smart EV Charging Infrastructure. Find charging stations, pay digitally, and track your charging history with ease.
-            </p>
-            <div style={{ display: 'flex', gap: 14 }}>
-              <a href="#" style={{ opacity: 0.6, transition: 'opacity .2s' }} onMouseEnter={e => (e.currentTarget.style.opacity = '1')} onMouseLeave={e => (e.currentTarget.style.opacity = '0.6')}><XIcon /></a>
-              <a href="#" style={{ opacity: 0.6, transition: 'opacity .2s' }} onMouseEnter={e => (e.currentTarget.style.opacity = '1')} onMouseLeave={e => (e.currentTarget.style.opacity = '0.6')}><LinkedInIcon /></a>
-              <a href="#" style={{ opacity: 0.6, transition: 'opacity .2s' }} onMouseEnter={e => (e.currentTarget.style.opacity = '1')} onMouseLeave={e => (e.currentTarget.style.opacity = '0.6')}><InstaIcon /></a>
-            </div>
+        {/* Brand section */}
+        <div style={{ marginBottom: isMobile ? 24 : 40 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
+            <img src={ecwLogo} alt="logo" style={{ height: 28, width: 28 }} />
+            <span style={{ fontWeight: 900, fontSize: 18, color: TX }}>e<span style={{ color: GN }}>Charge</span>Way</span>
           </div>
-          {/* Link columns */}
+          <p style={{ fontSize: 13, color: TM, lineHeight: 1.7, marginBottom: 16, maxWidth: isMobile ? '100%' : 280 }}>
+            Smart EV Charging Infrastructure. Find charging stations, pay digitally, and track your charging history with ease.
+          </p>
+          <div style={{ display: 'flex', gap: 14 }}>
+            <a href="#" style={{ opacity: 0.6, transition: 'opacity .2s' }} onMouseEnter={e => (e.currentTarget.style.opacity = '1')} onMouseLeave={e => (e.currentTarget.style.opacity = '0.6')}><XIcon /></a>
+            <a href="#" style={{ opacity: 0.6, transition: 'opacity .2s' }} onMouseEnter={e => (e.currentTarget.style.opacity = '1')} onMouseLeave={e => (e.currentTarget.style.opacity = '0.6')}><LinkedInIcon /></a>
+            <a href="#" style={{ opacity: 0.6, transition: 'opacity .2s' }} onMouseEnter={e => (e.currentTarget.style.opacity = '1')} onMouseLeave={e => (e.currentTarget.style.opacity = '0.6')}><InstaIcon /></a>
+          </div>
+        </div>
+
+        {/* Link columns */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: isMobile ? '1fr 1fr' : '1fr 1fr 1fr 1fr',
+          gap: isMobile ? '20px 16px' : 40,
+          marginBottom: isMobile ? 24 : 40,
+        }}>
           {cols.map(col => (
             <div key={col.title}>
-              <div style={{ fontWeight: 700, fontSize: 14, color: TX, marginBottom: 16 }}>{col.title}</div>
+              <div style={{ fontWeight: 700, fontSize: 14, color: TX, marginBottom: isMobile ? 10 : 16 }}>{col.title}</div>
               {col.items.map(item => (
                 <div key={item.label} onClick={item.action} style={{
-                  fontSize: 13, color: TM, marginBottom: 12, cursor: 'pointer',
+                  fontSize: 13, color: TM, marginBottom: isMobile ? 8 : 12, cursor: 'pointer',
                   transition: 'color .2s',
                 }} onMouseEnter={e => (e.currentTarget.style.color = TS)} onMouseLeave={e => (e.currentTarget.style.color = TM)}>
                   {item.label}
@@ -65,9 +73,12 @@ export default function SiteFooter() {
             </div>
           ))}
         </div>
+
         <div style={{
-          borderTop: `1px solid ${BD}`, paddingTop: 20,
-          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+          borderTop: `1px solid ${BD}`, paddingTop: 16,
+          display: 'flex', flexDirection: isMobile ? 'column' : 'row',
+          justifyContent: 'space-between', alignItems: isMobile ? 'center' : 'center',
+          gap: isMobile ? 8 : 0,
         }}>
           <span style={{ fontSize: 12, color: TM }}>© 2026 EChargeWay. All rights reserved.</span>
           <span style={{ fontSize: 12, color: TM }}>Made with <span style={{ color: GN }}>⚡</span> for a greener future</span>

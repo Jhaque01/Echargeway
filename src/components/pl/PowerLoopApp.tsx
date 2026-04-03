@@ -295,18 +295,18 @@ export default function PowerLoopApp() {
         {/* Header */}
         <header style={{
           display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-          padding: '16px 18px 12px', background: 'rgba(0,0,0,.75)', backdropFilter: 'blur(24px)',
+          padding: isMobile ? '12px 12px 10px' : '16px 18px 12px', background: 'rgba(0,0,0,.75)', backdropFilter: 'blur(24px)',
           WebkitBackdropFilter: 'blur(24px)',
           position: 'sticky', top: 0, zIndex: 10, borderBottom: `1px solid ${BD}`
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-            <div onClick={() => navigate('/home')} style={{ fontWeight: 900, fontSize: 22, color: TX, letterSpacing: -.5, display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
-              <img src={ecwLogo} alt="eChargeWay logo" style={{ height: 32, width: 32, objectFit: 'contain' }} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? 12 : 20 }}>
+            <div onClick={() => navigate('/home')} style={{ fontWeight: 900, fontSize: isMobile ? 18 : 22, color: TX, letterSpacing: -.5, display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer' }}>
+              <img src={ecwLogo} alt="eChargeWay logo" style={{ height: isMobile ? 26 : 32, width: isMobile ? 26 : 32, objectFit: 'contain' }} />
               e<span style={{ color: GN, textShadow: `0 0 22px ${GG}` }}>Charge</span>Way
             </div>
-            <nav style={{ display: 'flex', gap: 16 }}>
-              <span onClick={() => navigate('/about')} style={{ fontSize: 13, color: TS, fontWeight: 600, cursor: 'pointer' }}>About</span>
-              <span onClick={() => navigate('/station')} style={{ fontSize: 13, color: TS, fontWeight: 600, cursor: 'pointer' }}>Find Chargers</span>
+            <nav style={{ display: 'flex', gap: isMobile ? 10 : 16 }}>
+              <span onClick={() => navigate('/about')} style={{ fontSize: isMobile ? 11 : 13, color: TS, fontWeight: 600, cursor: 'pointer' }}>About</span>
+              <span onClick={() => navigate('/station')} style={{ fontSize: isMobile ? 11 : 13, color: TS, fontWeight: 600, cursor: 'pointer' }}>Find Chargers</span>
             </nav>
           </div>
           {user ?
@@ -352,10 +352,10 @@ export default function PowerLoopApp() {
                 </div>
               </div>
               {nearest && (
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-                    <span style={{ fontSize: 13, color: GN, fontWeight: 700 }}>{nearest.distStr}</span>
-                    <span style={{ color: TM, fontSize: 12 }}>{nearest.timeStr} drive</span>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? 8 : 14, flexWrap: 'wrap' }}>
+                    <span style={{ fontSize: isMobile ? 12 : 13, color: GN, fontWeight: 700 }}>{nearest.distStr}</span>
+                    <span style={{ color: TM, fontSize: isMobile ? 11 : 12 }}>{nearest.timeStr} drive</span>
                     <span style={{ background: GD, padding: '3px 10px', borderRadius: 50, color: GN, fontSize: 11, fontWeight: 700 }}>
                       {nearest.av}/{nearest.tot} free
                     </span>

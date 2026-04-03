@@ -21,16 +21,20 @@ export const RM = 'rgba(239,68,68,.12)';
 
 // Style objects
 export const CARD: React.CSSProperties = {
-  background: S1, borderRadius: 22, padding: 18,
-  border: '1px solid ' + BD, boxShadow: '0 4px 24px rgba(0,0,0,.5)',
+  background: 'rgba(255,255,255,.04)', borderRadius: 22, padding: 18,
+  border: '1px solid rgba(255,255,255,.08)', boxShadow: '0 8px 32px rgba(0,0,0,.6)',
+  backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)',
 };
 export const IBOX: React.CSSProperties = {
-  width: 43, height: 43, background: GD, borderRadius: 13,
+  width: 43, height: 43, background: 'rgba(34,197,110,.1)', borderRadius: 13,
   display: 'flex', alignItems: 'center', justifyContent: 'center',
-  border: '1px solid rgba(34,197,94,.2)', flexShrink: 0,
+  border: '1px solid rgba(34,197,110,.18)', flexShrink: 0,
+  backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
 };
 export const SMCARD: React.CSSProperties = {
-  background: S2, borderRadius: 13, padding: '12px 13px', border: '1px solid ' + BD,
+  background: 'rgba(255,255,255,.05)', borderRadius: 13, padding: '12px 13px',
+  border: '1px solid rgba(255,255,255,.08)',
+  backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
 };
 export const GBTN: React.CSSProperties = {
   background: GN, color: '#fff', border: 'none', borderRadius: 12,

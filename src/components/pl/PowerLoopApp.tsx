@@ -41,10 +41,12 @@ function ChargingCard() {
   useEffect(() => {const t = setInterval(() => setP((x) => !x), 900);return () => clearInterval(t);}, []);
   return (
     <div style={{
-      background: 'linear-gradient(135deg,#0D0D0D,#111 50%,#0A1A0A)', borderRadius: 22,
-      overflow: 'hidden', position: 'relative', height: 196,
+      background: 'linear-gradient(135deg, rgba(255,255,255,.03), rgba(34,197,110,.04) 50%, rgba(0,0,0,.4))',
+      borderRadius: 22, overflow: 'hidden', position: 'relative', height: 196,
       display: 'flex', alignItems: 'flex-end', padding: '18px 22px',
-      border: '1px solid rgba(34,197,94,.15)'
+      border: '1px solid rgba(34,197,110,.12)',
+      backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
+      boxShadow: '0 8px 32px rgba(0,0,0,.5)',
     }}>
       {[0, 1, 2].map((i) =>
       <div key={i} style={{
@@ -146,8 +148,9 @@ function ChargingStatusBar({ user }: { user: any }) {
   return (
     <div style={{
       ...CARD, padding: '16px 18px',
-      border: '1px solid rgba(34,197,94,.25)',
-      background: 'linear-gradient(135deg, rgba(34,197,94,.06), rgba(10,10,10,.9))',
+      border: '1px solid rgba(34,197,110,.2)',
+      background: 'linear-gradient(135deg, rgba(34,197,110,.06), rgba(255,255,255,.03))',
+      backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
     }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -292,7 +295,8 @@ export default function PowerLoopApp() {
         {/* Header */}
         <header style={{
           display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-          padding: '16px 18px 12px', background: 'rgba(8,8,8,.97)', backdropFilter: 'blur(20px)',
+          padding: '16px 18px 12px', background: 'rgba(0,0,0,.75)', backdropFilter: 'blur(24px)',
+          WebkitBackdropFilter: 'blur(24px)',
           position: 'sticky', top: 0, zIndex: 10, borderBottom: `1px solid ${BD}`
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>

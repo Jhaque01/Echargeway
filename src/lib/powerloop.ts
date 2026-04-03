@@ -4,7 +4,7 @@ export const UPI_NAME = 'eChargeWay';
 export const KWH_SES = 30;
 
 // Colors
-export const BG = '#080808';
+export const BG = '#000000';
 export const S1 = '#111111';
 export const S2 = '#1A1A1A';
 export const S3 = '#222222';

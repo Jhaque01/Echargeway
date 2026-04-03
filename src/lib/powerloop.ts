@@ -5,7 +5,7 @@ export const KWH_SES = 30;
 
 // Colors
 export const BG = '#000000';
-export const S1 = '#111111';
+export const S1 = '#0A0A0A';
 export const S2 = '#1A1A1A';
 export const S3 = '#222222';
 export const BD = 'rgba(255,255,255,.07)';

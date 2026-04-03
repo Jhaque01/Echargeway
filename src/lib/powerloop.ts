@@ -4,15 +4,15 @@ export const UPI_NAME = 'eChargeWay';
 export const KWH_SES = 30;
 
 // Colors
-export const BG = '#080808';
-export const S1 = '#111111';
+export const BG = '#000000';
+export const S1 = '#0A0A0A';
 export const S2 = '#1A1A1A';
 export const S3 = '#222222';
 export const BD = 'rgba(255,255,255,.07)';
 export const BM = 'rgba(255,255,255,.13)';
-export const GN = '#0FFF50';
-export const GD = 'rgba(15,255,80,.12)';
-export const GG = 'rgba(15,255,80,.28)';
+export const GN = '#22C56E';
+export const GD = 'rgba(34,197,110,.12)';
+export const GG = 'rgba(34,197,110,.28)';
 export const TX = '#F4F4F5';
 export const TS = '#A1A1AA';
 export const TM = '#52525B';

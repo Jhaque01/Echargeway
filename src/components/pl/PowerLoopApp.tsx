@@ -148,8 +148,9 @@ function ChargingStatusBar({ user }: { user: any }) {
   return (
     <div style={{
       ...CARD, padding: '16px 18px',
-      border: '1px solid rgba(34,197,94,.25)',
-      background: 'linear-gradient(135deg, rgba(34,197,94,.06), rgba(10,10,10,.9))',
+      border: '1px solid rgba(34,197,110,.2)',
+      background: 'linear-gradient(135deg, rgba(34,197,110,.06), rgba(255,255,255,.03))',
+      backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
     }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>

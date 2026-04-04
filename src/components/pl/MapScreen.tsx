@@ -148,7 +148,7 @@ export default function MapScreen({ onBack, user, token, onHistAdd }: MapScreenP
             display: 'flex', alignItems: 'center', gap: 7,
             boxShadow: '0 2px 20px rgba(0,0,0,.8)', fontFamily: 'inherit',
           }}>
-            ← e<span style={{ color: GN }}>Charge</span>Way
+            {"← "}{"e"}<span style={{ color: GN }}>{"Charge"}</span>{"Way"}
           </button>
           {user && <Avatar name={user.name} img={user.avatar_url} size={38} />}
         </div>

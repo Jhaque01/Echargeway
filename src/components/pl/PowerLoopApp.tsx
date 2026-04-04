@@ -302,7 +302,7 @@ export default function PowerLoopApp() {
           <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? 12 : 20 }}>
             <div onClick={() => navigate('/home')} style={{ fontWeight: 900, fontSize: isMobile ? 18 : 22, color: TX, letterSpacing: -.5, display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer' }}>
               <img src={ecwLogo} alt="eChargeWay logo" style={{ height: isMobile ? 26 : 32, width: isMobile ? 26 : 32, objectFit: 'contain' }} />
-              <span style={{ letterSpacing: -0.5 }}>e<span style={{ color: GN, textShadow: `0 0 22px ${GG}` }}>Charge</span>Way</span>
+              <span>e<span style={{ color: GN, textShadow: `0 0 22px ${GG}` }}>Charge</span>Way</span>
             </div>
             <nav style={{ display: 'flex', gap: isMobile ? 10 : 16 }}>
               <span onClick={() => navigate('/about')} style={{ fontSize: isMobile ? 11 : 13, color: TS, fontWeight: 600, cursor: 'pointer' }}>About</span>

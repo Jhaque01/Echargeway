@@ -2,138 +2,150 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&display=swap');
 
 @layer base {
   :root {
-    --background: 0 0% 0%;
-    --foreground: 240 5% 96%;
+    --background: 165 40% 2%;
+    --foreground: 150 10% 96%;
 
-    --card: 0 0% 7%;
-    --card-foreground: 240 5% 96%;
+    --card: 160 22% 5%;
+    --card-foreground: 150 10% 96%;
 
-    --popover: 0 0% 7%;
-    --popover-foreground: 240 5% 96%;
+    --popover: 160 22% 5%;
+    --popover-foreground: 150 10% 96%;
 
-    --primary: 145 72% 46%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 100 100% 61%;
+    --primary-foreground: 165 60% 4%;
 
-    --secondary: 0 0% 10%;
-    --secondary-foreground: 240 4% 67%;
+    --secondary: 160 14% 10%;
+    --secondary-foreground: 150 8% 80%;
 
-    --muted: 0 0% 13%;
-    --muted-foreground: 240 4% 32%;
+    --muted: 160 12% 12%;
+    --muted-foreground: 150 6% 55%;
 
-    --accent: 145 72% 46%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 100 100% 61%;
+    --accent-foreground: 165 60% 4%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 100% / 0.07;
-    --input: 0 0% 100% / 0.13;
-    --ring: 145 72% 46%;
+    --success: 145 72% 46%;
+    --warning: 38 95% 55%;
 
-    --radius: 0.75rem;
+    --border: 150 12% 16%;
+    --input: 150 12% 18%;
+    --ring: 100 100% 61%;
 
-    /* Custom PowerLoop tokens */
-    --pl-bg: #000000;
-    --pl-s1: #0A0A0A;
-    --pl-s2: #1A1A1A;
-    --pl-s3: #222222;
-    --pl-gn: #22C56E;
-    --pl-gd: rgba(34,197,110,.12);
-    --pl-gg: rgba(34,197,110,.28);
-    --pl-tx: #F4F4F5;
-    --pl-ts: #A1A1AA;
-    --pl-tm: #52525B;
-    --pl-rd: #EF4444;
-    --pl-rm: rgba(239,68,68,.12);
-    --pl-bd: rgba(255,255,255,.07);
-    --pl-bm: rgba(255,255,255,.13);
+    --radius: 1rem;
 
-    --sidebar-background: 0 0% 5%;
-    --sidebar-foreground: 240 5% 85%;
-    --sidebar-primary: 145 72% 46%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 0 0% 10%;
-    --sidebar-accent-foreground: 240 5% 85%;
-    --sidebar-border: 0 0% 10%;
-    --sidebar-ring: 145 72% 46%;
+    --glass: 150 20% 100% / 0.04;
+    --glass-border: 150 20% 100% / 0.09;
+
+    --gradient-hero: radial-gradient(120% 80% at 50% 0%, hsl(100 100% 61% / 0.18) 0%, transparent 60%);
+    --gradient-primary: linear-gradient(135deg, hsl(100 100% 61%), hsl(145 90% 48%));
+    --shadow-glow: 0 0 40px hsl(100 100% 61% / 0.28);
+    --shadow-card: 0 14px 44px hsl(165 60% 1% / 0.7);
+
+    --sidebar-background: 160 22% 4%;
+    --sidebar-foreground: 150 8% 82%;
+    --sidebar-primary: 100 100% 61%;
+    --sidebar-primary-foreground: 165 60% 4%;
+    --sidebar-accent: 160 14% 10%;
+    --sidebar-accent-foreground: 150 8% 82%;
+    --sidebar-border: 150 12% 14%;
+    --sidebar-ring: 100 100% 61%;
+
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
   }
 }
 
 @layer base {
   * {
     @apply border-border;
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
   }
 
-  html, body {
-    background: #000000;
-    font-family: 'DM Sans', sans-serif;
-    -webkit-tap-highlight-color: transparent;
-    overflow-x: hidden;
+  html {
+    background: hsl(var(--background));
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+    font-family: 'DM Sans', sans-serif;
+    -webkit-tap-highlight-color: transparent;
+    overflow-x: hidden;
+    overscroll-behavior: none;
+    overscroll-behavior-y: none;
+  }
+
+  button, [role='tab'], [role='menuitem'], [role='button'], .no-select {
+    user-select: none;
+    -webkit-user-select: none;
   }
 
   ::-webkit-scrollbar {
+    width: 0;
+    height: 0;
     display: none;
   }
 
-  input::placeholder {
-    color: #3f3f46;
+  input::placeholder, textarea::placeholder {
+    @apply text-muted-foreground;
   }
 }
 
-@keyframes ring {
-  0% { transform: translate(-50%,-50%) scale(.82); opacity: .5; }
-  to { transform: translate(-50%,-50%) scale(1.18); opacity: 0; }
+@layer components {
+  .glass {
+    background: hsl(var(--glass));
+    border: 1px solid hsl(var(--glass-border));
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: var(--shadow-card);
+  }
+
+  .glow {
+    box-shadow: var(--shadow-glow);
+  }
+
+  .display {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+
+  .safe-top {
+    padding-top: calc(var(--safe-top));
+  }
+
+  .safe-bottom {
+    padding-bottom: calc(var(--safe-bottom));
+  }
+
+  .press:active {
+    transform: scale(0.97);
+  }
 }
 
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(18px); }
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(14px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes pulse-dot {
-  0%, 100% { transform: scale(1); opacity: .4; }
-  50% { transform: scale(1.7); opacity: 0; }
+@keyframes pulse-ring {
+  0%, 100% { transform: scale(1); opacity: 0.35; }
+  50% { transform: scale(1.45); opacity: 0; }
 }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 16px hsl(100 100% 61% / 0.25); }
+  50% { box-shadow: 0 0 44px hsl(100 100% 61% / 0.6); }
 }
 
-@keyframes glow {
-  0%, 100% { box-shadow: 0 0 18px rgba(34,197,94,.3); }
-  50% { box-shadow: 0 0 40px rgba(34,197,94,.7); }
+@keyframes shimmer {
+  100% { transform: translateX(100%); }
 }
 
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  20%, 60% { transform: translateX(-7px); }
-  40%, 80% { transform: translateX(7px); }
-}
-
-.fu {
-  animation: fadeUp .5s ease forwards;
-}
-
-.hoverable {
-  transition: transform .18s, border-color .2s;
-  cursor: pointer;
-}
-
-.hoverable:hover {
-  transform: translateY(-2px);
-}
-
-.press:active {
-  transform: scale(.95) !important;
-}
+.fade-up { animation: fade-up 0.45s ease forwards; }
+.glow-pulse { animation: glow-pulse 3s ease-in-out infinite; }
+.leaflet-container { background: hsl(var(--background)); }

@@ -4,8 +4,8 @@ import ecwLogo from '@/assets/echargeway-logo.png';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { supabase } from '@/integrations/supabase/client';
 import {
-  requestGeo, sortedStations, sessPrice,
-  STATIONS, BG, S1, S2, BD, BM, GN, GG, GD, TX, TS, TM,
+  requestGeo, sortedStations,
+  STATIONS, BG, S2, BD, GN, GG, GD, TX, TS, TM,
   CARD, IBOX, Station } from
 '@/lib/powerloop';
 import { Avatar, IcBolt, IcPin, IcNav, IcUser, IcSta, IcPeo, IcCity } from '@/components/pl/Shared';

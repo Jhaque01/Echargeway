@@ -1,7 +1,8 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import ReactDOM from 'react-dom';
-import { supabase } from '@/integrations/supabase/client';
 import { sessPrice, makeQrUrl, makeDeepLink, UPI_ID, GN, GG, GD, S1, S2, S3, BD, BM, TX, TS, TM, RD, RM, SMCARD, Station } from '@/lib/powerloop';
+import { usePayment } from '@/hooks/usePayment';
+import { useChargeSimulation } from '@/hooks/useChargeSimulation';
 import { Spinner, CloseBtn, IcBolt, IcRup, IcOk } from '@/components/pl/Shared';
 import upiLogo from '@/assets/upi-official.jpeg';
 import ecwLogo from '@/assets/echargeway-logo.png';
@@ -23,9 +24,6 @@ type PayTab = 'qr' | 'upiid' | 'app';
 export default function PayModal({ station, user, token, onClose, onPaid }: PayModalProps) {
   const defAmt = String(sessPrice(station.price));
   const [amt, setAmt] = useState(defAmt);
-  const [paid, setPaid] = useState(false);
-  const [saving, setSaving] = useState(false);
-  const [err, setErr] = useState('');
   const [imgOk, setImgOk] = useState(true);
   const [tab, setTab] = useState<PayTab>('qr');
   const [copied, setCopied] = useState(false);
@@ -46,58 +44,8 @@ export default function PayModal({ station, user, token, onClose, onPaid }: PayM
     }).catch(() => {});
   };
 
-  const confirm = async () => {
-    setSaving(true); setErr('');
-    try {
-      const { data: { user: authUser } } = await supabase.auth.getUser();
-      if (!authUser) throw new Error('Please sign in first');
-      
-      const insertData: any = {
-          user_id: authUser.id,
-          station_name: station.name,
-          amount: parseFloat(amt || '0'),
-          kwh: 30,
-        };
-      if (tab === 'upiid' && userUpiId.trim()) {
-        insertData.upi_id = userUpiId.trim();
-      }
-      const { data: h, error } = await supabase
-        .from('charging_history')
-        .insert(insertData)
-        .select()
-        .single();
-      if (error) throw error;
-      setPaid(true);
-      onPaid(h);
-    } catch (e: any) { setErr(e.message); }
-    setSaving(false);
-  };
-
-  const [chargePercent, setChargePercent] = useState(0);
-  const [chargeSpeed, setChargeSpeed] = useState<'slow' | 'fast' | 'rapid'>('fast');
-  const speedDurations = { slow: 12000, fast: 6000, rapid: 3000 };
-  const speedLabels = { slow: '🐢 Slow (3.3 kW)', fast: '⚡ Fast (22 kW)', rapid: '🚀 Rapid (50 kW)' };
-  const speedTimes = { slow: '~3h 20m', fast: '~1h 10m', rapid: '~30 min' };
-
-  useEffect(() => {
-    if (!paid) return;
-    setChargePercent(0);
-    const target = 100;
-    const duration = speedDurations[chargeSpeed];
-    const stepTime = 50;
-    const steps = duration / stepTime;
-    const increment = target / steps;
-    let current = 0;
-    const timer = setInterval(() => {
-      current += increment;
-      if (current >= target) {
-        current = target;
-        clearInterval(timer);
-      }
-      setChargePercent(Math.round(current));
-    }, stepTime);
-    return () => clearInterval(timer);
-  }, [paid, chargeSpeed]);
+  const { paid, saving, err, confirm } = usePayment({ stationName: station.name, amt, tab, userUpiId, onPaid });
+  const { chargePercent, chargeSpeed, setChargeSpeed, speedTimes, speedLabels } = useChargeSimulation(paid);
 
   if (paid) {
     return ReactDOM.createPortal(

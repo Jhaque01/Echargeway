@@ -51,6 +51,7 @@ export default function ProfileModal({ user, session, onClose, onUpdate, onLogou
         const { data } = await supabase
           .from('charging_history')
           .select('*')
+          .eq('user_id', user.id)
           .order('created_at', { ascending: false });
         setHist(data || []);
       } catch {
@@ -60,7 +61,7 @@ export default function ProfileModal({ user, session, onClose, onUpdate, onLogou
       }
     };
     loadHistory();
-  }, [tab, hist]);
+  }, [tab, hist, user.id]);
 
   const save = async () => {
     setLd(true); setErr('');

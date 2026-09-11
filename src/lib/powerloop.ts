@@ -119,9 +119,9 @@ export function makeDeepLink(amount: string, stName: string) {
 
 // Storage
 export const store = {
-  get: (k: string) => { try { return JSON.parse(localStorage.getItem(k) || 'null'); } catch { return null; } },
-  set: (k: string, v: any) => localStorage.setItem(k, JSON.stringify(v)),
-  del: (k: string) => localStorage.removeItem(k),
+  get: (k: string) => { try { return JSON.parse(sessionStorage.getItem(k) || 'null'); } catch { return null; } },
+  set: (k: string, v: any) => sessionStorage.setItem(k, JSON.stringify(v)),
+  del: (k: string) => sessionStorage.removeItem(k),
 };
 
 // Local DB

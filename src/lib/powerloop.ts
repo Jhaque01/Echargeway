@@ -99,9 +99,10 @@ export function fmtAge(ts: string) {
 }
 
 export function sortedStations(pos: { lat: number; lng: number }): Station[] {
-  return STATIONS.map(s => ({ ...s, km: haversine(pos.lat, pos.lng, s.lat, s.lng) }))
-    .sort((a, b) => (a.km || 0) - (b.km || 0))
-    .map(s => ({ ...s, distStr: fmtDist(s.km || 0), timeStr: fmtTime(s.km || 0) }));
+  return STATIONS.map(s => {
+    const km = haversine(pos.lat, pos.lng, s.lat, s.lng);
+    return { ...s, km, distStr: fmtDist(km), timeStr: fmtTime(km) };
+  }).sort((a, b) => (a.km || 0) - (b.km || 0));
 }
 
 export function sessPrice(price: number) {

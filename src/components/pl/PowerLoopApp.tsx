@@ -6,7 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import {
   requestGeo, sortedStations, sessPrice,
   STATIONS, BG, S1, S2, BD, BM, GN, GG, GD, TX, TS, TM,
-  CARD, IBOX, Station } from
+  CARD, IBOX, Station, User } from
 '@/lib/powerloop';
 import { Avatar, IcBolt, IcPin, IcNav, IcUser, IcSta, IcPeo, IcCity } from '@/components/pl/Shared';
 import AuthModal from '@/components/pl/AuthModal';
@@ -100,7 +100,7 @@ function Milestones() {
 
 
 // Charging Status Bar - shows real data from DB
-function ChargingStatusBar({ user }: { user: any }) {
+function ChargingStatusBar({ user }: { user: User | null }) {
   const [lastSession, setLastSession] = useState<any>(null);
   const [percent, setPercent] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -218,7 +218,7 @@ export default function PowerLoopApp() {
   const isMobile = useIsMobile();
   const [showAuth, setShowAuth] = useState(false);
   const [showProf, setShowProf] = useState(false);
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<any>(null);
   const [nearest, setNearest] = useState<Station | null>(null);
   const [authLoading, setAuthLoading] = useState(true);

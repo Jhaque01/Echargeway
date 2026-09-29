@@ -35,17 +35,24 @@ export default function MapScreen({ onBack, user, token, onHistAdd }: MapScreenP
     if (!map) return;
     Object.values(mkRef.current).forEach(m => { try { m.remove(); } catch {} });
     mkRef.current = {};
+
+    const selIcon = L.divIcon({
+      className: '',
+      iconSize: [38, 46],
+      iconAnchor: [19, 46],
+      html: `<div style="width:34px;height:34px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:#22C55E;border:2.5px solid #050505;display:flex;align-items:center;justify-content:center;box-shadow:0 0 20px rgba(34,197,94,.9);cursor:pointer"><span style="transform:rotate(45deg);color:#fff;font-size:9px;font-weight:900">CW</span></div>`,
+    });
+
+    const unselIcon = L.divIcon({
+      className: '',
+      iconSize: [38, 46],
+      iconAnchor: [19, 46],
+      html: `<div style="width:34px;height:34px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:#1C1C1C;border:2.5px solid rgba(34,197,94,.4);display:flex;align-items:center;justify-content:center;box-shadow:none;cursor:pointer"><span style="transform:rotate(45deg);color:#fff;font-size:9px;font-weight:900">CW</span></div>`,
+    });
+
     sorted.forEach(s => {
       const isSel = selSta && s.id === selSta.id;
-      const col = isSel ? '#22C55E' : '#1C1C1C';
-      const bord = isSel ? '#050505' : 'rgba(34,197,94,.4)';
-      const glow = isSel ? '0 0 20px rgba(34,197,94,.9)' : 'none';
-      const icon = L.divIcon({
-        className: '',
-        iconSize: [38, 46],
-        iconAnchor: [19, 46],
-        html: `<div style="width:34px;height:34px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:${col};border:2.5px solid ${bord};display:flex;align-items:center;justify-content:center;box-shadow:${glow};cursor:pointer"><span style="transform:rotate(45deg);color:#fff;font-size:9px;font-weight:900">CW</span></div>`,
-      });
+      const icon = isSel ? selIcon : unselIcon;
       const mk = L.marker([s.lat, s.lng], { icon }).addTo(map);
       mk.on('click', () => {
         setSel(s);

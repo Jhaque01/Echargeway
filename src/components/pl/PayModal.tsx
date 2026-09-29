@@ -69,7 +69,13 @@ export default function PayModal({ station, user, token, onClose, onPaid }: PayM
       if (error) throw error;
       setPaid(true);
       onPaid(h);
-    } catch (e: any) { setErr(e.message); }
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        setErr(e.message);
+      } else {
+        setErr(String(e));
+      }
+    }
     setSaving(false);
   };
 

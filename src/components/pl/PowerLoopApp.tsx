@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import ecwLogo from '@/assets/echargeway-logo.png';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { supabase } from '@/integrations/supabase/client';
+import { Session } from '@supabase/supabase-js';
 import {
   requestGeo, sortedStations, sessPrice,
   STATIONS, BG, S1, S2, BD, BM, GN, GG, GD, TX, TS, TM,
@@ -219,7 +220,7 @@ export default function PowerLoopApp() {
   const [showAuth, setShowAuth] = useState(false);
   const [showProf, setShowProf] = useState(false);
   const [user, setUser] = useState<any>(null);
-  const [session, setSession] = useState<any>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [nearest, setNearest] = useState<Station | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
   

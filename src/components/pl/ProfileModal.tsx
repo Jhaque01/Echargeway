@@ -11,14 +11,35 @@ interface ProfileModalProps {
   onLogout: () => void;
 }
 
+const dateFormatter = new Intl.DateTimeFormat('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+const fullDateFormatter = new Intl.DateTimeFormat('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
+
 function downloadReport(user: any, hist: any[]) {
-  const rows = hist.length === 0
-    ? '<tr><td colspan="4" style="text-align:center;color:#999;padding:24px">No sessions yet</td></tr>'
-    : hist.map(h => `<tr><td>${new Date(h.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</td><td>${h.station_name || '—'}</td><td style="text-align:right">₹${parseFloat(h.amount || 0).toFixed(0)}</td><td style="text-align:right">${h.kwh || 0} kWh</td></tr>`).join('');
-  const totalAmt = hist.reduce((s: number, h: any) => s + parseFloat(h.amount || 0), 0);
-  const totalKwh = hist.reduce((s: number, h: any) => s + (parseFloat(h.kwh) || 0), 0);
+  let rows = '';
+  let totalAmt = 0;
+  let totalKwh = 0;
+
+  if (hist.length === 0) {
+    rows = '<tr><td colspan="4" style="text-align:center;color:#999;padding:24px">No sessions yet</td></tr>';
+  } else {
+    const acc = hist.reduce((state, h) => {
+      const amt = parseFloat(h.amount || 0);
+      const kwh = parseFloat(h.kwh) || 0;
+      const formattedDate = dateFormatter.format(new Date(h.created_at));
+
+      return {
+        rows: state.rows + `<tr><td>${formattedDate}</td><td>${h.station_name || '—'}</td><td style="text-align:right">₹${amt.toFixed(0)}</td><td style="text-align:right">${h.kwh || 0} kWh</td></tr>`,
+        totalAmt: state.totalAmt + amt,
+        totalKwh: state.totalKwh + kwh
+      };
+    }, { rows: '', totalAmt: 0, totalKwh: 0 });
+
+    rows = acc.rows;
+    totalAmt = acc.totalAmt;
+    totalKwh = acc.totalKwh;
+  }
   const totRow = hist.length > 0 ? `<tr class="tot"><td colspan="2"><b>Total (${hist.length} sessions)</b></td><td style="text-align:right"><b>₹${totalAmt.toFixed(0)}</b></td><td style="text-align:right"><b>${totalKwh} kWh</b></td></tr>` : '';
-  const doc = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>eChargeWay Charging Report</title><style>body{font-family:Arial,sans-serif;max-width:720px;margin:40px auto;color:#222;padding:0 24px}.hd{display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid #22C55E;padding-bottom:14px;margin-bottom:22px}.brand{font-size:26px;font-weight:900}.brand b{color:#22C55E}table{width:100%;border-collapse:collapse}th{background:#22C55E;color:#fff;padding:10px 12px;text-align:left;font-size:13px}td{padding:9px 12px;border-bottom:1px solid #eee;font-size:13px}.tot td{background:#f0fdf4;border-top:2px solid #22C55E}.foot{text-align:center;color:#aaa;font-size:11px;margin-top:36px}</style></head><body><div class="hd"><div class="brand">e<b>Charge</b>Way</div><div style="text-align:right;font-size:12px;color:#666"><b>Charging Report</b><br>Generated: ${new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}</div></div><h2>${user.name || 'User'}</h2><p>📧 ${user.email || '—'}</p><table><thead><tr><th>Date</th><th>Station</th><th style="text-align:right">Amount</th><th style="text-align:right">Energy</th></tr></thead><tbody>${rows}${totRow}</tbody></table><div class="foot">eChargeWay EV Charging · © ${new Date().getFullYear()}</div></body></html>`;
+  const doc = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>eChargeWay Charging Report</title><style>body{font-family:Arial,sans-serif;max-width:720px;margin:40px auto;color:#222;padding:0 24px}.hd{display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid #22C55E;padding-bottom:14px;margin-bottom:22px}.brand{font-size:26px;font-weight:900}.brand b{color:#22C55E}table{width:100%;border-collapse:collapse}th{background:#22C55E;color:#fff;padding:10px 12px;text-align:left;font-size:13px}td{padding:9px 12px;border-bottom:1px solid #eee;font-size:13px}.tot td{background:#f0fdf4;border-top:2px solid #22C55E}.foot{text-align:center;color:#aaa;font-size:11px;margin-top:36px}</style></head><body><div class="hd"><div class="brand">e<b>Charge</b>Way</div><div style="text-align:right;font-size:12px;color:#666"><b>Charging Report</b><br>Generated: ${fullDateFormatter.format(new Date())}</div></div><h2>${user.name || 'User'}</h2><p>📧 ${user.email || '—'}</p><table><thead><tr><th>Date</th><th>Station</th><th style="text-align:right">Amount</th><th style="text-align:right">Energy</th></tr></thead><tbody>${rows}${totRow}</tbody></table><div class="foot">eChargeWay EV Charging · © ${new Date().getFullYear()}</div></body></html>`;
   const blob = new Blob([doc], { type: 'text/html' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);

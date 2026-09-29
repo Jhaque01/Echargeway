@@ -27,10 +27,10 @@ export default function SiteFooter() {
   const isMobile = useIsMobile();
 
   const cols = [
-    { title: 'Product', items: [{ label: 'Features', action: () => navigate('/home') }, { label: 'Find Chargers', action: () => navigate('/station') }, { label: 'Pricing', action: () => {} }] },
-    { title: 'Company', items: [{ label: 'About Us', action: () => navigate('/about') }, { label: 'Careers', action: () => {} }, { label: 'Partners', action: () => {} }, { label: 'Contact', action: () => {} }] },
-    { title: 'Resources', items: [{ label: 'Blog', action: () => {} }, { label: 'Help Center', action: () => {} }, { label: 'API Docs', action: () => {} }, { label: 'Status', action: () => {} }] },
-    { title: 'Legal', items: [{ label: 'Privacy Policy', action: () => {} }, { label: 'Terms of Service', action: () => {} }, { label: 'Cookie Policy', action: () => {} }] },
+    { title: 'Product', items: [{ label: 'Features', action: () => navigate('/home') }, { label: 'Find Chargers', action: () => navigate('/station') }, { label: 'Pricing', action: () => console.log('TODO: Implement Pricing route') }] },
+    { title: 'Company', items: [{ label: 'About Us', action: () => navigate('/about') }, { label: 'Careers', action: () => console.log('TODO: Implement Careers route') }, { label: 'Partners', action: () => console.log('TODO: Implement Partners route') }, { label: 'Contact', action: () => console.log('TODO: Implement Contact route') }] },
+    { title: 'Resources', items: [{ label: 'Blog', action: () => console.log('TODO: Implement Blog route') }, { label: 'Help Center', action: () => console.log('TODO: Implement Help Center route') }, { label: 'API Docs', action: () => console.log('TODO: Implement API Docs route') }, { label: 'Status', action: () => console.log('TODO: Implement Status route') }] },
+    { title: 'Legal', items: [{ label: 'Privacy Policy', action: () => console.log('TODO: Implement Privacy Policy route') }, { label: 'Terms of Service', action: () => console.log('TODO: Implement Terms of Service route') }, { label: 'Cookie Policy', action: () => console.log('TODO: Implement Cookie Policy route') }] },
   ];
 
   return (

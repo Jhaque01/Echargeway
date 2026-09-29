@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import ecwLogo from '@/assets/echargeway-logo.png';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { supabase } from '@/integrations/supabase/client';
+import { Database } from '@/integrations/supabase/types';
 import {
   requestGeo, sortedStations, sessPrice,
   STATIONS, BG, S1, S2, BD, BM, GN, GG, GD, TX, TS, TM,
@@ -99,9 +100,11 @@ function Milestones() {
 }
 
 
+type ChargingHistoryRow = Database['public']['Tables']['charging_history']['Row'];
+
 // Charging Status Bar - shows real data from DB
 function ChargingStatusBar({ user }: { user: any }) {
-  const [lastSession, setLastSession] = useState<any>(null);
+  const [lastSession, setLastSession] = useState<ChargingHistoryRow | null>(null);
   const [percent, setPercent] = useState(0);
   const [loading, setLoading] = useState(true);
 

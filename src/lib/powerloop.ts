@@ -46,6 +46,17 @@ export const DBTN: React.CSSProperties = {
   padding: '12px', fontWeight: 700, fontSize: 14, cursor: 'pointer',
 };
 
+export interface User {
+  id: string;
+  name: string;
+  email: string | null;
+  phone: string | null;
+  avatar_url: string | null;
+  onboarded: boolean;
+  preferred_charge_limit: number;
+  created_at: string;
+}
+
 // Stations
 export interface Station {
   id: number;

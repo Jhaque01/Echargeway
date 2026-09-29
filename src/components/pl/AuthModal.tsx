@@ -3,10 +3,11 @@ import { supabase } from '@/integrations/supabase/client';
 import { lovable } from '@/integrations/lovable/index';
 import { GN, GG, S2, S3, BD, TX, TS, TM, GD } from '@/lib/powerloop';
 import { Spinner, CloseBtn, DInput, ErrBanner, IcUser, IcMail, IcOk, GoogleG } from '@/components/pl/Shared';
+import { User, Session } from '@supabase/supabase-js';
 
 interface AuthModalProps {
   onClose: () => void;
-  onSuccess: (user: any, session: any) => void;
+  onSuccess: (user: User, session: Session) => void;
 }
 
 export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {

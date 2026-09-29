@@ -129,14 +129,32 @@ export const DB = {
   users: { get: () => store.get('pl_db_usr') || [], save: (v: any) => store.set('pl_db_usr', v) },
   otps: { get: () => store.get('pl_db_otp') || {}, save: (v: any) => store.set('pl_db_otp', v) },
   hist: { get: (uid: string) => store.get('pl_hist_' + uid) || [], save: (uid: string, v: any) => store.set('pl_hist_' + uid, v) },
+  sessions: { get: () => store.get('pl_db_sess') || {}, save: (v: any) => store.set('pl_db_sess', v) },
 };
 
-function mkToken(uid: string) { return btoa(JSON.stringify({ uid, exp: Date.now() + 30 * 24 * 3600000 })); }
+function genToken() {
+  if (typeof crypto !== 'undefined' && crypto.randomUUID) return crypto.randomUUID();
+  return Math.random().toString(36).substring(2) + Date.now().toString(36);
+}
+
+function mkToken(uid: string) {
+  const tok = genToken();
+  const sessions = DB.sessions.get();
+  sessions[tok] = { uid, exp: Date.now() + 30 * 24 * 3600000 };
+  DB.sessions.save(sessions);
+  return tok;
+}
 
 export function chkToken(tok: string) {
   try {
-    const p = JSON.parse(atob(tok));
-    if (p.exp < Date.now()) throw new Error('expired');
+    const sessions = DB.sessions.get();
+    const p = sessions[tok];
+    if (!p) throw new Error('Invalid token');
+    if (p.exp < Date.now()) {
+      delete sessions[tok];
+      DB.sessions.save(sessions);
+      throw new Error('expired');
+    }
     return p;
   } catch {
     throw new Error('Session expired — please log in again');
@@ -167,14 +185,26 @@ export async function callApi(path: string, method?: string, body?: any, token?:
     const users = DB.users.get();
     const u = users.find((x: any) => x.phone === ph);
     if (u) return { status: 'LOGIN', token: mkToken(u.id), user: u };
-    return { status: 'NEW_USER', verify_token: btoa(JSON.stringify({ phone: ph, exp: Date.now() + 600000 })) };
+
+    const vt = genToken();
+    const sessions = DB.sessions.get();
+    sessions[vt] = { phone: ph, exp: Date.now() + 600000 };
+    DB.sessions.save(sessions);
+    return { status: 'NEW_USER', verify_token: vt };
   }
 
   if (path === '/auth/register') {
     const { verify_token: vt, name, email } = body;
-    let v: any;
-    try { v = JSON.parse(atob(vt)); } catch { throw new Error('Invalid token'); }
-    if (v.exp < Date.now()) throw new Error('Session expired');
+    const sessions = DB.sessions.get();
+    const v = sessions[vt];
+    if (!v) throw new Error('Invalid token');
+    if (v.exp < Date.now()) {
+      delete sessions[vt];
+      DB.sessions.save(sessions);
+      throw new Error('Session expired');
+    }
+    delete sessions[vt];
+    DB.sessions.save(sessions);
     const users = DB.users.get();
     const nu = { id: 'u' + Date.now(), name, phone: v.phone, email: email || '', avatar_url: null, created_at: new Date().toISOString() };
     users.push(nu); DB.users.save(users);

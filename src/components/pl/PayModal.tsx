@@ -82,21 +82,32 @@ export default function PayModal({ station, user, token, onClose, onPaid }: PayM
   useEffect(() => {
     if (!paid) return;
     setChargePercent(0);
-    const target = 100;
     const duration = speedDurations[chargeSpeed];
-    const stepTime = 50;
-    const steps = duration / stepTime;
-    const increment = target / steps;
-    let current = 0;
-    const timer = setInterval(() => {
-      current += increment;
-      if (current >= target) {
-        current = target;
-        clearInterval(timer);
+
+    let startTime: number;
+    let animationFrameId: number;
+    let lastPercent = 0;
+
+    const animate = (time: number) => {
+      if (!startTime) startTime = time;
+      const elapsed = time - startTime;
+
+      const current = Math.min(100, (elapsed / duration) * 100);
+      const roundedPercent = Math.round(current);
+
+      if (roundedPercent !== lastPercent) {
+        setChargePercent(roundedPercent);
+        lastPercent = roundedPercent;
       }
-      setChargePercent(Math.round(current));
-    }, stepTime);
-    return () => clearInterval(timer);
+
+      if (elapsed < duration) {
+        animationFrameId = requestAnimationFrame(animate);
+      }
+    };
+
+    animationFrameId = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(animationFrameId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [paid, chargeSpeed]);
 
   if (paid) {

@@ -138,7 +138,7 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('Not authenticated');
 
-      const updateData: any = { name: name.trim() };
+      const updateData: { name: string; email?: string; phone?: string } = { name: name.trim() };
       if (authMethod === 'email') updateData.email = email.trim().toLowerCase();
       if (authMethod === 'phone') updateData.phone = phone.trim().startsWith('+') ? phone.trim() : `+91${phone.trim()}`;
 

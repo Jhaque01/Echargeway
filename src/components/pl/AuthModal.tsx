@@ -3,10 +3,14 @@ import { supabase } from '@/integrations/supabase/client';
 import { lovable } from '@/integrations/lovable/index';
 import { GN, GG, S2, S3, BD, TX, TS, TM, GD } from '@/lib/powerloop';
 import { Spinner, CloseBtn, DInput, ErrBanner, IcUser, IcMail, IcOk, GoogleG } from '@/components/pl/Shared';
+import { Session } from '@supabase/supabase-js';
+import { Database } from '@/integrations/supabase/types';
+
+type Profile = Database['public']['Tables']['profiles']['Row'];
 
 interface AuthModalProps {
   onClose: () => void;
-  onSuccess: (user: any, session: any) => void;
+  onSuccess: (user: Profile, session: Session) => void;
 }
 
 export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {

@@ -2,16 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { fmtAge, UPI_ID, GN, GG, GD, S2, BD, TX, TS, TM, RD, RM, GBTN, DBTN } from '@/lib/powerloop';
 import { Spinner, Avatar, CloseBtn, DInput, TabRow, IcUser, IcMail, IcPhone, IcEdit, IcOk, IcOut, IcHist, IcSet, IcBolt } from '@/components/pl/Shared';
+import { Session } from '@supabase/supabase-js';
+import { Database } from '@/integrations/supabase/types';
+
+type Profile = Database['public']['Tables']['profiles']['Row'];
 
 interface ProfileModalProps {
-  user: any;
-  session: any;
+  user: Profile;
+  session: Session | null;
   onClose: () => void;
-  onUpdate: (user: any) => void;
+  onUpdate: (user: Profile) => void;
   onLogout: () => void;
 }
 
-function downloadReport(user: any, hist: any[]) {
+function downloadReport(user: Profile, hist: any[]) {
   const rows = hist.length === 0
     ? '<tr><td colspan="4" style="text-align:center;color:#999;padding:24px">No sessions yet</td></tr>'
     : hist.map(h => `<tr><td>${new Date(h.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</td><td>${h.station_name || '—'}</td><td style="text-align:right">₹${parseFloat(h.amount || 0).toFixed(0)}</td><td style="text-align:right">${h.kwh || 0} kWh</td></tr>`).join('');

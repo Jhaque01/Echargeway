@@ -6,14 +6,14 @@ import {
   GN, GG, GD, S1, S2, S3, BD, BM, TX, TS, TM, RD, SMCARD,
 } from '@/lib/powerloop';
 import { Avatar, Spinner, IcBolt, IcCar, IcNav, IcRup, IcLoc } from '@/components/pl/Shared';
-import PayModal from '@/components/pl/PayModal';
+import PayModal, { ChargingHistory } from '@/components/pl/PayModal';
 import upiLogo from '@/assets/upi-official.jpeg';
 
 interface MapScreenProps {
   onBack: () => void;
   user: any;
   token: string;
-  onHistAdd?: (h: any) => void;
+  onHistAdd?: (h: ChargingHistory) => void;
 }
 
 export default function MapScreen({ onBack, user, token, onHistAdd }: MapScreenProps) {

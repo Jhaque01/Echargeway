@@ -10,12 +10,23 @@ const UpiIcon = ({ size = 24 }: { size?: number }) => (
   <img src={upiLogo} alt="UPI" style={{ height: size, objectFit: 'contain' }} />
 );
 
+export interface ChargingHistory {
+  id: string;
+  user_id: string;
+  station_name: string;
+  amount: number;
+  kwh: number;
+  status: string;
+  upi_id?: string | null;
+  created_at: string;
+}
+
 interface PayModalProps {
   station: Station;
   user: any;
   token: string;
   onClose: () => void;
-  onPaid: (h: any) => void;
+  onPaid: (h: ChargingHistory) => void;
 }
 
 type PayTab = 'qr' | 'upiid' | 'app';

@@ -159,9 +159,17 @@ export async function callApi(path: string, method?: string, body?: any, token?:
 
   if (path === '/auth/verify-otp') {
     const { phone: ph, otp } = body;
+
+    if (!ph || typeof ph !== 'string') throw new Error('Invalid phone number');
+    if (!otp || typeof otp !== 'string') throw new Error('Invalid OTP — please try again');
+
     const otps = DB.otps.get();
+    if (!Object.prototype.hasOwnProperty.call(otps, ph)) {
+      throw new Error('OTP expired — request a new one');
+    }
+
     const e = otps[ph];
-    if (!e || e.exp < Date.now()) { if (e) { delete otps[ph]; DB.otps.save(otps); } throw new Error('OTP expired — request a new one'); }
+    if (e.exp < Date.now()) { delete otps[ph]; DB.otps.save(otps); throw new Error('OTP expired — request a new one'); }
     if (e.otp !== otp) throw new Error('Invalid OTP — please try again');
     delete otps[ph]; DB.otps.save(otps);
     const users = DB.users.get();

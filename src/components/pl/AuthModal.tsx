@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { Session } from '@supabase/supabase-js';
+import { Tables } from '@/integrations/supabase/types';
 import { lovable } from '@/integrations/lovable/index';
 import { GN, GG, S2, S3, BD, TX, TS, TM, GD } from '@/lib/powerloop';
 import { Spinner, CloseBtn, DInput, ErrBanner, IcUser, IcMail, IcOk, GoogleG } from '@/components/pl/Shared';
 
 interface AuthModalProps {
   onClose: () => void;
-  onSuccess: (user: any, session: any) => void;
+  onSuccess: (user: Tables<'profiles'>, session: Session) => void;
 }
 
 export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
@@ -153,7 +155,7 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
       await supabase.auth.updateUser({ data: { name: name.trim() } });
 
       const { data: { session } } = await supabase.auth.getSession();
-      onSuccess(profile, session);
+      if (session) onSuccess(profile, session);
     } catch (e: any) { setErr(e.message); }
     setLoading(false);
   };

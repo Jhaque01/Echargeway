@@ -41,8 +41,8 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
         redirect_uri: window.location.origin,
       });
       if (result.error) throw result.error;
-    } catch (e: any) {
-      setErr(e.message || 'Google sign-in failed');
+    } catch (e: unknown) {
+      setErr(e instanceof Error ? e.message : 'Google sign-in failed');
     }
     setLoading(false);
   };
@@ -70,7 +70,7 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
       setCntdn(60);
       setDigits(Array(6).fill(''));
       setTimeout(() => { boxRefs.current[0]?.focus(); }, 120);
-    } catch (e: any) { setErr(e.message || 'Failed to send OTP'); }
+    } catch (e: unknown) { setErr(e instanceof Error ? e.message : 'Failed to send OTP'); }
     setLoading(false);
   };
 
@@ -123,8 +123,8 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
           setStep('register');
         }
       }
-    } catch (e: any) {
-      setErr(e.message || 'Invalid OTP — please try again');
+    } catch (e: unknown) {
+      setErr(e instanceof Error ? e.message : 'Invalid OTP — please try again');
       setShake(true); setDigits(Array(6).fill(''));
       setTimeout(() => { setShake(false); boxRefs.current[0]?.focus(); }, 400);
     }
@@ -154,7 +154,7 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
 
       const { data: { session } } = await supabase.auth.getSession();
       onSuccess(profile, session);
-    } catch (e: any) { setErr(e.message); }
+    } catch (e: unknown) { setErr(e instanceof Error ? e.message : 'An error occurred'); }
     setLoading(false);
   };
 

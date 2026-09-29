@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { supabase } from '@/integrations/supabase/client';
-import { sessPrice, makeQrUrl, makeDeepLink, UPI_ID, GN, GG, GD, S1, S2, S3, BD, BM, TX, TS, TM, RD, RM, SMCARD, Station } from '@/lib/powerloop';
+import { sessPrice, makeQrUrl, makeDeepLink, UPI_ID, GN, GG, GD, S1, S2, S3, BD, BM, TX, TS, TM, RD, RM, SMCARD, Station, User } from '@/lib/powerloop';
 import { Spinner, CloseBtn, IcBolt, IcRup, IcOk } from '@/components/pl/Shared';
 import upiLogo from '@/assets/upi-official.jpeg';
 import ecwLogo from '@/assets/echargeway-logo.png';
@@ -12,7 +12,7 @@ const UpiIcon = ({ size = 24 }: { size?: number }) => (
 
 interface PayModalProps {
   station: Station;
-  user: any;
+  user: User;
   token: string;
   onClose: () => void;
   onPaid: (h: any) => void;

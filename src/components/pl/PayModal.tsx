@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { supabase } from '@/integrations/supabase/client';
+import { TablesInsert } from '@/integrations/supabase/types';
 import { sessPrice, makeQrUrl, makeDeepLink, UPI_ID, GN, GG, GD, S1, S2, S3, BD, BM, TX, TS, TM, RD, RM, SMCARD, Station } from '@/lib/powerloop';
 import { Spinner, CloseBtn, IcBolt, IcRup, IcOk } from '@/components/pl/Shared';
 import upiLogo from '@/assets/upi-official.jpeg';
@@ -52,7 +53,7 @@ export default function PayModal({ station, user, token, onClose, onPaid }: PayM
       const { data: { user: authUser } } = await supabase.auth.getUser();
       if (!authUser) throw new Error('Please sign in first');
       
-      const insertData: any = {
+      const insertData: TablesInsert<'charging_history'> = {
           user_id: authUser.id,
           station_name: station.name,
           amount: parseFloat(amt || '0'),

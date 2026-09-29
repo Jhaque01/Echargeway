@@ -1,3 +1,5 @@
+import { Tables } from '@/integrations/supabase/types';
+
 // Constants
 export const UPI_ID = '9832667682@upi';
 export const UPI_NAME = 'eChargeWay';
@@ -45,6 +47,8 @@ export const DBTN: React.CSSProperties = {
   background: S2, color: TS, border: '1px solid ' + BD, borderRadius: 12,
   padding: '12px', fontWeight: 700, fontSize: 14, cursor: 'pointer',
 };
+
+export type User = Tables<'profiles'>;
 
 // Stations
 export interface Station {

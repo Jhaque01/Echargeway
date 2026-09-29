@@ -3,6 +3,17 @@ import { supabase } from '@/integrations/supabase/client';
 import { fmtAge, UPI_ID, GN, GG, GD, S2, BD, TX, TS, TM, RD, RM, GBTN, DBTN } from '@/lib/powerloop';
 import { Spinner, Avatar, CloseBtn, DInput, TabRow, IcUser, IcMail, IcPhone, IcEdit, IcOk, IcOut, IcHist, IcSet, IcBolt } from '@/components/pl/Shared';
 
+interface ChargingHistory {
+  id: string;
+  station_name: string;
+  amount: number;
+  kwh: number;
+  created_at: string;
+  status: string;
+  upi_id?: string | null;
+  user_id: string;
+}
+
 interface ProfileModalProps {
   user: any;
   session: any;
@@ -11,12 +22,12 @@ interface ProfileModalProps {
   onLogout: () => void;
 }
 
-function downloadReport(user: any, hist: any[]) {
+function downloadReport(user: any, hist: ChargingHistory[]) {
   const rows = hist.length === 0
     ? '<tr><td colspan="4" style="text-align:center;color:#999;padding:24px">No sessions yet</td></tr>'
-    : hist.map(h => `<tr><td>${new Date(h.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</td><td>${h.station_name || '—'}</td><td style="text-align:right">₹${parseFloat(h.amount || 0).toFixed(0)}</td><td style="text-align:right">${h.kwh || 0} kWh</td></tr>`).join('');
-  const totalAmt = hist.reduce((s: number, h: any) => s + parseFloat(h.amount || 0), 0);
-  const totalKwh = hist.reduce((s: number, h: any) => s + (parseFloat(h.kwh) || 0), 0);
+    : hist.map(h => `<tr><td>${new Date(h.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</td><td>${h.station_name || '—'}</td><td style="text-align:right">₹${Number(h.amount || 0).toFixed(0)}</td><td style="text-align:right">${h.kwh || 0} kWh</td></tr>`).join('');
+  const totalAmt = hist.reduce((s: number, h: ChargingHistory) => s + Number(h.amount || 0), 0);
+  const totalKwh = hist.reduce((s: number, h: ChargingHistory) => s + Number(h.kwh || 0), 0);
   const totRow = hist.length > 0 ? `<tr class="tot"><td colspan="2"><b>Total (${hist.length} sessions)</b></td><td style="text-align:right"><b>₹${totalAmt.toFixed(0)}</b></td><td style="text-align:right"><b>${totalKwh} kWh</b></td></tr>` : '';
   const doc = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>eChargeWay Charging Report</title><style>body{font-family:Arial,sans-serif;max-width:720px;margin:40px auto;color:#222;padding:0 24px}.hd{display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid #22C55E;padding-bottom:14px;margin-bottom:22px}.brand{font-size:26px;font-weight:900}.brand b{color:#22C55E}table{width:100%;border-collapse:collapse}th{background:#22C55E;color:#fff;padding:10px 12px;text-align:left;font-size:13px}td{padding:9px 12px;border-bottom:1px solid #eee;font-size:13px}.tot td{background:#f0fdf4;border-top:2px solid #22C55E}.foot{text-align:center;color:#aaa;font-size:11px;margin-top:36px}</style></head><body><div class="hd"><div class="brand">e<b>Charge</b>Way</div><div style="text-align:right;font-size:12px;color:#666"><b>Charging Report</b><br>Generated: ${new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}</div></div><h2>${user.name || 'User'}</h2><p>📧 ${user.email || '—'}</p><table><thead><tr><th>Date</th><th>Station</th><th style="text-align:right">Amount</th><th style="text-align:right">Energy</th></tr></thead><tbody>${rows}${totRow}</tbody></table><div class="foot">eChargeWay EV Charging · © ${new Date().getFullYear()}</div></body></html>`;
   const blob = new Blob([doc], { type: 'text/html' });
@@ -34,7 +45,7 @@ export default function ProfileModal({ user, session, onClose, onUpdate, onLogou
   const [loading, setLd] = useState(false);
   const [err, setErr] = useState('');
   const [saved, setSaved] = useState(false);
-  const [hist, setHist] = useState<any[] | null>(null);
+  const [hist, setHist] = useState<ChargingHistory[] | null>(null);
   const [hloading, setHl] = useState(false);
 
   useEffect(() => {
@@ -169,11 +180,11 @@ export default function ProfileModal({ user, session, onClose, onUpdate, onLogou
             )}
             {!hloading && hist && hist.length > 0 && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                {hist.map((h: any, i: number) => (
+                {hist.map((h: ChargingHistory, i: number) => (
                   <div key={h.id || i} style={{ background: S2, borderRadius: 14, padding: '13px 16px', border: `1px solid ${BD}` }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 6 }}>
                       <div style={{ fontWeight: 700, fontSize: 14, color: TX, flex: 1, marginRight: 8, lineHeight: 1.35 }}>{h.station_name}</div>
-                      <div style={{ fontWeight: 800, fontSize: 16, color: GN, whiteSpace: 'nowrap' }}>₹{parseFloat(h.amount).toFixed(0)}</div>
+                      <div style={{ fontWeight: 800, fontSize: 16, color: GN, whiteSpace: 'nowrap' }}>₹{Number(h.amount || 0).toFixed(0)}</div>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 9, flexWrap: 'wrap' }}>
                       {h.kwh && <span style={{ fontSize: 11, color: TS, background: '#222', padding: '2px 8px', borderRadius: 20 }}>{h.kwh} kWh</span>}

@@ -6,7 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import {
   requestGeo, sortedStations, sessPrice,
   STATIONS, BG, S1, S2, BD, BM, GN, GG, GD, TX, TS, TM,
-  CARD, IBOX, Station } from
+  CARD, IBOX, Station, User } from
 '@/lib/powerloop';
 import { Avatar, IcBolt, IcPin, IcNav, IcUser, IcSta, IcPeo, IcCity } from '@/components/pl/Shared';
 import AuthModal from '@/components/pl/AuthModal';
@@ -100,7 +100,7 @@ function Milestones() {
 
 
 // Charging Status Bar - shows real data from DB
-function ChargingStatusBar({ user }: { user: any }) {
+function ChargingStatusBar({ user }: { user: User }) {
   const [lastSession, setLastSession] = useState<any>(null);
   const [percent, setPercent] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -332,9 +332,11 @@ export default function PowerLoopApp() {
           <div className="fu" style={{ opacity: 0 }}><ChargingCard /></div>
 
           {/* Live charging status bar - real data */}
-          <div className="fu" style={{ animationDelay: '.06s', opacity: 0 }}>
-            <ChargingStatusBar user={user} />
-          </div>
+          {user && (
+            <div className="fu" style={{ animationDelay: '.06s', opacity: 0 }}>
+              <ChargingStatusBar user={user} />
+            </div>
+          )}
 
           {/* Nearest station */}
           <div className="fu" style={{ animationDelay: '.12s', opacity: 0 }}>

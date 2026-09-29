@@ -3,7 +3,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import {
   Station, sortedStations, sessPrice, requestGeo, BLR,
-  GN, GG, GD, S1, S2, S3, BD, BM, TX, TS, TM, RD, SMCARD,
+  GN, GG, GD, S1, S2, S3, BD, BM, TX, TS, TM, RD, SMCARD, User
 } from '@/lib/powerloop';
 import { Avatar, Spinner, IcBolt, IcCar, IcNav, IcRup, IcLoc } from '@/components/pl/Shared';
 import PayModal from '@/components/pl/PayModal';
@@ -11,7 +11,7 @@ import upiLogo from '@/assets/upi-official.jpeg';
 
 interface MapScreenProps {
   onBack: () => void;
-  user: any;
+  user: User | null;
   token: string;
   onHistAdd?: (h: any) => void;
 }
@@ -291,7 +291,7 @@ export default function MapScreen({ onBack, user, token, onHistAdd }: MapScreenP
         )}
       </div>
 
-      {showPay && sel && (
+      {showPay && sel && user && (
         <PayModal
           station={sel} user={user} token={token}
           onClose={() => setShowPay(false)}

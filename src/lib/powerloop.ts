@@ -47,6 +47,17 @@ export const DBTN: React.CSSProperties = {
 };
 
 // Stations
+export interface User {
+  id: string;
+  name: string;
+  email: string | null;
+  phone: string | null;
+  avatar_url: string | null;
+  created_at?: string;
+  onboarded?: boolean;
+  preferred_charge_limit?: number;
+}
+
 export interface Station {
   id: number;
   name: string;

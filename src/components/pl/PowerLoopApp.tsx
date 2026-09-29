@@ -12,6 +12,10 @@ import { Avatar, IcBolt, IcPin, IcNav, IcUser, IcSta, IcPeo, IcCity } from '@/co
 import AuthModal from '@/components/pl/AuthModal';
 import ProfileModal from '@/components/pl/ProfileModal';
 import SiteFooter from '@/components/pl/SiteFooter';
+import { Session } from '@supabase/supabase-js';
+import { Database } from '@/integrations/supabase/types';
+
+type Profile = Database['public']['Tables']['profiles']['Row'];
 
 // Counter component
 function Counter({ target, suffix }: {target: number;suffix?: string;}) {
@@ -100,7 +104,7 @@ function Milestones() {
 
 
 // Charging Status Bar - shows real data from DB
-function ChargingStatusBar({ user }: { user: any }) {
+function ChargingStatusBar({ user }: { user: Profile | null }) {
   const [lastSession, setLastSession] = useState<any>(null);
   const [percent, setPercent] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -218,8 +222,8 @@ export default function PowerLoopApp() {
   const isMobile = useIsMobile();
   const [showAuth, setShowAuth] = useState(false);
   const [showProf, setShowProf] = useState(false);
-  const [user, setUser] = useState<any>(null);
-  const [session, setSession] = useState<any>(null);
+  const [user, setUser] = useState<Profile | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [nearest, setNearest] = useState<Station | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
   
@@ -266,12 +270,12 @@ export default function PowerLoopApp() {
     );
   }, []);
 
-  const onAuthOk = (profile: any, sess: any) => {
+  const onAuthOk = (profile: Profile, sess: Session) => {
     setUser(profile);
     setSession(sess);
     setShowAuth(false);
   };
-  const onUpdate = (u: any) => { setUser(u); };
+  const onUpdate = (u: Profile) => { setUser(u); };
   const onLogout = async () => {
     await supabase.auth.signOut();
     setUser(null);

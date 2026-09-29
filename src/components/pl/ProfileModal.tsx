@@ -65,7 +65,7 @@ export default function ProfileModal({ user, session, onClose, onUpdate, onLogou
   const save = async () => {
     setLd(true); setErr('');
     try {
-      const b: any = {};
+      const b: { name?: string; email?: string; phone?: string } = {};
       if (form.name !== (user.name || '')) b.name = form.name;
       if (form.email !== (user.email || '')) b.email = form.email;
       if (form.phone !== (user.phone || '')) b.phone = form.phone;

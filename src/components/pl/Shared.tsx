@@ -1,5 +1,5 @@
 import React from 'react';
-import { GN, S2, BD, TS, TX, GD, GG, RD, RM } from '@/lib/powerloop';
+import { GN, S2, BD, TS, TX, GG, RD, RM } from '@/lib/powerloop';
 
 export const Spinner = ({ sz = 22, col }: { sz?: number; col?: string }) => (
   <div style={{

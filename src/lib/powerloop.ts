@@ -126,7 +126,18 @@ export const store = {
 
 // Local DB
 export const DB = {
-  users: { get: () => store.get('pl_db_usr') || [], save: (v: any) => store.set('pl_db_usr', v) },
+  users: {
+    get: () => {
+      const d = store.get('pl_db_usr') || {};
+      if (Array.isArray(d)) {
+        const obj = d.reduce((acc: any, u: any) => { acc[u.phone] = u; return acc; }, {});
+        store.set('pl_db_usr', obj);
+        return obj;
+      }
+      return d;
+    },
+    save: (v: any) => store.set('pl_db_usr', v)
+  },
   otps: { get: () => store.get('pl_db_otp') || {}, save: (v: any) => store.set('pl_db_otp', v) },
   hist: { get: (uid: string) => store.get('pl_hist_' + uid) || [], save: (uid: string, v: any) => store.set('pl_hist_' + uid, v) },
 };
@@ -165,7 +176,7 @@ export async function callApi(path: string, method?: string, body?: any, token?:
     if (e.otp !== otp) throw new Error('Invalid OTP — please try again');
     delete otps[ph]; DB.otps.save(otps);
     const users = DB.users.get();
-    const u = users.find((x: any) => x.phone === ph);
+    const u = Object.prototype.hasOwnProperty.call(users, ph) ? users[ph] : undefined;
     if (u) return { status: 'LOGIN', token: mkToken(u.id), user: u };
     return { status: 'NEW_USER', verify_token: btoa(JSON.stringify({ phone: ph, exp: Date.now() + 600000 })) };
   }
@@ -177,7 +188,7 @@ export async function callApi(path: string, method?: string, body?: any, token?:
     if (v.exp < Date.now()) throw new Error('Session expired');
     const users = DB.users.get();
     const nu = { id: 'u' + Date.now(), name, phone: v.phone, email: email || '', avatar_url: null, created_at: new Date().toISOString() };
-    users.push(nu); DB.users.save(users);
+    users[v.phone] = nu; DB.users.save(users);
     return { token: mkToken(nu.id), user: nu };
   }
 
@@ -185,18 +196,19 @@ export async function callApi(path: string, method?: string, body?: any, token?:
 
   if (path === '/profile' && method === 'GET') {
     const p = chkToken(token!);
-    const u = DB.users.get().find((x: any) => x.id === p.uid);
+    const u = Object.values(DB.users.get()).find((x: any) => x.id === p.uid);
     if (!u) throw new Error('User not found');
     return u;
   }
 
   if (path === '/profile' && method === 'PUT') {
     const p = chkToken(token!);
-    const arr = DB.users.get();
-    const i = arr.findIndex((x: any) => x.id === p.uid);
-    if (i === -1) throw new Error('User not found');
-    arr[i] = { ...arr[i], ...body }; DB.users.save(arr);
-    return arr[i];
+    const usersMap = DB.users.get();
+    const u: any = Object.values(usersMap).find((x: any) => x.id === p.uid);
+    if (!u) throw new Error('User not found');
+    const phone = u.phone;
+    usersMap[phone] = { ...usersMap[phone], ...body }; DB.users.save(usersMap);
+    return usersMap[phone];
   }
 
   if (path === '/history' && method === 'GET') {

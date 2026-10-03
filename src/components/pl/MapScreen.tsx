@@ -117,7 +117,7 @@ export default function MapScreen({ onBack, user, token, onHistAdd }: MapScreenP
   const openNav = () => {
     if (!sel) return;
     const o = pos ? `&origin=${pos.lat},${pos.lng}` : '';
-    window.open(`https://www.google.com/maps/dir/?api=1${o}&destination=${sel.lat},${sel.lng}&travelmode=driving`, '_blank');
+    window.open(`https://www.google.com/maps/dir/?api=1${o}&destination=${sel.lat},${sel.lng}&travelmode=driving`, '_blank', 'noopener,noreferrer');
   };
 
   const recenter = () => {

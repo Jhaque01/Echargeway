@@ -5,7 +5,7 @@ import {
   Station, sortedStations, sessPrice, requestGeo, BLR,
   GN, GG, GD, S1, S2, S3, BD, BM, TX, TS, TM, RD, SMCARD,
 } from '@/lib/powerloop';
-import { Avatar, Spinner, IcBolt, IcCar, IcNav, IcRup, IcLoc } from '@/components/pl/Shared';
+import { Avatar, Spinner, IcBolt, IcCar, IcNav, IcRup, IcLoc } from '@/components/pl/index';
 import PayModal from '@/components/pl/PayModal';
 import upiLogo from '@/assets/upi-official.jpeg';
 

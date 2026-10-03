@@ -8,7 +8,7 @@ import {
   STATIONS, BG, S1, S2, BD, BM, GN, GG, GD, TX, TS, TM,
   CARD, IBOX, Station } from
 '@/lib/powerloop';
-import { Avatar, IcBolt, IcPin, IcNav, IcUser, IcSta, IcPeo, IcCity } from '@/components/pl/Shared';
+import { Avatar, IcBolt, IcPin, IcNav, IcUser, IcSta, IcPeo, IcCity } from '@/components/pl/index';
 import AuthModal from '@/components/pl/AuthModal';
 import ProfileModal from '@/components/pl/ProfileModal';
 import SiteFooter from '@/components/pl/SiteFooter';

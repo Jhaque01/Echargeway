@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import ecwLogo from '@/assets/echargeway-logo.png';
 import { BG, S1, S2, S3, BD, GN, GG, GD, TX, TS, TM } from '@/lib/powerloop';
-import { IcBolt } from '@/components/pl/Shared';
+import { IcBolt } from '@/components/pl/index';
 import SiteFooter from '@/components/pl/SiteFooter';
 import { useIsMobile } from '@/hooks/use-mobile';
 

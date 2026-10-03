@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { lovable } from '@/integrations/lovable/index';
 import { GN, GG, S2, S3, BD, TX, TS, TM, GD } from '@/lib/powerloop';
-import { Spinner, CloseBtn, DInput, ErrBanner, IcUser, IcMail, IcOk, GoogleG } from '@/components/pl/Shared';
+import { Spinner, CloseBtn, DInput, ErrBanner, IcUser, IcMail, IcOk, GoogleG } from '@/components/pl/index';
 
 interface AuthModalProps {
   onClose: () => void;

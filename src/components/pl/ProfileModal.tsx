@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { fmtAge, UPI_ID, GN, GG, GD, S2, BD, TX, TS, TM, RD, RM, GBTN, DBTN } from '@/lib/powerloop';
-import { Spinner, Avatar, CloseBtn, DInput, TabRow, IcUser, IcMail, IcPhone, IcEdit, IcOk, IcOut, IcHist, IcSet, IcBolt } from '@/components/pl/Shared';
+import { Spinner, Avatar, CloseBtn, DInput, TabRow, IcUser, IcMail, IcPhone, IcEdit, IcOk, IcOut, IcHist, IcSet } from '@/components/pl/Shared';
 
 interface ProfileModalProps {
   user: any;

@@ -3,6 +3,11 @@ import { supabase } from '@/integrations/supabase/client';
 import { lovable } from '@/integrations/lovable/index';
 import { GN, GG, S2, S3, BD, TX, TS, TM, GD } from '@/lib/powerloop';
 import { Spinner, CloseBtn, DInput, ErrBanner, IcUser, IcMail, IcOk, GoogleG } from '@/components/pl/Shared';
+import { AuthChoose } from './auth/AuthChoose';
+import { AuthEmail } from './auth/AuthEmail';
+import { AuthPhone } from './auth/AuthPhone';
+import { AuthOtp } from './auth/AuthOtp';
+import { AuthRegister } from './auth/AuthRegister';
 
 interface AuthModalProps {
   onClose: () => void;
@@ -41,8 +46,8 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
         redirect_uri: window.location.origin,
       });
       if (result.error) throw result.error;
-    } catch (e: any) {
-      setErr(e.message || 'Google sign-in failed');
+    } catch (e: unknown) {
+      setErr(e instanceof Error ? e.message : 'Google sign-in failed');
     }
     setLoading(false);
   };
@@ -70,7 +75,7 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
       setCntdn(60);
       setDigits(Array(6).fill(''));
       setTimeout(() => { boxRefs.current[0]?.focus(); }, 120);
-    } catch (e: any) { setErr(e.message || 'Failed to send OTP'); }
+    } catch (e: unknown) { setErr(e instanceof Error ? e.message : 'Failed to send OTP'); }
     setLoading(false);
   };
 
@@ -123,8 +128,8 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
           setStep('register');
         }
       }
-    } catch (e: any) {
-      setErr(e.message || 'Invalid OTP — please try again');
+    } catch (e: unknown) {
+      setErr(e instanceof Error ? e.message : 'Invalid OTP — please try again');
       setShake(true); setDigits(Array(6).fill(''));
       setTimeout(() => { setShake(false); boxRefs.current[0]?.focus(); }, 400);
     }
@@ -154,7 +159,7 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
 
       const { data: { session } } = await supabase.auth.getSession();
       onSuccess(profile, session);
-    } catch (e: any) { setErr(e.message); }
+    } catch (e: unknown) { setErr(e instanceof Error ? e.message : 'Unknown error'); }
     setLoading(false);
   };
 
@@ -190,189 +195,70 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
         </div>
 
         {step === 'choose' && (
-          <>
-            <p className="text-center" style={{ color: TS, fontSize: 13.5, lineHeight: 1.7, marginBottom: 18 }}>
-              Sign in or create an account
-            </p>
-
-            {/* Google Sign-In */}
-            <button className="press" onClick={handleGoogleSignIn} disabled={loading} style={{
-              width: '100%', padding: '15px', background: '#fff', color: '#222', border: 'none',
-              borderRadius: 13, fontWeight: 700, fontSize: 14, cursor: 'pointer', marginBottom: 10,
-              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, fontFamily: 'inherit',
-              opacity: loading ? 0.7 : 1,
-            }}>
-              {loading ? <Spinner sz={18} col="#222" /> : <GoogleG s={20} />} Continue with Google
-            </button>
-
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12, margin: '6px 0 14px' }}>
-              <div style={{ flex: 1, height: 1, background: BD }} />
-              <span style={{ fontSize: 11, color: TM, fontWeight: 600 }}>or</span>
-              <div style={{ flex: 1, height: 1, background: BD }} />
-            </div>
-
-            {methodBtn('Continue with Email', <IcMail />, () => { setAuthMethod('email'); setStep('email'); setErr(''); })}
-            {methodBtn('Continue with Phone', <span></span>, () => { setAuthMethod('phone'); setStep('phone'); setErr(''); })}
-          </>
+          <AuthChoose
+            handleGoogleSignIn={handleGoogleSignIn}
+            loading={loading}
+            setAuthMethod={setAuthMethod}
+            setStep={setStep}
+            setErr={setErr}
+            methodBtn={methodBtn}
+          />
         )}
 
         {step === 'email' && (
-          <>
-            <p style={{ color: TS, fontSize: 13.5, lineHeight: 1.7, marginBottom: 16 }}>
-              Enter your email. We'll send a 6-digit OTP — works for both new and existing accounts.
-            </p>
-            {lbl('Email Address')}
-            <DInput ph="you@email.com" type="email" value={email}
-              onChange={e => setEmail(e.target.value)} icon={<IcMail />} autoFocus />
-            <button className="press" onClick={() => sendOtp(false)} disabled={loading} style={{
-              width: '100%', padding: '14px', background: GN, color: '#fff', border: 'none',
-              borderRadius: 13, fontWeight: 800, fontSize: 15, cursor: 'pointer',
-              opacity: loading ? 0.7 : 1, marginTop: 4,
-              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
-              boxShadow: loading ? 'none' : `0 0 24px ${GG}`, fontFamily: 'inherit',
-            }}>
-              {loading ? <><Spinner sz={20} col="#fff" />Sending OTP…</> : 'Send OTP →'}
-            </button>
-            <button onClick={() => { setStep('choose'); setErr(''); }} style={{
-              width: '100%', marginTop: 10, padding: '10px', background: 'transparent',
-              border: `1px solid ${BD}`, color: TS, borderRadius: 11, fontWeight: 600, fontSize: 13,
-              cursor: 'pointer', fontFamily: 'inherit',
-            }}>← Back</button>
-          </>
+          <AuthEmail
+            email={email}
+            setEmail={setEmail}
+            sendOtp={sendOtp}
+            loading={loading}
+            setStep={setStep}
+            setErr={setErr}
+            lbl={lbl}
+          />
         )}
 
         {step === 'phone' && (
-          <>
-            <p style={{ color: TS, fontSize: 13.5, lineHeight: 1.7, marginBottom: 16 }}>
-              Enter your mobile number. Works for both new and existing accounts.
-            </p>
-            {lbl('Phone Number')}
-            <div style={{ display: 'flex', gap: 8, marginBottom: 10 }}>
-              <div style={{
-                background: S3, border: `1.5px solid ${BD}`, borderRadius: 12,
-                padding: '12px', color: GN, fontWeight: 800, fontSize: 15, minWidth: 56, textAlign: 'center',
-              }}>+91</div>
-              <DInput ph="9876543210" type="tel" value={phone}
-                onChange={e => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))} autoFocus />
-            </div>
-            <button className="press" onClick={() => sendOtp(false)} disabled={loading} style={{
-              width: '100%', padding: '14px', background: GN, color: '#fff', border: 'none',
-              borderRadius: 13, fontWeight: 800, fontSize: 15, cursor: 'pointer',
-              opacity: loading ? 0.7 : 1, marginTop: 4,
-              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
-              boxShadow: loading ? 'none' : `0 0 24px ${GG}`, fontFamily: 'inherit',
-            }}>
-              {loading ? <><Spinner sz={20} col="#fff" />Sending OTP…</> : 'Send OTP →'}
-            </button>
-            <button onClick={() => { setStep('choose'); setErr(''); }} style={{
-              width: '100%', marginTop: 10, padding: '10px', background: 'transparent',
-              border: `1px solid ${BD}`, color: TS, borderRadius: 11, fontWeight: 600, fontSize: 13,
-              cursor: 'pointer', fontFamily: 'inherit',
-            }}>← Back</button>
-          </>
+          <AuthPhone
+            phone={phone}
+            setPhone={setPhone}
+            sendOtp={sendOtp}
+            loading={loading}
+            setStep={setStep}
+            setErr={setErr}
+            lbl={lbl}
+          />
         )}
 
         {step === 'otp' && (
-          <>
-            <div style={{ textAlign: 'center', marginBottom: 20 }}>
-              <div style={{ fontWeight: 800, fontSize: 17, color: TX, marginBottom: 5 }}>Enter the 6-digit OTP</div>
-              <div style={{ fontSize: 13, color: TS }}>Sent to <span style={{ color: GN, fontWeight: 700 }}>{authMethod === 'email' ? email : `+91 ${phone}`}</span></div>
-              <div style={{
-                background: GD, border: '1px solid rgba(34,197,94,.2)', borderRadius: 9,
-                padding: '7px 12px', marginTop: 10, color: GN, fontSize: 12, fontWeight: 700,
-              }}>
-                {authMethod === 'email' ? '📧 Check your email inbox for the OTP code' : '📱 Check your SMS for the OTP code'}
-              </div>
-            </div>
-
-            <div className={shake ? 'shake' : ''} style={{ display: 'flex', gap: 8, justifyContent: 'center', marginBottom: 20 }}>
-              {digits.map((d: string, i: number) => (
-                <input key={i} ref={el => { boxRefs.current[i] = el; }}
-                  style={{
-                    width: 44, height: 54, textAlign: 'center', fontSize: 22, fontWeight: 800,
-                    borderRadius: 13, border: `2px solid ${d ? 'rgba(34,197,94,.45)' : 'rgba(255,255,255,.12)'}`,
-                    background: '#222', color: TX, outline: 'none',
-                    transition: 'border-color .15s, box-shadow .15s', caretColor: 'transparent',
-                    fontFamily: 'inherit',
-                  }}
-                  type="tel" inputMode="numeric" maxLength={1} value={d}
-                  onChange={e => onDigitChange(i, e.target.value)}
-                  onKeyDown={e => onDigitKey(i, e)}
-                  onPaste={i === 0 ? onDigitPaste : undefined}
-                  disabled={loading}
-                />
-              ))}
-            </div>
-
-            <button className="press" onClick={() => verifyOtp()} disabled={loading || digits.some((d: string) => !d)} style={{
-              width: '100%', padding: '14px',
-              background: digits.every((d: string) => d) ? GN : S3,
-              color: digits.every((d: string) => d) ? '#fff' : TM,
-              border: 'none', borderRadius: 13, fontWeight: 800, fontSize: 15, cursor: 'pointer',
-              transition: 'all .2s', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
-              boxShadow: digits.every((d: string) => d) ? `0 0 22px ${GG}` : 'none', fontFamily: 'inherit',
-            }}>
-              {loading ? <><Spinner sz={20} col="#fff" />Verifying…</> : 'Verify OTP →'}
-            </button>
-
-            <div style={{ textAlign: 'center', marginTop: 14 }}>
-              {countdown > 0
-                ? <span style={{ fontSize: 13, color: TM }}>Resend OTP in <b style={{ color: GN }}>0:{String(countdown).padStart(2, '0')}</b></span>
-                : <button onClick={() => sendOtp(true)} disabled={loading} style={{
-                  background: 'transparent', border: 'none', color: GN, fontWeight: 700, fontSize: 13,
-                  cursor: 'pointer', textDecoration: 'underline', textUnderlineOffset: '3px', fontFamily: 'inherit',
-                }}>Resend OTP</button>
-              }
-            </div>
-
-            <button onClick={() => { setStep(authMethod === 'email' ? 'email' : 'phone'); setDigits(Array(6).fill('')); setErr(''); setCntdn(0); }} style={{
-              width: '100%', marginTop: 10, padding: '10px', background: 'transparent',
-              border: `1px solid ${BD}`, color: TS, borderRadius: 11, fontWeight: 600, fontSize: 13,
-              cursor: 'pointer', fontFamily: 'inherit',
-            }}>← Change {authMethod === 'email' ? 'Email' : 'Phone'}</button>
-          </>
+          <AuthOtp
+            authMethod={authMethod}
+            email={email}
+            phone={phone}
+            shake={shake}
+            digits={digits}
+            boxRefs={boxRefs}
+            onDigitChange={onDigitChange}
+            onDigitKey={onDigitKey}
+            onDigitPaste={onDigitPaste}
+            loading={loading}
+            verifyOtp={verifyOtp}
+            countdown={countdown}
+            sendOtp={sendOtp}
+            setStep={setStep}
+            setDigits={setDigits}
+            setErr={setErr}
+            setCntdn={setCntdn}
+          />
         )}
 
         {step === 'register' && (
-          <>
-            <div style={{
-              background: GD, border: '1px solid rgba(34,197,94,.25)', borderRadius: 12,
-              padding: '11px 14px', color: GN, fontSize: 13, fontWeight: 700, marginBottom: 18,
-              display: 'flex', alignItems: 'center', gap: 8,
-            }}>
-              <IcOk s={16} />Verified! Set up your profile.
-            </div>
-            {lbl('Your Name *')}
-            <DInput ph="Full Name" value={name} onChange={e => setName(e.target.value)} icon={<IcUser />} autoFocus />
-            
-            {/* Name initial preview */}
-            {name.trim() && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
-                <div style={{
-                  width: 42, height: 42, borderRadius: '50%',
-                  background: `linear-gradient(135deg,${GN},#16A34A)`,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontWeight: 900, fontSize: 18, color: '#fff',
-                  boxShadow: `0 0 16px ${GG}`, border: '2.5px solid rgba(34,197,94,.4)',
-                }}>
-                  {name.trim()[0].toUpperCase()}
-                </div>
-                <div>
-                  <div style={{ fontWeight: 700, fontSize: 14, color: TX }}>{name.trim()}</div>
-                  <div style={{ fontSize: 11, color: TM }}>Your profile avatar</div>
-                </div>
-              </div>
-            )}
-
-            <button className="press" onClick={doRegister} disabled={loading} style={{
-              width: '100%', padding: '14px', background: GN, color: '#fff', border: 'none',
-              borderRadius: 13, fontWeight: 800, fontSize: 15, cursor: 'pointer',
-              opacity: loading ? 0.7 : 1, boxShadow: loading ? 'none' : `0 0 22px ${GG}`,
-              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, fontFamily: 'inherit',
-            }}>
-              {loading ? <><Spinner sz={20} col="#fff" />Creating…</> : 'Create Account →'}
-            </button>
-          </>
+          <AuthRegister
+            name={name}
+            setName={setName}
+            doRegister={doRegister}
+            loading={loading}
+            lbl={lbl}
+          />
         )}
 
         <ErrBanner msg={err} />

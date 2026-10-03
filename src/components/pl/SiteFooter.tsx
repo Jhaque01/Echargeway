@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import ecwLogo from '@/assets/echargeway-logo.png';
-import { BG, S1, BD, GN, GG, TX, TS, TM } from '@/lib/powerloop';
+import { S1, BD, GN, GG, TX, TS, TM } from '@/lib/powerloop';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 const XIcon = () => (

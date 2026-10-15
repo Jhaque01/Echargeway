@@ -70,7 +70,7 @@ export const STATIONS: Station[] = [
   { id: 6, name: 'Electronic City Hub', lat: 12.8394, lng: 77.6769, av: 1, tot: 4, price: 15.5, types: 'Type 2 (22kW)' },
 ];
 
-export const BLR = { lat: 12.9352, lng: 77.6245 };
+export { BLR } from './ev';
 
 // Utils
 export function haversine(a: number, b: number, c: number, d: number) {

@@ -144,7 +144,17 @@ export function chkToken(tok: string) {
 }
 
 // Local API
-export async function callApi(path: string, method?: string, body?: any, token?: string): Promise<any> {
+
+export interface ApiPayload {
+  phone?: string;
+  otp?: string;
+  verify_token?: string;
+  name?: string;
+  email?: string;
+  [key: string]: unknown;
+}
+
+export async function callApi(path: string, method?: string, body?: ApiPayload, token?: string): Promise<unknown> {
   await new Promise(r => setTimeout(r, 340));
   method = method || 'GET';
 

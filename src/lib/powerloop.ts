@@ -1,6 +1,8 @@
+import { UPI_ID, UPI_NAME, BLR, haversine } from './ev';
+
+export { UPI_ID, UPI_NAME, BLR, haversine };
+
 // Constants
-export const UPI_ID = '9832667682@upi';
-export const UPI_NAME = 'eChargeWay';
 export const KWH_SES = 30;
 
 // Colors
@@ -70,16 +72,7 @@ export const STATIONS: Station[] = [
   { id: 6, name: 'Electronic City Hub', lat: 12.8394, lng: 77.6769, av: 1, tot: 4, price: 15.5, types: 'Type 2 (22kW)' },
 ];
 
-export const BLR = { lat: 12.9352, lng: 77.6245 };
-
 // Utils
-export function haversine(a: number, b: number, c: number, d: number) {
-  const R = 6371;
-  const r = (x: number) => x * Math.PI / 180;
-  const v = Math.sin(r(c - a) / 2) ** 2 + Math.cos(r(a)) * Math.cos(r(c)) * Math.sin(r(d - b) / 2) ** 2;
-  return R * 2 * Math.atan2(Math.sqrt(v), Math.sqrt(1 - v));
-}
-
 export function fmtDist(km: number) {
   return km < 1 ? Math.round(km * 1000) + ' m' : km.toFixed(1) + ' km';
 }

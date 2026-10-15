@@ -125,10 +125,24 @@ export const store = {
 };
 
 // Local DB
+const _cache: Record<string, { raw: string; parsed: any }> = {};
+const memoGet = (k: string, def: any) => {
+  const raw = localStorage.getItem(k);
+  if (!raw) return def;
+  if (_cache[k] && _cache[k].raw === raw) return _cache[k].parsed;
+  try {
+    const parsed = JSON.parse(raw);
+    _cache[k] = { raw, parsed };
+    return parsed;
+  } catch {
+    return def;
+  }
+};
+
 export const DB = {
-  users: { get: () => store.get('pl_db_usr') || [], save: (v: any) => store.set('pl_db_usr', v) },
-  otps: { get: () => store.get('pl_db_otp') || {}, save: (v: any) => store.set('pl_db_otp', v) },
-  hist: { get: (uid: string) => store.get('pl_hist_' + uid) || [], save: (uid: string, v: any) => store.set('pl_hist_' + uid, v) },
+  users: { get: () => memoGet('pl_db_usr', []), save: (v: any) => store.set('pl_db_usr', v) },
+  otps: { get: () => memoGet('pl_db_otp', {}), save: (v: any) => store.set('pl_db_otp', v) },
+  hist: { get: (uid: string) => memoGet('pl_hist_' + uid, []), save: (uid: string, v: any) => store.set('pl_hist_' + uid, v) },
 };
 
 function mkToken(uid: string) { return btoa(JSON.stringify({ uid, exp: Date.now() + 30 * 24 * 3600000 })); }

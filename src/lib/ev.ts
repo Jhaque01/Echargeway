@@ -126,7 +126,10 @@ export function upiQrUrl(amount: number, note: string) {
 }
 
 export function txnId() {
-  return `ECW${Date.now().toString(36).toUpperCase()}${Math.floor(Math.random() * 900 + 100)}`;
+  const array = new Uint32Array(1);
+  crypto.getRandomValues(array);
+  const randomNum = 100 + (array[0] % 900);
+  return `ECW${Date.now().toString(36).toUpperCase()}${randomNum}`;
 }
 
 export function requestGeo(timeoutMs = 10000): Promise<{ lat: number; lng: number }> {

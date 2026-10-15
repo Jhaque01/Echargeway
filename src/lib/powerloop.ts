@@ -1,6 +1,7 @@
+import { UPI_ID, UPI_NAME } from './ev';
+
 // Constants
-export const UPI_ID = '9832667682@upi';
-export const UPI_NAME = 'eChargeWay';
+export { UPI_ID, UPI_NAME };
 export const KWH_SES = 30;
 
 // Colors

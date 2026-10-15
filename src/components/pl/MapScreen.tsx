@@ -8,12 +8,16 @@ import {
 import { Avatar, Spinner, IcBolt, IcCar, IcNav, IcRup, IcLoc } from '@/components/pl/Shared';
 import PayModal from '@/components/pl/PayModal';
 import upiLogo from '@/assets/upi-official.jpeg';
+import type { Database } from '@/integrations/supabase/types';
+
+type User = Database['public']['Tables']['profiles']['Row'];
+type History = Database['public']['Tables']['charging_history']['Row'];
 
 interface MapScreenProps {
   onBack: () => void;
-  user: any;
+  user: User | null;
   token: string;
-  onHistAdd?: (h: any) => void;
+  onHistAdd?: (h: History) => void;
 }
 
 export default function MapScreen({ onBack, user, token, onHistAdd }: MapScreenProps) {

@@ -1,3 +1,5 @@
+import { requestGeo as requestGeoPromise } from './ev';
+
 // Constants
 export const UPI_ID = '9832667682@upi';
 export const UPI_NAME = 'eChargeWay';
@@ -218,11 +220,7 @@ export async function callApi(path: string, method?: string, body?: any, token?:
 
 // Geolocation
 export function requestGeo(onOk: (pos: { lat: number; lng: number }) => void, onFail: (msg: string) => void, timeoutMs?: number) {
-  if (!navigator.geolocation) { onFail('Geolocation not supported'); return; }
-  const timer = setTimeout(() => onFail('Location timed out'), timeoutMs || 10000);
-  navigator.geolocation.getCurrentPosition(
-    pos => { clearTimeout(timer); onOk({ lat: pos.coords.latitude, lng: pos.coords.longitude }); },
-    err => { clearTimeout(timer); onFail(err.message || 'Permission denied'); },
-    { enableHighAccuracy: true, timeout: timeoutMs || 10000, maximumAge: 0 }
-  );
+  requestGeoPromise(timeoutMs)
+    .then(onOk)
+    .catch(err => onFail(err.message || 'Location failed'));
 }

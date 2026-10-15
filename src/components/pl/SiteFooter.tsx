@@ -27,10 +27,8 @@ export default function SiteFooter() {
   const isMobile = useIsMobile();
 
   const cols = [
-    { title: 'Product', items: [{ label: 'Features', action: () => navigate('/home') }, { label: 'Find Chargers', action: () => navigate('/station') }, { label: 'Pricing', action: () => {} }] },
-    { title: 'Company', items: [{ label: 'About Us', action: () => navigate('/about') }, { label: 'Careers', action: () => {} }, { label: 'Partners', action: () => {} }, { label: 'Contact', action: () => {} }] },
-    { title: 'Resources', items: [{ label: 'Blog', action: () => {} }, { label: 'Help Center', action: () => {} }, { label: 'API Docs', action: () => {} }, { label: 'Status', action: () => {} }] },
-    { title: 'Legal', items: [{ label: 'Privacy Policy', action: () => {} }, { label: 'Terms of Service', action: () => {} }, { label: 'Cookie Policy', action: () => {} }] },
+    { title: 'Product', items: [{ label: 'Features', action: () => navigate('/home') }, { label: 'Find Chargers', action: () => navigate('/station') }] },
+    { title: 'Company', items: [{ label: 'About Us', action: () => navigate('/about') }] },
   ];
 
   return (

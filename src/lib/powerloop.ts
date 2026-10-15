@@ -118,9 +118,34 @@ export function makeDeepLink(amount: string, stName: string) {
 }
 
 // Storage
+const SECRET = 'pl_secure_8372';
+function _enc(str: string) {
+  const e = encodeURIComponent(str);
+  let r = '';
+  for (let i = 0; i < e.length; i++) r += String.fromCharCode(e.charCodeAt(i) ^ SECRET.charCodeAt(i % SECRET.length));
+  return btoa(r);
+}
+function _dec(str: string) {
+  const d = atob(str);
+  let r = '';
+  for (let i = 0; i < d.length; i++) r += String.fromCharCode(d.charCodeAt(i) ^ SECRET.charCodeAt(i % SECRET.length));
+  return decodeURIComponent(r);
+}
+
 export const store = {
-  get: (k: string) => { try { return JSON.parse(localStorage.getItem(k) || 'null'); } catch { return null; } },
-  set: (k: string, v: any) => localStorage.setItem(k, JSON.stringify(v)),
+  get: (k: string) => {
+    try {
+      const raw = localStorage.getItem(k);
+      if (!raw) return null;
+      if (raw.startsWith('enc:')) {
+        return JSON.parse(_dec(raw.slice(4)));
+      }
+      return JSON.parse(raw);
+    } catch {
+      return null;
+    }
+  },
+  set: (k: string, v: any) => localStorage.setItem(k, 'enc:' + _enc(JSON.stringify(v))),
   del: (k: string) => localStorage.removeItem(k),
 };
 

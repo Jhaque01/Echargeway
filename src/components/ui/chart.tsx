@@ -81,7 +81,18 @@ ${colorConfig
 }
 `,
           )
-          .join("\n"),
+          .join("\n")
+          // Sanitize CSS payload to prevent XSS via SSR where style tag children are not escaped
+          .replace(/[<>"'&]/g, (match) => {
+            switch (match) {
+              case "<": return "\\3C ";
+              case ">": return "\\3E ";
+              case '"': return "\\22 ";
+              case "'": return "\\27 ";
+              case "&": return "\\26 ";
+              default: return match;
+            }
+          }),
       }}
     />
   );

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import {
-  Station, sortedStations, sessPrice, requestGeo, BLR,
+  Station, sortedStations, sessPrice, requestGeo, BLR, DEFAULT_ZOOM,
   GN, GG, GD, S1, S2, S3, BD, BM, TX, TS, TM, RD, SMCARD,
 } from '@/lib/powerloop';
 import { Avatar, Spinner, IcBolt, IcCar, IcNav, IcRup, IcLoc } from '@/components/pl/Shared';
@@ -62,8 +62,8 @@ export default function MapScreen({ onBack, user, token, onHistAdd }: MapScreenP
       if (!el || mapRef.current) return;
 
       const map = L.map(el, {
-        center: [12.9352, 77.6245],
-        zoom: 13,
+        center: [BLR.lat, BLR.lng],
+        zoom: DEFAULT_ZOOM,
         zoomControl: false,
         attributionControl: false,
       });

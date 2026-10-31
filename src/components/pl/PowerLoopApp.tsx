@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import ecwLogo from '@/assets/echargeway-logo.png';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { supabase } from '@/integrations/supabase/client';
+import type { Session } from '@supabase/supabase-js';
+import type { Tables } from '@/integrations/supabase/types';
 import {
   requestGeo, sortedStations, sessPrice,
   STATIONS, BG, S1, S2, BD, BM, GN, GG, GD, TX, TS, TM,
@@ -100,8 +102,8 @@ function Milestones() {
 
 
 // Charging Status Bar - shows real data from DB
-function ChargingStatusBar({ user }: { user: any }) {
-  const [lastSession, setLastSession] = useState<any>(null);
+function ChargingStatusBar({ user }: { user: Tables<'profiles'> | null }) {
+  const [lastSession, setLastSession] = useState<Tables<'charging_history'> | null>(null);
   const [percent, setPercent] = useState(0);
   const [loading, setLoading] = useState(true);
 
@@ -218,8 +220,8 @@ export default function PowerLoopApp() {
   const isMobile = useIsMobile();
   const [showAuth, setShowAuth] = useState(false);
   const [showProf, setShowProf] = useState(false);
-  const [user, setUser] = useState<any>(null);
-  const [session, setSession] = useState<any>(null);
+  const [user, setUser] = useState<Tables<'profiles'> | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [nearest, setNearest] = useState<Station | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
   
@@ -266,12 +268,12 @@ export default function PowerLoopApp() {
     );
   }, []);
 
-  const onAuthOk = (profile: any, sess: any) => {
+  const onAuthOk = (profile: Tables<'profiles'>, sess: Session) => {
     setUser(profile);
     setSession(sess);
     setShowAuth(false);
   };
-  const onUpdate = (u: any) => { setUser(u); };
+  const onUpdate = (u: Tables<'profiles'>) => { setUser(u); };
   const onLogout = async () => {
     await supabase.auth.signOut();
     setUser(null);

@@ -33,9 +33,11 @@ export default function MapScreen({ onBack, user, token, onHistAdd }: MapScreenP
   const redrawMarkers = useCallback((sorted: Station[], selSta: Station | null) => {
     const map = mapRef.current;
     if (!map) return;
-    Object.values(mkRef.current).forEach(m => { try { m.remove(); } catch {} });
-    mkRef.current = {};
+
+    const seenIds = new Set<number>();
+
     sorted.forEach(s => {
+      seenIds.add(s.id);
       const isSel = selSta && s.id === selSta.id;
       const col = isSel ? '#22C55E' : '#1C1C1C';
       const bord = isSel ? '#050505' : 'rgba(34,197,94,.4)';
@@ -46,13 +48,37 @@ export default function MapScreen({ onBack, user, token, onHistAdd }: MapScreenP
         iconAnchor: [19, 46],
         html: `<div style="width:34px;height:34px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:${col};border:2.5px solid ${bord};display:flex;align-items:center;justify-content:center;box-shadow:${glow};cursor:pointer"><span style="transform:rotate(45deg);color:#fff;font-size:9px;font-weight:900">CW</span></div>`,
       });
-      const mk = L.marker([s.lat, s.lng], { icon }).addTo(map);
-      mk.on('click', () => {
-        setSel(s);
-        redrawMarkers(stRef.current, s);
-        map.panTo([s.lat, s.lng], { animate: true, duration: 0.4 } as any);
-      });
-      mkRef.current[s.id] = mk;
+
+      let mk = mkRef.current[s.id];
+      // We store _isSel to dirty check and only update DOM when selection state changes
+      if (mk) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        if ((mk as any)._isSel !== isSel) {
+          mk.setIcon(icon);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (mk as any)._isSel = isSel;
+        }
+      } else {
+        mk = L.marker([s.lat, s.lng], { icon }).addTo(map);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (mk as any)._isSel = isSel;
+        mkRef.current[s.id] = mk;
+
+        mk.on('click', () => {
+          setSel(s);
+          redrawMarkers(stRef.current, s);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          map.panTo([s.lat, s.lng], { animate: true, duration: 0.4 } as any);
+        });
+      }
+    });
+
+    Object.keys(mkRef.current).forEach(idStr => {
+      const id = Number(idStr);
+      if (!seenIds.has(id)) {
+        try { mkRef.current[id].remove(); } catch (e) { /* ignore */ }
+        delete mkRef.current[id];
+      }
     });
   }, []);
 

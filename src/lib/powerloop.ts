@@ -150,7 +150,7 @@ export async function callApi(path: string, method?: string, body?: any, token?:
 
   if (path === '/auth/send-otp') {
     const ph = (body.phone || '').trim();
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const otp = Math.floor(100000 + (crypto.getRandomValues(new Uint32Array(1))[0] / (0xffffffff + 1)) * 900000).toString();
     const otps = DB.otps.get();
     otps[ph] = { otp, exp: Date.now() + 300000 };
     DB.otps.save(otps);

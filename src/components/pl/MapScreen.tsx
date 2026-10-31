@@ -33,7 +33,7 @@ export default function MapScreen({ onBack, user, token, onHistAdd }: MapScreenP
   const redrawMarkers = useCallback((sorted: Station[], selSta: Station | null) => {
     const map = mapRef.current;
     if (!map) return;
-    Object.values(mkRef.current).forEach(m => { try { m.remove(); } catch {} });
+    Object.values(mkRef.current).forEach(m => { try { m.remove(); } catch (e: unknown) { console.error(e instanceof Error ? e.message : String(e)); } });
     mkRef.current = {};
     sorted.forEach(s => {
       const isSel = selSta && s.id === selSta.id;
@@ -88,7 +88,7 @@ export default function MapScreen({ onBack, user, token, onHistAdd }: MapScreenP
           const sorted = sortedStations(p);
           setStns(sorted); setSel(sorted[0]);
           map.setView([p.lat, p.lng], 14, { animate: true });
-          if (uMkRef.current) try { uMkRef.current.remove(); } catch {}
+          if (uMkRef.current) try { uMkRef.current.remove(); } catch (e: unknown) { console.error(e instanceof Error ? e.message : String(e)); }
           uMkRef.current = L.marker([p.lat, p.lng], { icon: userIcon, zIndexOffset: 1000 }).addTo(map);
           redrawMarkers(sorted, sorted[0]);
         },
@@ -104,7 +104,7 @@ export default function MapScreen({ onBack, user, token, onHistAdd }: MapScreenP
 
     return () => {
       clearTimeout(tid);
-      if (mapRef.current) { try { mapRef.current.remove(); } catch {} mapRef.current = null; }
+      if (mapRef.current) { try { mapRef.current.remove(); } catch (e: unknown) { console.error(e instanceof Error ? e.message : String(e)); } mapRef.current = null; }
     };
   }, [redrawMarkers]);
 

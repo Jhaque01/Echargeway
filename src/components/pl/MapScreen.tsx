@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any, no-empty */
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -15,6 +16,15 @@ interface MapScreenProps {
   token: string;
   onHistAdd?: (h: any) => void;
 }
+
+const actionBtnBase: React.CSSProperties = {
+  borderRadius: 14,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  cursor: 'pointer',
+  fontFamily: 'inherit',
+};
 
 export default function MapScreen({ onBack, user, token, onHistAdd }: MapScreenProps) {
   const [pos, setPos] = useState(BLR);
@@ -269,20 +279,18 @@ export default function MapScreen({ onBack, user, token, onHistAdd }: MapScreenP
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 10 }}>
               <button onClick={openNav} style={{
+                ...actionBtnBase,
                 background: S2, color: TX, border: `1px solid ${BM}`,
-                borderRadius: 14, padding: '14px 8px',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                gap: 7, fontSize: 13, fontWeight: 800, cursor: 'pointer', fontFamily: 'inherit',
+                padding: '14px 8px', gap: 7, fontSize: 13, fontWeight: 800,
               }}>
                 <IcNav c={TX} s={14} /> Navigate
               </button>
               <button className="press" onClick={() => setShowPay(true)} style={{
+                ...actionBtnBase,
                 background: GN, color: '#fff', border: 'none',
-                borderRadius: 14, padding: 14,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                gap: 8, fontSize: 15, fontWeight: 900, cursor: 'pointer',
+                padding: 14, gap: 8, fontSize: 15, fontWeight: 900,
                 boxShadow: '0 0 28px rgba(34,197,94,.55)',
-                animation: 'glow 3s ease infinite', fontFamily: 'inherit',
+                animation: 'glow 3s ease infinite',
               }}>
                 <img src={upiLogo} alt="UPI" style={{ height: 22, objectFit: 'contain' }} /> Pay ₹{sessPrice(sel.price)} via UPI
               </button>

@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import type { Session } from '@supabase/supabase-js';
+import type { Tables } from '@/integrations/supabase/types';
 import { lovable } from '@/integrations/lovable/index';
 import { GN, GG, S2, S3, BD, TX, TS, TM, GD } from '@/lib/powerloop';
 import { Spinner, CloseBtn, DInput, ErrBanner, IcUser, IcMail, IcOk, GoogleG } from '@/components/pl/Shared';
 
 interface AuthModalProps {
   onClose: () => void;
-  onSuccess: (user: any, session: any) => void;
+  onSuccess: (user: Tables<'profiles'>, session: Session) => void;
 }
 
 export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
@@ -41,8 +43,8 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
         redirect_uri: window.location.origin,
       });
       if (result.error) throw result.error;
-    } catch (e: any) {
-      setErr(e.message || 'Google sign-in failed');
+    } catch (e: unknown) {
+      setErr(e instanceof Error ? e.message : String(e) || 'Google sign-in failed');
     }
     setLoading(false);
   };
@@ -70,7 +72,7 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
       setCntdn(60);
       setDigits(Array(6).fill(''));
       setTimeout(() => { boxRefs.current[0]?.focus(); }, 120);
-    } catch (e: any) { setErr(e.message || 'Failed to send OTP'); }
+    } catch (e: unknown) { setErr(e instanceof Error ? e.message : String(e) || 'Failed to send OTP'); }
     setLoading(false);
   };
 
@@ -123,8 +125,8 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
           setStep('register');
         }
       }
-    } catch (e: any) {
-      setErr(e.message || 'Invalid OTP — please try again');
+    } catch (e: unknown) {
+      setErr(e instanceof Error ? e.message : String(e) || 'Invalid OTP — please try again');
       setShake(true); setDigits(Array(6).fill(''));
       setTimeout(() => { setShake(false); boxRefs.current[0]?.focus(); }, 400);
     }
@@ -138,7 +140,7 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('Not authenticated');
 
-      const updateData: any = { name: name.trim() };
+      const updateData: Record<string, string> = { name: name.trim() };
       if (authMethod === 'email') updateData.email = email.trim().toLowerCase();
       if (authMethod === 'phone') updateData.phone = phone.trim().startsWith('+') ? phone.trim() : `+91${phone.trim()}`;
 
@@ -154,7 +156,7 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
 
       const { data: { session } } = await supabase.auth.getSession();
       onSuccess(profile, session);
-    } catch (e: any) { setErr(e.message); }
+    } catch (e: unknown) { setErr(e instanceof Error ? e.message : String(e)); }
     setLoading(false);
   };
 

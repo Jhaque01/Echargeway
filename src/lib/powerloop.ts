@@ -71,6 +71,7 @@ export const STATIONS: Station[] = [
 ];
 
 export const BLR = { lat: 12.9352, lng: 77.6245 };
+export const DEFAULT_ZOOM = 13;
 
 // Utils
 export function haversine(a: number, b: number, c: number, d: number) {

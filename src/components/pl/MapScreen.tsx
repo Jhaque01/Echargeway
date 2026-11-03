@@ -37,9 +37,9 @@ export default function MapScreen({ onBack, user, token, onHistAdd }: MapScreenP
     mkRef.current = {};
     sorted.forEach(s => {
       const isSel = selSta && s.id === selSta.id;
-      const col = isSel ? '#22C55E' : '#1C1C1C';
-      const bord = isSel ? '#050505' : 'rgba(34,197,94,.4)';
-      const glow = isSel ? '0 0 20px rgba(34,197,94,.9)' : 'none';
+      const col = isSel ? GN : S1;
+      const bord = isSel ? S1 : GG;
+      const glow = isSel ? `0 0 20px ${GN}` : 'none';
       const icon = L.divIcon({
         className: '',
         iconSize: [38, 46],

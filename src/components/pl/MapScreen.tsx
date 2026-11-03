@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import type { Tables } from '@/integrations/supabase/types';
 import {
   Station, sortedStations, sessPrice, requestGeo, BLR,
   GN, GG, GD, S1, S2, S3, BD, BM, TX, TS, TM, RD, SMCARD,
@@ -11,9 +12,9 @@ import upiLogo from '@/assets/upi-official.jpeg';
 
 interface MapScreenProps {
   onBack: () => void;
-  user: any;
+  user: Tables<'profiles'> | null;
   token: string;
-  onHistAdd?: (h: any) => void;
+  onHistAdd?: (h: Tables<'charging_history'>) => void;
 }
 
 export default function MapScreen({ onBack, user, token, onHistAdd }: MapScreenProps) {
@@ -33,7 +34,7 @@ export default function MapScreen({ onBack, user, token, onHistAdd }: MapScreenP
   const redrawMarkers = useCallback((sorted: Station[], selSta: Station | null) => {
     const map = mapRef.current;
     if (!map) return;
-    Object.values(mkRef.current).forEach(m => { try { m.remove(); } catch {} });
+    Object.values(mkRef.current).forEach(m => { try { m.remove(); } catch (e) { /* ignore */ } });
     mkRef.current = {};
     sorted.forEach(s => {
       const isSel = selSta && s.id === selSta.id;
@@ -50,7 +51,7 @@ export default function MapScreen({ onBack, user, token, onHistAdd }: MapScreenP
       mk.on('click', () => {
         setSel(s);
         redrawMarkers(stRef.current, s);
-        map.panTo([s.lat, s.lng], { animate: true, duration: 0.4 } as any);
+        map.panTo([s.lat, s.lng], { animate: true, duration: 0.4 } as L.PanOptions);
       });
       mkRef.current[s.id] = mk;
     });
@@ -88,7 +89,7 @@ export default function MapScreen({ onBack, user, token, onHistAdd }: MapScreenP
           const sorted = sortedStations(p);
           setStns(sorted); setSel(sorted[0]);
           map.setView([p.lat, p.lng], 14, { animate: true });
-          if (uMkRef.current) try { uMkRef.current.remove(); } catch {}
+          if (uMkRef.current) try { uMkRef.current.remove(); } catch (e) { /* ignore */ }
           uMkRef.current = L.marker([p.lat, p.lng], { icon: userIcon, zIndexOffset: 1000 }).addTo(map);
           redrawMarkers(sorted, sorted[0]);
         },
@@ -104,14 +105,14 @@ export default function MapScreen({ onBack, user, token, onHistAdd }: MapScreenP
 
     return () => {
       clearTimeout(tid);
-      if (mapRef.current) { try { mapRef.current.remove(); } catch {} mapRef.current = null; }
+      if (mapRef.current) { try { mapRef.current.remove(); } catch (e) { /* ignore */ } mapRef.current = null; }
     };
   }, [redrawMarkers]);
 
   const clickChip = (s: Station) => {
     setSel(s);
     redrawMarkers(stations, s);
-    if (mapRef.current) mapRef.current.panTo([s.lat, s.lng], { animate: true, duration: 0.4 } as any);
+    if (mapRef.current) mapRef.current.panTo([s.lat, s.lng], { animate: true, duration: 0.4 } as L.PanOptions);
   };
 
   const openNav = () => {

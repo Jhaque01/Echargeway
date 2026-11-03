@@ -9,6 +9,56 @@ import { Avatar, Spinner, IcBolt, IcCar, IcNav, IcRup, IcLoc } from '@/component
 import PayModal from '@/components/pl/PayModal';
 import upiLogo from '@/assets/upi-official.jpeg';
 
+const getStationMarkerHtml = (col: string, bord: string, glow: string) => `
+  <div style="
+    width: 34px;
+    height: 34px;
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    background: ${col};
+    border: 2.5px solid ${bord};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: ${glow};
+    cursor: pointer;
+  ">
+    <span style="
+      transform: rotate(45deg);
+      color: #fff;
+      font-size: 9px;
+      font-weight: 900;
+    ">CW</span>
+  </div>
+`;
+
+const getUserMarkerHtml = () => `
+  <div style="position: relative; width: 20px; height: 20px;">
+    <div style="
+      width: 14px;
+      height: 14px;
+      background: #22C55E;
+      border-radius: 50%;
+      border: 3px solid #080808;
+      box-shadow: 0 0 14px rgba(34,197,94,.9);
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      z-index: 2;
+    "></div>
+    <div style="
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(34,197,94,.15);
+      position: absolute;
+      top: -8px;
+      left: -8px;
+      animation: pulse-dot 2s ease infinite;
+    "></div>
+  </div>
+`;
+
 interface MapScreenProps {
   onBack: () => void;
   user: any;
@@ -44,7 +94,7 @@ export default function MapScreen({ onBack, user, token, onHistAdd }: MapScreenP
         className: '',
         iconSize: [38, 46],
         iconAnchor: [19, 46],
-        html: `<div style="width:34px;height:34px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:${col};border:2.5px solid ${bord};display:flex;align-items:center;justify-content:center;box-shadow:${glow};cursor:pointer"><span style="transform:rotate(45deg);color:#fff;font-size:9px;font-weight:900">CW</span></div>`,
+        html: getStationMarkerHtml(col, bord, glow),
       });
       const mk = L.marker([s.lat, s.lng], { icon }).addTo(map);
       mk.on('click', () => {
@@ -79,7 +129,7 @@ export default function MapScreen({ onBack, user, token, onHistAdd }: MapScreenP
         className: '',
         iconSize: [20, 20],
         iconAnchor: [10, 10],
-        html: '<div style="position:relative;width:20px;height:20px"><div style="width:14px;height:14px;background:#22C55E;border-radius:50%;border:3px solid #080808;box-shadow:0 0 14px rgba(34,197,94,.9);position:absolute;top:3px;left:3px;z-index:2"></div><div style="width:36px;height:36px;border-radius:50%;background:rgba(34,197,94,.15);position:absolute;top:-8px;left:-8px;animation:pulse-dot 2s ease infinite"></div></div>',
+        html: getUserMarkerHtml(),
       });
 
       requestGeo(

@@ -145,7 +145,6 @@ export function chkToken(tok: string) {
 
 // Local API
 export async function callApi(path: string, method?: string, body?: any, token?: string): Promise<any> {
-  await new Promise(r => setTimeout(r, 340));
   method = method || 'GET';
 
   if (path === '/auth/send-otp') {
